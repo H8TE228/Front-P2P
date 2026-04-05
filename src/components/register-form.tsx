@@ -19,6 +19,7 @@ import { useRegister } from "@/hooks";
 
 const formSchema = z.object({
   email: z.string(),
+  username: z.string(),
   password: z.string(),
   confirmPassword: z.string(),
   firstName: z.string(),
@@ -37,6 +38,7 @@ export function RegisterForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
+      username: "",
       password: "",
       confirmPassword: "",
       firstName: "",
@@ -49,11 +51,12 @@ export function RegisterForm({
     try {
       await register({
         email: data.email,
+        username: data.username,
         password: data.password,
         password2: data.confirmPassword,
+        phone_number: data.phoneNumber,
         first_name: data.firstName,
         last_name: data.lastName,
-        phone_number: data.phoneNumber,
       });
       form.reset();
     } catch (error) {
@@ -86,6 +89,30 @@ export function RegisterForm({
                       <Input
                         {...field}
                         id="email"
+                        type="text"
+                        required
+                        className="bg-input-background h-12 md:text-base"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="username"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel
+                        htmlFor="username"
+                        className="text-base font-semibold"
+                      >
+                        Имя пользователя
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="username"
                         type="text"
                         required
                         className="bg-input-background h-12 md:text-base"

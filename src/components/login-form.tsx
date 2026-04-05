@@ -87,7 +87,7 @@ export function LoginForm({
                         htmlFor="email"
                         className="text-base font-semibold"
                       >
-                        Имя пользователя
+                        Почта
                       </FieldLabel>
                       <Input
                         {...field}
