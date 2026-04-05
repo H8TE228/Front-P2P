@@ -38,6 +38,7 @@ const CATEGORIES = [
   { id: 8, name: "Разное", icon: Star },
 ];
 
+// ЗАМЕНЯТСЯ НА СЕРВЕРНЫЕ
 const CATALOG_CATEGORIES = [
   {
     id: "electro",

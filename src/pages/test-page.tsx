@@ -23,7 +23,7 @@ export function Test() {
   return (
     <div className="flex max-w-150 flex-col gap-4">
       <h1 className="text-2xl font-bold">Hello world!</h1>
-      <p>Попка</p>
+      <p>ВещьВокруг</p>
       <Card>
         <CardHeader>
           <CardTitle>Всем привет</CardTitle>

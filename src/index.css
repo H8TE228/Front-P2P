@@ -54,6 +54,7 @@
   --color-button-base: var(--button-base);
   --color-button-base-foreground: var(--base-button-foreground);
   --color-input-background: var(--input-background);
+  --color-button-base-hover: var(--button-base-hover);
 }
 
 :root {
@@ -62,6 +63,7 @@
   --footer: #f8fafc;
   --footer-foreground: #0f172b;
   --button-base: #f3f4f6;
+  --button-base-hover: #e5e7eb;
   --button-base-foreground: #0f172b;
 
   --background: #ffffff;
@@ -103,6 +105,7 @@
 .dark {
   --button-base: #0f172b;
   --button-base-foreground: #cad5e2;
+  --button-base-hover: #263247;
   --footer: #080e21;
   --footer-foreground: #f1f5f9;
   --header: #020618;
