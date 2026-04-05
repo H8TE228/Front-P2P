@@ -1,17 +1,31 @@
+import { RootLayout } from "@/components/layout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Test } from "@/pages";
+import { HomePage, Test } from "@/pages";
 
 function App() {
   const router = createBrowserRouter([
     {
-      path: "/",
-      element: <Test />,
-    },
-    {
-      path: "*",
-      element: (
-        <h1 className="pt-4 text-center text-3xl">404: Страница не найдена</h1>
-      ),
+      element: <RootLayout />,
+      children: [
+        {
+          path: "/",
+          element: <HomePage />,
+        },
+        {
+          path: "/test",
+          element: <Test />,
+        },
+        {
+          path: "*",
+          element: (
+            <div className="mb-20 px-4 pt-8">
+              <h1 className="text-center text-3xl">
+                404: Страница не найдена
+              </h1>
+            </div>
+          ),
+        },
+      ],
     },
   ]);
 
