@@ -1,13 +1,10 @@
 import { ListingCard } from "./listing-card";
 import { MOCK_LISTINGS } from "./mock-listings";
 
-const listingFont =
-  '"Inter Variable", Inter, system-ui, sans-serif' as const;
-
 export function CatalogSection() {
   return (
-    <section className="w-full" style={{ fontFamily: listingFont }}>
-      <h2 className="text-2xl font-bold leading-8 tracking-[-0.6px] text-[var(--app-text)]">
+    <section className="w-full">
+      <h2 className="text-2xl font-bold leading-8 tracking-[-0.6px] text-[#0F172B] dark:text-[#F1F5F9]">
         Рекомендуем вам
       </h2>
 

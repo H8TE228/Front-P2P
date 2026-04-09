@@ -1,5 +1,5 @@
 import listingPlaceholder from "@/assets/react.svg";
-import type { Listing } from "./types";
+import type { Listing } from "@/types";
 
 export const MOCK_LISTINGS: Listing[] = [
   {

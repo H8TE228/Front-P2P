@@ -1,13 +1,13 @@
 import { Star } from "lucide-react";
 import { formatRubAmount, reviewsLabel } from "@/lib/format-listing";
 import { cn } from "@/lib/utils";
-import type { Listing } from "./types";
+import type { Listing } from "@/types";
 
 const tagCoClass =
-  "rounded-full bg-[var(--app-accent)] px-2.5 py-1 text-[10px] font-bold uppercase leading-[15px] tracking-[0.5px] text-white";
+  "rounded-full bg-[#155DFC] px-2.5 py-1 text-[10px] font-bold uppercase leading-[15px] tracking-[0.5px] text-white";
 
 const tagRentClass =
-  "rounded-full border border-[var(--app-border)] bg-[var(--app-surface-card)] px-2.5 py-1 text-[10px] font-bold uppercase leading-[15px] tracking-[0.5px] text-[var(--app-text-muted-strong)]";
+  "rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[10px] font-bold uppercase leading-[15px] tracking-[0.5px] text-[#314158] dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#CAD5E2]";
 
 export function ListingCard({ listing }: { listing: Listing }) {
   const priceStr = `${formatRubAmount(listing.priceRub)} ₽`;
@@ -27,7 +27,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
         <img
           src={listing.imageSrc}
           alt=""
-          className="aspect-square w-full rounded-[14px] border border-[var(--app-border)] object-cover"
+          className="aspect-square w-full rounded-[14px] border border-[#E2E8F0] object-cover dark:border-[#1D293D]"
         />
         {listing.tag === "coownership" ? (
           <span className={cn("absolute left-[13px] top-[13px]", tagCoClass)}>
@@ -42,33 +42,31 @@ export function ListingCard({ listing }: { listing: Listing }) {
 
       <div className="mt-3 flex flex-col">
         <p className="flex flex-wrap items-baseline gap-x-1">
-          <span className="text-lg font-bold leading-[22.5px] text-[var(--app-text)]">
+          <span className="text-lg font-bold leading-[22.5px] text-[#0F172B] dark:text-[#F1F5F9]">
             {priceStr}
           </span>
-          <span className="text-sm font-normal leading-5 tracking-normal text-[var(--app-text-muted)]">
+          <span className="text-sm font-normal leading-5 tracking-normal text-[#62748E] dark:text-[#90A1B9]">
             {" "}
             / {suffix}
           </span>
         </p>
 
-        <h3 className="mt-1 text-sm font-medium leading-[19.25px] text-[var(--app-text)]">
+        <h3 className="mt-1 text-sm font-medium leading-[19.25px] text-[#0F172B] dark:text-[#F1F5F9]">
           {listing.title}
         </h3>
 
         <div className="mt-2 flex flex-wrap items-center gap-x-1 text-xs leading-4">
           <Star
-            className="size-3.5 shrink-0 fill-[var(--app-star)] text-[var(--app-star)]"
+            className="size-3.5 shrink-0 fill-[#CAD5E2] text-[#CAD5E2] dark:fill-[#45556C] dark:text-[#45556C]"
             aria-hidden
           />
-          <span className="font-medium text-[var(--app-text-muted-strong)]">
-            {ratingStr}
-          </span>
-          <span className="font-normal text-[var(--app-text-muted)]">
+          <span className="font-medium text-[#314158] dark:text-[#CAD5E2]">{ratingStr}</span>
+          <span className="font-normal text-[#62748E] dark:text-[#90A1B9]">
             · {reviewsLabel(listing.reviewsCount)}
           </span>
         </div>
 
-        <p className="mt-1 text-xs font-normal leading-4 text-[var(--app-text-muted)]">
+        <p className="mt-1 text-xs font-normal leading-4 text-[#62748E] dark:text-[#90A1B9]">
           {listing.location}
         </p>
       </div>

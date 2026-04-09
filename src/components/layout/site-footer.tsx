@@ -1,5 +1,4 @@
-const interFont =
-  '"Inter Variable", Inter, system-ui, sans-serif' as const;
+import { Button } from "@/components/ui/button";
 
 const linkColumns = [
   {
@@ -8,29 +7,28 @@ const linkColumns = [
   },
   {
     title: "Помощь",
-    links: ["Поддержка", "Безопасность", "Правила"],
+    links: ["Поддержка", "Поддержка", "Правила"],
   },
   {
     title: "Сервисы",
     links: [
       "Совместное владение",
-      "Доставка",
+      "Совместное владение",
       "Безопасная сделка",
     ],
   },
-] as const;
+];
 
 export function SiteFooter() {
   return (
     <footer
-      className="w-full border-t border-[var(--app-border)] bg-[var(--app-surface-soft)] py-12"
-      style={{ fontFamily: interFont }}
+      className="w-full border-t border-[#E5E7EB] bg-[#F8FAFC] py-12 dark:border-[#1D293D] dark:bg-[#0F172B]"
     >
       <div className="mx-auto w-full max-w-[1280px]">
         <div className="grid min-h-32 grid-cols-1 gap-x-8 gap-y-8 px-4 pb-3 sm:grid-cols-2 lg:grid-cols-4">
           {linkColumns.map((col) => (
             <div key={col.title} className="min-w-0">
-              <h3 className="mb-[18px] text-base font-semibold leading-6 tracking-normal text-[var(--app-text)]">
+              <h3 className="mb-[18px] text-base font-semibold leading-6 tracking-normal text-[#0F172B] dark:text-[#F1F5F9]">
                 {col.title}
               </h3>
               <ul className="flex flex-col gap-2">
@@ -38,7 +36,7 @@ export function SiteFooter() {
                   <li key={`${col.title}-${index}`}>
                     <a
                       href="#"
-                      className="text-sm font-normal leading-5 tracking-normal text-[var(--app-text-muted)] transition-colors hover:text-[var(--app-text)]"
+                      className="text-sm font-normal leading-5 tracking-normal text-[#62748E] transition-colors hover:text-[#0F172B] dark:text-[#90A1B9] dark:hover:text-[#F1F5F9]"
                     >
                       {label}
                     </a>
@@ -49,37 +47,39 @@ export function SiteFooter() {
           ))}
 
           <div className="min-w-0">
-            <h3 className="mb-[18px] text-base font-semibold leading-6 tracking-normal text-[var(--app-text)]">
+            <h3 className="mb-[18px] text-base font-semibold leading-6 tracking-normal text-[#0F172B] dark:text-[#F1F5F9]">
               Приложение
             </h3>
             <ul className="flex flex-col gap-2">
               <li>
-                <a
-                  href="#"
-                  className="flex h-10 w-32 items-center justify-center rounded-[10px] bg-[var(--app-store-bg)] text-center text-xs font-medium leading-4 tracking-normal text-[var(--app-store-fg)] transition-opacity hover:opacity-90"
+                <Button
+                  asChild
+                  variant="secondary"
+                  className="h-10 w-32 rounded-[10px] bg-[#E2E8F0] text-xs font-medium leading-4 text-[#45556C] hover:bg-[#CAD5E2] dark:bg-[#1D293D] dark:text-[#E2E8F0] dark:hover:bg-[#1D293D]/80"
                 >
-                  App Store
-                </a>
+                  <a href="#">App Store</a>
+                </Button>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="flex h-10 w-32 items-center justify-center rounded-[10px] bg-[var(--app-store-bg)] text-center text-xs font-medium leading-4 tracking-normal text-[var(--app-store-fg)] transition-opacity hover:opacity-90"
+                <Button
+                  asChild
+                  variant="secondary"
+                  className="h-10 w-32 rounded-[10px] bg-[#E2E8F0] text-xs font-medium leading-4 text-[#45556C] hover:bg-[#CAD5E2] dark:bg-[#1D293D] dark:text-[#E2E8F0] dark:hover:bg-[#1D293D]/80"
                 >
-                  Google Play
-                </a>
+                  <a href="#">Google Play</a>
+                </Button>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 flex min-h-[49px] flex-col gap-4 border-t border-[var(--app-border)] px-4 pt-8 pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
-          <p className="text-xs font-normal leading-4 tracking-normal text-[var(--app-text-subtle)]">
+        <div className="mt-12 flex min-h-[49px] flex-col gap-4 border-t border-[#E5E7EB] px-4 pt-8 pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0 dark:border-[#1D293D]">
+          <p className="text-xs font-normal leading-4 tracking-normal text-[#90A1B9] dark:text-[#62748E]">
             © 2026 ВещьВокруг
           </p>
           <a
             href="#"
-            className="text-xs font-normal leading-4 tracking-normal text-[var(--app-text-subtle)] transition-colors hover:text-[var(--app-text-muted)]"
+            className="text-xs font-normal leading-4 tracking-normal text-[#90A1B9] transition-colors hover:text-[#62748E] dark:text-[#62748E] dark:hover:text-[#90A1B9]"
           >
             Пользовательское соглашение
           </a>

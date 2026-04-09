@@ -27,7 +27,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-const CATEGORIES = [
+export const CATEGORIES = [
   { id: 1, name: "Электроника", icon: Smartphone },
   { id: 2, name: "Транспорт", icon: Plane },
   { id: 3, name: "Инструменты", icon: PenTool },
@@ -38,7 +38,7 @@ const CATEGORIES = [
   { id: 8, name: "Разное", icon: Star },
 ];
 
-const CATALOG_CATEGORIES = [
+export const CATALOG_CATEGORIES = [
   {
     id: "electro",
     name: "Электроника",

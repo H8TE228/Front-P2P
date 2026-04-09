@@ -7,7 +7,7 @@ const offerings = [
     description:
       "Находите нужные вещи рядом, арендуйте на удобный срок и получайте подсказки по выбору, использованию и безопасности.",
     linkLabel: "Найти вещь →",
-    accentCircleClassName: "bg-[var(--app-service-circle-1)]",
+    accentCircleClassName: "bg-[#E2E8F066] dark:bg-[#1D293D80]",
   },
   {
     id: "coownership",
@@ -15,9 +15,9 @@ const offerings = [
     description:
       "Покупайте дорогие вещи вместе с другими и пользуйтесь ими по прозрачному графику и понятным правилам.",
     linkLabel: "Узнать подробнее →",
-    accentCircleClassName: "bg-[var(--app-service-circle-2)]",
+    accentCircleClassName: "bg-[#DBEAFE99] dark:bg-[#193CB84D]",
   },
-] as const;
+];
 
 export function ServiceOfferingsSection() {
   return (

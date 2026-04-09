@@ -1,8 +1,5 @@
 import { cn } from "@/lib/utils";
 
-const interFont =
-  '"Inter Variable", Inter, system-ui, sans-serif' as const;
-
 export type ServiceOfferingCardProps = {
   title: string;
   description: string;
@@ -24,21 +21,20 @@ export function ServiceOfferingCard({
   return (
     <article
       className={cn(
-        "relative min-h-[236px] w-full max-w-[616px] overflow-hidden rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] lg:max-w-none",
+        "relative min-h-[236px] w-full max-w-[616px] overflow-hidden rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] lg:max-w-none dark:border-[#1D293D] dark:bg-[#0F172B]",
         className,
       )}
-      style={{ fontFamily: interFont }}
     >
       <div className="relative z-10 box-border w-full max-w-[417px] pt-[33px] pb-[33px] pl-[33px] pr-4">
-        <h3 className="text-[30px] font-bold leading-9 tracking-[-0.75px] text-[var(--app-text)]">
+        <h3 className="text-[30px] font-bold leading-9 tracking-[-0.75px] text-[#0F172B] dark:text-[#F1F5F9]">
           {title}
         </h3>
-        <p className="mt-4 max-w-[384px] text-base font-normal leading-[26px] tracking-normal text-[var(--app-text-muted)]">
+        <p className="mt-4 max-w-[384px] text-base font-normal leading-[26px] tracking-normal text-[#62748E] dark:text-[#90A1B9]">
           {description}
         </p>
         <a
           href={href}
-          className="mt-[18px] inline-block text-base font-medium leading-6 tracking-normal text-[var(--app-link)] transition-opacity hover:opacity-80"
+          className="mt-[18px] inline-block text-base font-medium leading-6 tracking-normal text-[#155DFC] transition-opacity hover:opacity-80 dark:text-[#51A2FF]"
         >
           {linkLabel}
         </a>
