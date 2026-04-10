@@ -1,4 +1,4 @@
-import { RootLayout } from "@/components/layout";
+import { RootLayout } from "@/components";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { HomePage, Test } from "@/pages";
 import { LoginForm, RegisterForm } from "@/components";

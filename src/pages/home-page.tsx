@@ -1,4 +1,4 @@
-import { CatalogSection } from "@/components/catalog";
+import { CatalogSection } from "@/components";
 import {
   PopularCategoriesSection,
   SafeListingCtaSection,
