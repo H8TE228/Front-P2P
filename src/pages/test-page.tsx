@@ -1,4 +1,4 @@
-import { ThemeSelect } from "@/components/theme-selector";
+import { ThemeSelect } from "@/components/theme/theme-selector";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,9 +19,10 @@ import {
 } from "@/components/ui/item";
 import { FiUser } from "react-icons/fi";
 
+/** Песочница UI: маршрут `/test` */
 export function Test() {
   return (
-    <div className="flex max-w-150 flex-col gap-4">
+    <div className="mx-auto mb-20 flex max-w-150 flex-col gap-4 px-4 py-8">
       <h1 className="text-2xl font-bold">Hello world!</h1>
       <p>ВещьВокруг</p>
       <Card>
