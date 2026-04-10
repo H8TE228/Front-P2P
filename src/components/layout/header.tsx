@@ -47,11 +47,9 @@ const navItems = [
   { icon: User, label: "Профиль" },
 ];
 
-export function SiteHeader() {
+export function Header() {
   return (
-    <header
-      className="box-border flex h-16 w-full items-center border-b border-[#E5E7EB] bg-[var(--header)] dark:border-[#1D293D]"
-    >
+    <header className="box-border flex h-16 w-full items-center border-b border-[#E5E7EB] bg-[var(--header)] dark:border-[#1D293D]">
       <div className="mx-auto flex h-full w-full max-w-[1280px] min-w-0 items-center gap-6 overflow-x-auto px-4">
         <div className="flex shrink-0 items-center">
           <Link
@@ -59,11 +57,9 @@ export function SiteHeader() {
             className="flex items-center gap-2 text-[#0F172B] no-underline dark:text-[#F1F5F9]"
           >
             <span className="flex size-8 items-center justify-center rounded-[10px] bg-[#155DFC] px-2">
-              <span
-                className="box-border h-4 w-4 shrink-0 rounded-[6px] border-2 border-white bg-transparent"
-              />
+              <span className="box-border h-4 w-4 shrink-0 rounded-[6px] border-2 border-white bg-transparent" />
             </span>
-            <span className="whitespace-nowrap text-xl font-bold leading-none tracking-[-0.5px]">
+            <span className="text-xl leading-none font-bold tracking-[-0.5px] whitespace-nowrap">
               ВещьВокруг
             </span>
           </Link>
@@ -72,12 +68,9 @@ export function SiteHeader() {
         <div className="flex shrink-0 items-center">
           <Button
             variant="default"
-            className="h-10 rounded-[10px] bg-[#F3F4F6] px-3 text-sm font-medium leading-5 text-[#1D293D] hover:bg-[#E5E7EB] dark:bg-[#1D293D] dark:text-[#E2E8F0] dark:hover:bg-[#1D293D]/80"
+            className="h-10 rounded-[10px] bg-[#F3F4F6] px-3 text-sm leading-5 font-medium text-[#1D293D] hover:bg-[#E5E7EB] dark:bg-[#1D293D] dark:text-[#E2E8F0] dark:hover:bg-[#1D293D]/80"
           >
-            <Menu
-              className="h-4 w-4 shrink-0"
-              strokeWidth={2}
-            />
+            <Menu className="h-4 w-4 shrink-0" strokeWidth={2} />
             <span className="hidden sm:inline">Каталог</span>
           </Button>
         </div>
@@ -85,7 +78,7 @@ export function SiteHeader() {
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <Button
             variant="outline"
-            className="h-10 w-36 justify-center gap-1.5 rounded-[10px] border-[#E5E7EB] bg-[#F9FAFB] px-3 text-sm font-medium leading-5 text-[#1D293D] hover:bg-[#F3F4F6] dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#E2E8F0] dark:hover:bg-[#0F172B]"
+            className="h-10 w-36 justify-center gap-1.5 rounded-[10px] border-[#E5E7EB] bg-[#F9FAFB] px-3 text-sm leading-5 font-medium text-[#1D293D] hover:bg-[#F3F4F6] dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#E2E8F0] dark:hover:bg-[#0F172B]"
           >
             <MapPin
               className="size-4 shrink-0 text-[#155DFC]"
@@ -94,11 +87,11 @@ export function SiteHeader() {
             <span className="truncate">Екатеринбург</span>
           </Button>
 
-          <div className="relative hidden min-w-0 max-w-[408px] flex-1 md:block">
+          <div className="relative hidden max-w-[408px] min-w-0 flex-1 md:block">
             <input
               type="search"
               placeholder="Поиск по товарам, аренде и совладению..."
-              className="h-10 w-full rounded-[10px] border border-[#E5E7EB] bg-[#F9FAFB] py-2 pl-4 pr-10 text-sm leading-normal text-[#0F172B] placeholder:text-[#90A1B9] focus:border-[#155DFC] focus:outline-none focus:ring-1 focus:ring-[#155DFC] dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#F1F5F9] dark:placeholder:text-[#62748E]"
+              className="h-10 w-full rounded-[10px] border border-[#E5E7EB] bg-[#F9FAFB] py-2 pr-10 pl-4 text-sm leading-normal text-[#0F172B] placeholder:text-[#90A1B9] focus:border-[#155DFC] focus:ring-1 focus:ring-[#155DFC] focus:outline-none dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#F1F5F9] dark:placeholder:text-[#62748E]"
             />
             <Search
               className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-[#90A1B9] dark:text-[#62748E]"
@@ -117,18 +110,15 @@ export function SiteHeader() {
                 type="button"
                 className="flex min-w-[56px] flex-col items-center gap-2 px-0.5 py-0.5 text-[#62748E] transition-colors hover:text-[#0F172B] dark:text-[#90A1B9] dark:hover:text-[#F1F5F9]"
               >
-                <Icon
-                  className="size-5 shrink-0"
-                  strokeWidth={2}
-                />
-                <span className="max-w-[4.5rem] text-center text-[10px] font-medium leading-tight tracking-normal">
+                <Icon className="size-5 shrink-0" strokeWidth={2} />
+                <span className="max-w-[4.5rem] text-center text-[10px] leading-tight font-medium tracking-normal">
                   {label}
                 </span>
               </button>
             ))}
           </nav>
 
-          <Button variant="blue" className="h-9 rounded-[10px] px-4">
+          <Button variant="blue" className="h-9 rounded-lg px-4">
             Разместить
           </Button>
         </div>

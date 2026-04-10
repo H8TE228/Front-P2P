@@ -1,3 +1,3 @@
 export { RootLayout } from "./root-layout";
-export { SiteFooter } from "./site-footer";
-export { SiteHeader } from "./site-header";
+export { Footer } from "./footer";
+export { Header } from "./header";

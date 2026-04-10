@@ -1,13 +1,13 @@
 import { Outlet } from "react-router-dom";
-import { SiteFooter } from "./site-footer";
-import { SiteHeader } from "./site-header";
+import { Footer } from "./footer";
+import { Header } from "./header";
 
 export function RootLayout() {
   return (
     <>
-      <SiteHeader />
+      <Header />
       <Outlet />
-      <SiteFooter />
+      <Footer />
     </>
   );
 }
