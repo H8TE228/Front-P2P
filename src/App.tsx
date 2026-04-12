@@ -5,23 +5,21 @@ import { HomePage, Test } from "@/pages";
 function App() {
   const router = createBrowserRouter([
     {
-      element: <RootLayout />,
+      Component: RootLayout,
       children: [
         {
           path: "/",
-          element: <HomePage />,
+          Component: HomePage,
         },
         {
           path: "/test",
-          element: <Test />,
+          Component: Test,
         },
         {
           path: "*",
           element: (
             <div className="mb-20 px-4 pt-8">
-              <h1 className="text-center text-3xl">
-                404: Страница не найдена
-              </h1>
+              <h1 className="text-center text-3xl">404: Страница не найдена</h1>
             </div>
           ),
         },

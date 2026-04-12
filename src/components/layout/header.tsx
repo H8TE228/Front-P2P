@@ -72,9 +72,7 @@ export function SiteHeader({
             className="flex items-center gap-2 text-[#0F172B] no-underline dark:text-[#F1F5F9]"
           >
             <span className="flex size-8 items-center justify-center rounded-[10px] bg-[#155DFC] px-2">
-              <span
-                className="box-border h-4 w-4 shrink-0 rounded-[6px] border-2 border-white bg-transparent"
-              />
+              <span className="box-border h-4 w-4 shrink-0 rounded-[6px] border-2 border-white bg-transparent" />
             </span>
             <span className="whitespace-nowrap text-xl font-bold leading-none tracking-[-0.5px]">
               ВещьВокруг
@@ -94,10 +92,7 @@ export function SiteHeader({
                 : "bg-[#F3F4F6] text-[#1D293D] hover:bg-[#E5E7EB] dark:bg-[#1D293D] dark:text-[#E2E8F0] dark:hover:bg-[#1D293D]/80",
             )}
           >
-            <Menu
-              className="h-4 w-4 shrink-0"
-              strokeWidth={2}
-            />
+            <Menu className="h-4 w-4 shrink-0" strokeWidth={2} />
             <span className="hidden sm:inline">Каталог</span>
           </Button>
         </div>
@@ -129,10 +124,7 @@ export function SiteHeader({
                   type="button"
                   className="flex min-w-[56px] flex-col items-center gap-2 px-0.5 py-0.5 text-[#62748E] transition-colors hover:text-[#0F172B] dark:text-[#90A1B9] dark:hover:text-[#F1F5F9]"
                 >
-                  <Icon
-                    className="size-5 shrink-0"
-                    strokeWidth={2}
-                  />
+                  <Icon className="size-5 shrink-0" strokeWidth={2} />
                   <span className="max-w-[4.5rem] text-center text-[10px] font-medium leading-tight tracking-normal">
                     {label}
                   </span>

@@ -1,5 +1,6 @@
-import { CatalogSection, PopularCategoriesSection } from "@/components/catalog";
+import { CatalogSection } from "@/components/catalog";
 import {
+  PopularCategoriesSection,
   SafeListingCtaSection,
   ServiceOfferingsSection,
 } from "@/components/home";

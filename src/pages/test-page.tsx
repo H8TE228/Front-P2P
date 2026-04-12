@@ -1,4 +1,4 @@
-import { ThemeSelect } from "@/components/theme-selector";
+import { ThemeSelect } from "@/components/theme/theme-selector";
 import { Button } from "@/components/ui/button";
 import {
   Card,
