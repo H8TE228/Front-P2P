@@ -3,3 +3,4 @@ export * from "./layout";
 export * from "./auth";
 export * from "./catalog";
 export * from "./home";
+export { SearchInput } from "./search";

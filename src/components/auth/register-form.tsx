@@ -1,6 +1,19 @@
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
+import { ArrowRight } from "lucide-react";
+import * as z from "zod";
+import { useRegister } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Field,
   FieldDescription,
@@ -8,14 +21,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
-import { useState } from "react";
-import { useRegister } from "@/hooks";
-// import { useRegister } from "@/hooks";
 
 const formSchema = z.object({
   email: z.string(),
@@ -25,6 +30,7 @@ const formSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   phoneNumber: z.string(),
+  agreeToTerms: z.boolean(),
 });
 
 export function RegisterForm({
@@ -44,11 +50,13 @@ export function RegisterForm({
       firstName: "",
       lastName: "",
       phoneNumber: "",
+      agreeToTerms: false,
     },
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
+      setError("");
       await register({
         email: data.email,
         username: data.username,
@@ -63,117 +71,24 @@ export function RegisterForm({
       if (error instanceof AxiosError) {
         setError(error.response?.data.error);
       } else {
-        setError("Неизвестная ошибка");
+        setError("Ошибка при регистрации. Пожалуйста, попробуйте еще раз.");
       }
     }
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="w-full max-w-md self-center lg:max-w-2xl">
-        <CardContent>
+    <div className={cn("flex flex-col", className)} {...props}>
+      <Card className="w-full gap-0 self-center overflow-visible rounded-[32px] border-0 bg-transparent py-0 text-[#1f2a44] shadow-none ring-0">
+        <CardTitle className="mb-3 text-4xl font-semibold tracking-tight text-[#1f2a44]">
+          Создать аккаунт
+        </CardTitle>
+        <CardDescription className="mb-8 max-w-md text-base leading-7 text-[#7687a7]">
+          Присоединяйтесь к платформе для аренды и совместного владения.
+        </CardDescription>
+        <CardContent className="px-0">
           <form id="register-form" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <div className="flex flex-col gap-4">
-                <Controller
-                  name="email"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        htmlFor="email"
-                        className="text-base font-semibold"
-                      >
-                        Почта
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id="email"
-                        type="text"
-                        required
-                        className="bg-input-background h-12 md:text-base"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="username"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        htmlFor="username"
-                        className="text-base font-semibold"
-                      >
-                        Имя пользователя
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id="username"
-                        type="text"
-                        required
-                        className="bg-input-background h-12 md:text-base"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="password"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        htmlFor="password"
-                        className="text-base font-semibold"
-                      >
-                        Пароль
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id="password"
-                        type="password"
-                        required
-                        className="bg-input-background h-12 md:text-base"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="confirmPassword"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        htmlFor="confirmPassword"
-                        className="text-base font-semibold"
-                      >
-                        Повторите пароль
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id="confirmPassword"
-                        type="password"
-                        required
-                        className="bg-input-background h-12 md:text-base"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-              </div>
-
-              <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Controller
                   name="firstName"
                   control={form.control}
@@ -181,7 +96,7 @@ export function RegisterForm({
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel
                         htmlFor="firstName"
-                        className="text-base font-semibold"
+                        className="text-sm font-medium text-[#2d3a54]"
                       >
                         Имя
                       </FieldLabel>
@@ -189,8 +104,9 @@ export function RegisterForm({
                         {...field}
                         id="firstName"
                         type="text"
+                        placeholder="Иван"
                         required
-                        className="bg-input-background h-12 md:text-base"
+                        className="h-11 rounded-2xl border-[#e2e8f5] bg-[#f9fbff] px-4 text-base text-[#1f2a44] placeholder:text-[#9aabc7]"
                       />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
@@ -205,7 +121,7 @@ export function RegisterForm({
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel
                         htmlFor="lastName"
-                        className="text-base font-semibold"
+                        className="text-sm font-medium text-[#2d3a54]"
                       >
                         Фамилия
                       </FieldLabel>
@@ -213,32 +129,9 @@ export function RegisterForm({
                         {...field}
                         id="lastName"
                         type="text"
+                        placeholder="Петров"
                         required
-                        className="bg-input-background h-12 md:text-base"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="phoneNumber"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        htmlFor="phoneNumber"
-                        className="text-base font-semibold"
-                      >
-                        Номер телефона
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id="phoneNumber"
-                        type="text"
-                        required
-                        className="bg-input-background h-12 md:text-base"
+                        className="h-11 rounded-2xl border-[#e2e8f5] bg-[#f9fbff] px-4 text-base text-[#1f2a44] placeholder:text-[#9aabc7]"
                       />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
@@ -247,20 +140,201 @@ export function RegisterForm({
                   )}
                 />
               </div>
+
+              <Controller
+                name="email"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel
+                      htmlFor="email"
+                      className="text-sm font-medium text-[#2d3a54]"
+                    >
+                      Email
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="email"
+                      type="email"
+                      placeholder="ivan@example.com"
+                      required
+                      className="h-11 rounded-2xl border-[#e2e8f5] bg-[#f9fbff] px-4 text-base text-[#1f2a44] placeholder:text-[#9aabc7]"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="phoneNumber"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel
+                      htmlFor="phoneNumber"
+                      className="text-sm font-medium text-[#2d3a54]"
+                    >
+                      Телефон
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="phoneNumber"
+                      type="tel"
+                      placeholder="+79081234567"
+                      required
+                      className="h-11 rounded-2xl border-[#e2e8f5] bg-[#f9fbff] px-4 text-base text-[#1f2a44] placeholder:text-[#9aabc7]"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="username"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel
+                      htmlFor="username"
+                      className="text-sm font-medium text-[#2d3a54]"
+                    >
+                      Имя пользователя
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="username"
+                      type="text"
+                      placeholder="ivanov"
+                      required
+                      className="h-11 rounded-2xl border-[#e2e8f5] bg-[#f9fbff] px-4 text-base text-[#1f2a44] placeholder:text-[#9aabc7]"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="password"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel
+                      htmlFor="password"
+                      className="text-sm font-medium text-[#2d3a54]"
+                    >
+                      Пароль
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="password"
+                      type="password"
+                      placeholder="••••••••"
+                      required
+                      className="h-11 rounded-2xl border-[#e2e8f5] bg-[#f9fbff] px-4 text-base text-[#1f2a44] placeholder:text-[#9aabc7]"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="confirmPassword"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel
+                      htmlFor="confirmPassword"
+                      className="text-sm font-medium text-[#2d3a54]"
+                    >
+                      Подтвердите пароль
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="confirmPassword"
+                      type="password"
+                      placeholder="••••••••"
+                      required
+                      className="h-11 rounded-2xl border-[#e2e8f5] bg-[#f9fbff] px-4 text-base text-[#1f2a44] placeholder:text-[#9aabc7]"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="agreeToTerms"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="gap-3">
+                    <label className="flex items-start gap-3 text-sm leading-6 text-[#66789a]">
+                      <input
+                        checked={field.value}
+                        onChange={(event) =>
+                          field.onChange(event.target.checked)
+                        }
+                        type="checkbox"
+                        className="mt-1 h-4 w-4 rounded border border-[#d4dded] accent-[#2f62f4]"
+                      />
+                      <span>
+                        Я принимаю условия{" "}
+                        <Link
+                          to="#"
+                          className="font-medium text-[#2f62f4] hover:text-[#2149c9]"
+                        >
+                          Пользовательского соглашения
+                        </Link>{" "}
+                        и{" "}
+                        <Link
+                          to="#"
+                          className="font-medium text-[#2f62f4] hover:text-[#2149c9]"
+                        >
+                          Политики конфиденциальности
+                        </Link>
+                      </span>
+                    </label>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              {error ? (
+                <FieldDescription className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                  {error}
+                </FieldDescription>
+              ) : null}
             </div>
 
-            <div className="mt-6 flex flex-col items-center gap-4">
+            <div className="mt-8 flex flex-col items-center gap-6">
               <Button
-                className="h-12 w-full max-w-xs text-base font-semibold"
+                className="h-13 w-full rounded-2xl bg-[#dfe7f4] text-base font-semibold text-[#6f86a8] shadow-none hover:bg-[#d2ddee]"
                 type="submit"
                 disabled={isPending}
               >
                 Зарегистрироваться
+                <ArrowRight className="ml-2 size-4" />
               </Button>
-              <FieldDescription className="text-center text-base font-semibold [&>a:hover]:text-[#5a7d5f]/90">
-                <span>Уже есть аккаунт? </span>
-                <Link to="/login" className="text-[#5a7d5f]">
-                  Войти
+
+              <div className="h-px w-full bg-[#e9edf5]" />
+
+              <FieldDescription className="text-center text-sm text-[#8a9ab5]">
+                <span>Уже зарегистрированы? </span>
+                <Link
+                  to="/login"
+                  className="font-semibold text-[#1f2a44] decoration-0! hover:text-[#1f2a44]/80!"
+                >
+                  Войти в систему
                 </Link>
               </FieldDescription>
             </div>

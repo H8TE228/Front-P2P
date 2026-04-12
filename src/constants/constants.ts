@@ -25,9 +25,25 @@ import {
   ChevronDown,
   ChevronRight,
   TrendingUp,
+  Shield,
 } from "lucide-react";
 import listingPlaceholder from "@/assets/react.svg";
 import type { Listing } from "@/types";
+
+export const REG_LOGIN_TEXT = [
+  {
+    icon: Shield,
+    title: "Безопасные сделки",
+    description:
+      "Мы тщательно проверяем пользователей и предоставляем надежные инструменты для защиты от любых рисков.",
+  },
+  {
+    icon: Camera,
+    title: "Экономия на покупках",
+    description:
+      "Зачем покупать дорогое оборудование на один раз? Арендуйте у соседей и экономьте свои деньги.",
+  },
+];
 
 export const CATEGORIES = [
   { id: 1, name: "Электроника", icon: Smartphone },

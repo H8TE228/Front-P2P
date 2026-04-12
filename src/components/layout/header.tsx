@@ -13,6 +13,7 @@ import {
   User,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { SearchInput } from "../search";
 
 function ThemeHeaderToggle() {
   const { theme, setTheme } = useTheme();
@@ -49,8 +50,8 @@ const navItems = [
 
 export function Header() {
   return (
-    <header className="box-border flex h-16 w-full items-center border-b border-[#E5E7EB] bg-[var(--header)] dark:border-[#1D293D]">
-      <div className="mx-auto flex h-full w-full max-w-[1280px] min-w-0 items-center gap-6 overflow-x-auto px-4">
+    <header className="bg-header box-border flex h-16 w-full items-center border-b border-[#E5E7EB] dark:border-[#1D293D]">
+      <div className="mx-auto flex h-full w-full max-w-[1280px] min-w-0 items-center gap-6 px-4">
         <div className="flex shrink-0 items-center">
           <Link
             to="/"
@@ -88,15 +89,7 @@ export function Header() {
           </Button>
 
           <div className="relative hidden max-w-[408px] min-w-0 flex-1 md:block">
-            <input
-              type="search"
-              placeholder="Поиск по товарам, аренде и совладению..."
-              className="h-10 w-full rounded-[10px] border border-[#E5E7EB] bg-[#F9FAFB] py-2 pr-10 pl-4 text-sm leading-normal text-[#0F172B] placeholder:text-[#90A1B9] focus:border-[#155DFC] focus:ring-1 focus:ring-[#155DFC] focus:outline-none dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#F1F5F9] dark:placeholder:text-[#62748E]"
-            />
-            <Search
-              className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-[#90A1B9] dark:text-[#62748E]"
-              strokeWidth={2}
-            />
+            <SearchInput />
           </div>
         </div>
 
@@ -107,8 +100,7 @@ export function Header() {
             {navItems.map(({ icon: Icon, label }) => (
               <button
                 key={label}
-                type="button"
-                className="flex min-w-[56px] flex-col items-center gap-2 px-0.5 py-0.5 text-[#62748E] transition-colors hover:text-[#0F172B] dark:text-[#90A1B9] dark:hover:text-[#F1F5F9]"
+                className="flex min-w-[56px] cursor-pointer flex-col items-center gap-2 px-0.5 py-0.5 text-[#62748E] transition-colors hover:text-[#0F172B] dark:text-[#90A1B9] dark:hover:text-[#F1F5F9]"
               >
                 <Icon className="size-5 shrink-0" strokeWidth={2} />
                 <span className="max-w-[4.5rem] text-center text-[10px] leading-tight font-medium tracking-normal">

@@ -1,7 +1,6 @@
 import { RootLayout } from "@/components";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { HomePage, Test } from "@/pages";
-import { LoginForm, RegisterForm } from "@/components";
+import { HomePage, LoginPage, RegisterPage } from "@/pages";
 
 function App() {
   const router = createBrowserRouter([
@@ -13,13 +12,17 @@ function App() {
           Component: HomePage,
         },
         {
-          path: "/test",
-          Component: Test,
+          path: "/login",
+          Component: LoginPage,
+        },
+        {
+          path: "/register",
+          Component: RegisterPage,
         },
         {
           path: "*",
           element: (
-            <div className="mb-20 px-4 pt-8">
+            <div className="min-h-[calc(100vh-416px)] px-4 pt-8">
               <h1 className="text-center text-3xl">404: Страница не найдена</h1>
             </div>
           ),

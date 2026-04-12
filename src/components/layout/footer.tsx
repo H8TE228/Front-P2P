@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const linkColumns = [
   {
@@ -28,12 +29,12 @@ export function Footer() {
               <ul className="flex flex-col gap-2">
                 {col.links.map((label, index) => (
                   <li key={`${col.title}-${index}`}>
-                    <a
-                      href="#"
+                    <Link
+                      to="#"
                       className="text-sm leading-5 font-normal tracking-normal text-[#62748E] transition-colors hover:text-[#0F172B] dark:text-[#90A1B9] dark:hover:text-[#F1F5F9]"
                     >
                       {label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -51,7 +52,7 @@ export function Footer() {
                   variant="secondary"
                   className="h-10 w-32 rounded-[10px] bg-[#E2E8F0] text-xs leading-4 font-medium text-[#45556C] hover:bg-[#CAD5E2] dark:bg-[#1D293D] dark:text-[#E2E8F0] dark:hover:bg-[#1D293D]/80"
                 >
-                  <a href="#">App Store</a>
+                  <Link to="#">App Store</Link>
                 </Button>
               </li>
               <li>
@@ -60,7 +61,7 @@ export function Footer() {
                   variant="secondary"
                   className="h-10 w-32 rounded-[10px] bg-[#E2E8F0] text-xs leading-4 font-medium text-[#45556C] hover:bg-[#CAD5E2] dark:bg-[#1D293D] dark:text-[#E2E8F0] dark:hover:bg-[#1D293D]/80"
                 >
-                  <a href="#">Google Play</a>
+                  <Link to="#">Google Play</Link>
                 </Button>
               </li>
             </ul>
@@ -71,12 +72,12 @@ export function Footer() {
           <p className="text-xs leading-4 font-normal tracking-normal text-[#90A1B9] dark:text-[#62748E]">
             © 2026 ВещьВокруг
           </p>
-          <a
-            href="#"
+          <Link
+            to="#"
             className="text-xs leading-4 font-normal tracking-normal text-[#90A1B9] transition-colors hover:text-[#62748E] dark:text-[#62748E] dark:hover:text-[#90A1B9]"
           >
             Пользовательское соглашение
-          </a>
+          </Link>
         </div>
       </div>
     </footer>
