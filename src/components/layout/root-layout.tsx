@@ -2,17 +2,14 @@ import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import { CatalogMegaMenu } from "./catalog-mega-menu";
 import { Footer } from "./footer";
-import { SiteHeader } from "./header";
+import { Header } from "./header";
 
 export function RootLayout() {
   const [catalogOpen, setCatalogOpen] = useState(false);
 
   return (
     <>
-      <SiteHeader
-        catalogOpen={catalogOpen}
-        onCatalogOpenChange={setCatalogOpen}
-      />
+      <Header catalogOpen={catalogOpen} onCatalogOpenChange={setCatalogOpen} />
       <Outlet />
       <Footer />
       <CatalogMegaMenu

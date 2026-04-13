@@ -13,13 +13,12 @@ const PLACE_OPTIONS = [
   {
     id: "coown",
     title: "Предложить для совладения",
-    description:
-      "Найдите партнеров для совместной покупки или использования.",
+    description: "Найдите партнеров для совместной покупки или использования.",
     to: "/",
   },
 ];
 
-export function PlaceListingMenu() {
+export function ListingMenu() {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -38,7 +37,8 @@ export function PlaceListingMenu() {
       }
     };
     document.addEventListener("pointerdown", onPointerDown, true);
-    return () => document.removeEventListener("pointerdown", onPointerDown, true);
+    return () =>
+      document.removeEventListener("pointerdown", onPointerDown, true);
   }, [open, close]);
 
   useEffect(() => {
@@ -80,10 +80,10 @@ export function PlaceListingMenu() {
                 onClick={close}
                 className="block p-3 text-left no-underline transition-colors hover:bg-[#F9FAFB] dark:hover:bg-[#1D293D]/40"
               >
-                <span className="block text-base font-medium leading-6 text-[#0F172B] dark:text-[#F1F5F9]">
+                <span className="block text-base leading-5 font-medium text-[#0F172B] dark:text-[#F1F5F9]">
                   {option.title}
                 </span>
-                <span className="mt-1 block text-xs font-normal leading-4 text-[#62748E] dark:text-[#90A1B9]">
+                <span className="mt-1 block text-xs leading-4 font-normal text-[#62748E] dark:text-[#90A1B9]">
                   {option.description}
                 </span>
               </Link>
