@@ -15,16 +15,8 @@ import {
   Star,
   Tent,
   Tv,
+  Wrench,
   Zap,
-  Heart,
-  MessageSquare,
-  Search,
-  User,
-  Menu,
-  MapPin,
-  ChevronDown,
-  ChevronRight,
-  TrendingUp,
   Shield,
 } from "lucide-react";
 import listingPlaceholder from "@/assets/react.svg";
@@ -64,10 +56,10 @@ export const CATALOG_CATEGORIES = [
     icon: Smartphone,
     sub: [
       "Смартфоны",
-      "Планшеты",
-      "Ноутбуки",
       "Игровые приставки",
+      "Планшеты",
       "Наушники",
+      "Ноутбуки",
       "Умные часы",
     ],
   },
@@ -100,7 +92,7 @@ export const CATALOG_CATEGORIES = [
   {
     id: "tools",
     name: "Инструменты и ремонт",
-    icon: PenTool,
+    icon: Wrench,
     sub: [
       "Дрели и шуруповерты",
       "Перфораторы",
