@@ -1,4 +1,4 @@
-import { Star } from "lucide-react";
+﻿import { Star } from "lucide-react";
 import { formatRubAmount, reviewsLabel } from "@/lib/format-listing";
 import { cn } from "@/lib/utils";
 import type { Listing } from "@/types";
@@ -25,7 +25,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
       <div className="relative w-full">
         <img
           src={listing.imageSrc}
-          alt=""
+          alt={listing.title}
           className="aspect-square w-full rounded-[14px] border border-[#E2E8F0] object-cover dark:border-[#1D293D]"
         />
         {listing.tag === "coownership" ? (
@@ -45,7 +45,6 @@ export function ListingCard({ listing }: { listing: Listing }) {
             {priceStr}
           </span>
           <span className="text-sm leading-5 font-normal tracking-normal text-[#62748E] dark:text-[#90A1B9]">
-            {" "}
             / {suffix}
           </span>
         </p>
@@ -56,7 +55,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
 
         <div className="mt-2 flex flex-wrap items-center gap-x-1 text-xs leading-4">
           <Star
-            className="size-3.5 shrink-0 fill-[#CAD5E2] text-[#CAD5E2] dark:fill-[#45556C] dark:text-[#45556C]"
+            className="size-3.5 shrink-0 fill-[#F5B400] text-[#F5B400]"
             aria-hidden
           />
           <span className="font-medium text-[#314158] dark:text-[#CAD5E2]">

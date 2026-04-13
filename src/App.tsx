@@ -1,6 +1,6 @@
 import { RootLayout } from "@/components";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { HomePage, LoginPage, RegisterPage } from "@/pages";
+import { CatalogPage, HomePage, LoginPage, RegisterPage } from "@/pages";
 import cats from "@/assets/cats.png";
 
 function App() {
@@ -11,6 +11,10 @@ function App() {
         {
           path: "/",
           Component: HomePage,
+        },
+        {
+          path: "/catalog",
+          Component: CatalogPage,
         },
         {
           path: "/login",

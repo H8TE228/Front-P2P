@@ -8,12 +8,12 @@ export function PopularCategoriesSection() {
         <h2 className="text-2xl leading-8 font-bold tracking-[-0.6px] text-[#0F172B] dark:text-[#F1F5F9]">
           Популярные категории
         </h2>
-        <button
-          type="button"
+        <Link
+          to="/catalog"
           className="shrink-0 cursor-pointer border-0 bg-transparent text-sm leading-5 font-medium tracking-normal text-[#155DFC] transition-opacity hover:opacity-80 dark:text-[#51A2FF]"
         >
           Все категории
-        </button>
+        </Link>
       </div>
 
       <div className="mt-6 grid w-full grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8">

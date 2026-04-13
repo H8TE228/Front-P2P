@@ -95,7 +95,7 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
                   {selected.name}
                 </h2>
                 <Link
-                  to="/"
+                  to="/catalog"
                   onClick={onClose}
                   className="inline-flex items-center gap-0.5 text-sm font-medium text-[#155DFC] hover:underline dark:text-[#60A5FA]"
                 >
