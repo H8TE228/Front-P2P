@@ -1,6 +1,7 @@
 import { RootLayout } from "@/components";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { HomePage, LoginPage, RegisterPage } from "@/pages";
+import cats from "@/assets/cats.png";
 
 function App() {
   const router = createBrowserRouter([
@@ -22,8 +23,12 @@ function App() {
         {
           path: "*",
           element: (
-            <div className="min-h-[calc(100vh-416px)] px-4 pt-8">
-              <h1 className="text-center text-3xl">404: Страница не найдена</h1>
+            <div className="flex min-h-[calc(100vh-416px)] flex-col items-center px-4 pt-8">
+              <img
+                src={cats}
+                alt="404котики"
+                className="max-h-100 rounded-xl opacity-90 shadow-xl"
+              />
             </div>
           ),
         },
