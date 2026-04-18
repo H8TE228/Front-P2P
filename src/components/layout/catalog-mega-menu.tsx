@@ -56,34 +56,47 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
               const Icon = cat.icon;
               const isSelected = index === selectedIndex;
               return (
-                <button
+                <div
                   key={cat.id}
-                  type="button"
-                  onClick={() => setSelectedIndex(index)}
                   className={cn(
-                    "flex w-full cursor-pointer items-center gap-3 py-2.5 pr-5 pl-5 text-left text-sm leading-5 font-medium transition-colors hover:bg-blue-200",
-                    isSelected
-                      ? "relative z-[1] text-[#155DFC] shadow-[0_1px_2px_-1px_rgba(0,0,0,0.1),0_1px_3px_0_rgba(0,0,0,0.1)] dark:text-[#60A5FA]"
-                      : "text-[#314158] dark:text-[#CBD5E1]",
+                    "flex w-full items-stretch",
+                    isSelected &&
+                      "relative z-[1] shadow-[0_1px_2px_-1px_rgba(0,0,0,0.1),0_1px_3px_0_rgba(0,0,0,0.1)]",
                   )}
                 >
-                  <Icon
+                  <button
+                    type="button"
+                    onClick={() => setSelectedIndex(index)}
                     className={cn(
-                      "size-4 shrink-0",
-                      isSelected
-                        ? "text-[#155DFC] dark:text-[#60A5FA]"
-                        : "text-[#90A1B9]",
+                      "flex min-w-0 flex-1 cursor-pointer items-center gap-3 py-2.5 pl-5 text-left text-sm leading-5 font-medium transition-colors hover:bg-blue-200",
+                      isSelected ? "pr-2 text-[#155DFC] dark:text-[#60A5FA]" : "pr-5 text-[#314158] dark:text-[#CBD5E1]",
                     )}
-                    strokeWidth={2}
-                  />
-                  <span className="min-w-0 flex-1 truncate">{cat.name}</span>
-                  {isSelected ? (
-                    <ChevronRight
-                      className="size-4 shrink-0 text-[#155DFC] dark:text-[#60A5FA]"
+                  >
+                    <Icon
+                      className={cn(
+                        "size-4 shrink-0",
+                        isSelected
+                          ? "text-[#155DFC] dark:text-[#60A5FA]"
+                          : "text-[#90A1B9]",
+                      )}
                       strokeWidth={2}
                     />
+                    <span className="min-w-0 flex-1 truncate">{cat.name}</span>
+                  </button>
+                  {isSelected ? (
+                    <Link
+                      to={`/category/${cat.id}`}
+                      onClick={onClose}
+                      className="inline-flex shrink-0 items-center pr-5"
+                      aria-label={`Открыть ${cat.name}`}
+                    >
+                      <ChevronRight
+                        className="size-4 shrink-0 text-[#155DFC] dark:text-[#60A5FA]"
+                        strokeWidth={2}
+                      />
+                    </Link>
                   ) : null}
-                </button>
+                </div>
               );
             })}
           </nav>
@@ -95,7 +108,7 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
                   {selected.name}
                 </h2>
                 <Link
-                  to="/"
+                  to={`/category/${selected.id}`}
                   onClick={onClose}
                   className="inline-flex items-center gap-0.5 text-sm font-medium text-[#155DFC] hover:underline dark:text-[#60A5FA]"
                 >
@@ -111,7 +124,7 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
                     className="flex h-7 cursor-pointer px-2 py-1 hover:rounded-sm hover:bg-blue-100"
                   >
                     <Link
-                      to="/"
+                      to={`/category/${selected.id}`}
                       onClick={onClose}
                       className="w-full text-sm font-medium text-[#314158] decoration-transparent transition-colors hover:text-[#155DFC] dark:text-[#CBD5E1] dark:hover:text-[#60A5FA]"
                     >
