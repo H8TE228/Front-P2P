@@ -1,6 +1,6 @@
 import { RootLayout } from "@/components/layout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { HomePage, Test } from "@/pages";
+import { CategoryPage, HomePage, Test } from "@/pages";
 
 function App() {
   const router = createBrowserRouter([
@@ -14,6 +14,10 @@ function App() {
         {
           path: "/test",
           Component: Test,
+        },
+        {
+          path: "/category/:categoryId",
+          Component: CategoryPage,
         },
         {
           path: "*",

@@ -78,10 +78,16 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
                 />
                 <span className="min-w-0 flex-1 truncate">{cat.name}</span>
                 {isSelected ? (
-                  <ChevronRight
-                    className="size-4 shrink-0 text-[#155DFC] dark:text-[#60A5FA]"
-                    strokeWidth={2}
-                  />
+                  <Link
+                    to={`/category/${cat.id}`}
+                    onClick={onClose}
+                    className="inline-flex shrink-0 items-center"
+                  >
+                    <ChevronRight
+                      className="size-4 shrink-0 text-[#155DFC] dark:text-[#60A5FA]"
+                      strokeWidth={2}
+                    />
+                  </Link>
                 ) : null}
               </button>
             );
@@ -95,7 +101,7 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
                 {selected.name}
               </h2>
               <Link
-                to="/"
+                to={`/category/${selected.id}`}
                 onClick={onClose}
                 className="inline-flex items-center gap-0.5 text-sm font-medium text-[#155DFC] hover:underline dark:text-[#60A5FA]"
               >
@@ -108,7 +114,7 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
               {selected.sub.map((sub) => (
                 <li key={sub}>
                   <Link
-                    to="/"
+                    to={`/category/${selected.id}`}
                     onClick={onClose}
                     className="text-sm font-medium text-[#314158] decoration-transparent transition-colors hover:text-[#155DFC] dark:text-[#CBD5E1] dark:hover:text-[#60A5FA]"
                   >
