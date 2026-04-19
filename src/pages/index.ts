@@ -4,3 +4,6 @@ export { RegisterPage } from "./register-page";
 export { CatalogPage } from "./catalog-page";
 export { ProfilePage } from "./profile-page";
 export { ProfileEditPage } from "./profile-edit-page";
+export { FavoritePage } from "./favorite-page";
+export { MessagesPage } from "./messages-page";
+export { ListingFormPage } from "./listing-form-page";

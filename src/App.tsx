@@ -2,8 +2,11 @@ import { RootLayout } from "@/components";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {
   CatalogPage,
+  FavoritePage,
   HomePage,
+  ListingFormPage,
   LoginPage,
+  MessagesPage,
   ProfileEditPage,
   ProfilePage,
   RegisterPage,
@@ -38,12 +41,12 @@ function App() {
           children: [
             {
               path: "/listing-form",
-              // Component: ListingFormPage,
+              Component: ListingFormPage,
             },
             { path: "profile", Component: ProfilePage },
             { path: "profile/edit", Component: ProfileEditPage },
-            // { path: "favorite", Component: FavoritePage },
-            // { path: "messages", Component: MessagesPage },
+            { path: "favorite", Component: FavoritePage },
+            { path: "messages", Component: MessagesPage },
           ],
         },
 
