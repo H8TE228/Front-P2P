@@ -3,3 +3,4 @@ export { useLogin } from "./use-login";
 export { useRegister } from "./use-register";
 export { useProducts } from "./use-products";
 export { useProfile } from "./use-profile";
+export { useUpdateProfile } from "./use-update-profile";

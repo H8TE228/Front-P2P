@@ -55,8 +55,9 @@ export function ProfilePage() {
             </div>
             <div className="flex w-full max-w-40 flex-col justify-between">
               <Button
-                className="h-10 rounded-2xl border border-[#E2E8F0] bg-white shadow-sm"
+                className="h-10 rounded-2xl border shadow-sm"
                 onClick={() => navigate("/profile/edit")}
+                variant="outline"
               >
                 <Pen className="size-4" />
                 Редактировать

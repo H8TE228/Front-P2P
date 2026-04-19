@@ -4,6 +4,7 @@ import {
   CatalogPage,
   HomePage,
   LoginPage,
+  ProfileEditPage,
   ProfilePage,
   RegisterPage,
 } from "@/pages";
@@ -40,6 +41,7 @@ function App() {
               // Component: ListingFormPage,
             },
             { path: "profile", Component: ProfilePage },
+            { path: "profile/edit", Component: ProfileEditPage },
             // { path: "favorite", Component: FavoritePage },
             // { path: "messages", Component: MessagesPage },
           ],

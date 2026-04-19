@@ -21,4 +21,8 @@ export const authQueries = {
     const res = await api.get<any>("/auth/profile/");
     return res.data;
   },
+  updateProfile: async (userData: unknown) => {
+    const res = await api.patch("/auth/profile/", userData);
+    return res.data;
+  },
 };
