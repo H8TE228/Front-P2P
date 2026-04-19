@@ -30,7 +30,9 @@ const formSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   phoneNumber: z.string(),
-  agreeToTerms: z.boolean(),
+  agreeToTerms: z.boolean().refine((val) => val === true, {
+    message: "Необходимо принять условия",
+  }),
 });
 
 export function RegisterForm({
@@ -49,7 +51,7 @@ export function RegisterForm({
       confirmPassword: "",
       firstName: "",
       lastName: "",
-      phoneNumber: "",
+      phoneNumber: "+7",
       agreeToTerms: false,
     },
   });
@@ -69,7 +71,10 @@ export function RegisterForm({
       form.reset();
     } catch (error) {
       if (error instanceof AxiosError) {
-        setError(error.response?.data.error);
+        setError(
+          Object.values(error.response?.data).join(" ") ??
+            "Непредвиденная ошибка",
+        );
       } else {
         setError("Ошибка при регистрации. Пожалуйста, попробуйте еще раз.");
       }
@@ -184,6 +189,16 @@ export function RegisterForm({
                       type="tel"
                       placeholder="+79081234567"
                       required
+                      onChange={(e) => {
+                        let value = e.target.value;
+                        if (!value.startsWith("+7")) {
+                          value = "+7";
+                        }
+                        value =
+                          "+7" + value.slice(2).replace(/\D/g, "").slice(0, 10);
+
+                        field.onChange(value);
+                      }}
                       className="h-11 rounded-2xl border-[#e2e8f5] bg-[#f9fbff] px-4 text-base text-[#1f2a44] placeholder:text-[#9aabc7]"
                     />
                     {fieldState.invalid && (
@@ -318,8 +333,9 @@ export function RegisterForm({
 
             <div className="mt-8 flex flex-col items-center gap-6">
               <Button
-                className="h-13 w-full rounded-2xl bg-[#dfe7f4] text-base font-semibold text-[#6f86a8] shadow-none hover:bg-[#d2ddee]"
+                className="h-13 w-full rounded-2xl text-base font-semibold shadow-none hover:bg-[#0f4ae0]"
                 type="submit"
+                variant="blue"
                 disabled={isPending}
               >
                 Зарегистрироваться

@@ -51,7 +51,7 @@ export function LoginForm({
       navigate("/profile");
     } catch (error) {
       if (error instanceof AxiosError) {
-        setError(error.response?.data ?? "ошибка");
+        setError(error.response?.data.detail ?? "Непредвиденная ошибка");
       } else {
         setError("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
       }
@@ -143,8 +143,9 @@ export function LoginForm({
 
             <div className="mt-8 flex flex-col items-center gap-6">
               <Button
-                className="h-13 w-full rounded-2xl bg-[#dfe7f4] text-base font-semibold text-[#6f86a8] shadow-none hover:bg-[#d2ddee]"
+                className="h-13 w-full rounded-2xl text-base font-semibold shadow-none hover:bg-[#0f4ae0]"
                 type="submit"
+                variant="blue"
                 disabled={isPending}
               >
                 Войти
