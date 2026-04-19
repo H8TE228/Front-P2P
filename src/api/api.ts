@@ -1,3 +1,5 @@
+import { store } from "@/store";
+import { logout, setTokens } from "@/store/auth-slice";
 import axios from "axios";
 
 export const api = axios.create({
@@ -10,7 +12,7 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken"); // пока так
+    const token = localStorage.getItem("access"); // пока так
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -19,45 +21,36 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// api.interceptors.response.use(
-//   (res) => res,
-//   async (err) => {
-//     const originalRequest = err.config;
+api.interceptors.response.use(
+  (res) => res,
+  async (err) => {
+    const originalRequest = err.config;
 
-//     const isPublicEndpoint = publicEndpoints.some((endpoint) =>
-//       originalRequest.url?.includes(endpoint)
-//     );
+    if (err.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-//     if (isPublicEndpoint) {
-//       return Promise.reject(err);
-//     }
+      try {
+        const refresh = localStorage.getItem("refresh");
+        if (!refresh) throw new Error("Нет refresh токена");
 
-//     if (err.response?.status === 401 && !originalRequest._retry) {
-//       originalRequest._retry = true;
+        const { data } = await axios.post("/api/v1/auth/login/refresh/", {
+          refresh,
+        });
+        store.dispatch(setTokens(data));
+        localStorage.setItem("refresh", data.refresh);
+        localStorage.setItem("access", data.access);
+        originalRequest.headers["Authorization"] = `Bearer ${data.access}`;
 
-//       try {
-//         const refresh = localStorage.getItem("refresh");
-//         if (!refresh) throw new Error("Нет refresh токена");
+        return api(originalRequest);
+      } catch (e) {
+        store.dispatch(logout());
+        localStorage.removeItem("refresh");
+        localStorage.removeItem("access");
+        localStorage.removeItem("user");
+        return Promise.reject(e);
+      }
+    }
 
-//         const { data } = await axios.post<IRefreshResponseData>(
-//           "/api/v1/auth/login/refresh/",
-//           { refresh },
-//         );
-//         store.dispatch(setToken({ access: data.access }));
-//         localStorage.setItem("refresh", data.refresh);
-//         localStorage.setItem("access", data.access);
-//         originalRequest.headers["Authorization"] = `Bearer ${data.access}`;
-
-//         return api(originalRequest);
-//       } catch (e) {
-//         store.dispatch(logout());
-//         localStorage.removeItem("refresh");
-//         localStorage.removeItem("access");
-//         localStorage.removeItem("user");
-//         return Promise.reject(e);
-//       }
-//     }
-
-//     return Promise.reject(err);
-//   },
-// );
+    return Promise.reject(err);
+  },
+);

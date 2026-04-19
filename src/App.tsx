@@ -1,7 +1,14 @@
 import { RootLayout } from "@/components";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { CatalogPage, HomePage, LoginPage, RegisterPage } from "@/pages";
+import {
+  CatalogPage,
+  HomePage,
+  LoginPage,
+  ProfilePage,
+  RegisterPage,
+} from "@/pages";
 import cats from "@/assets/cats.png";
+import { PrivateOnlyRoute, PublicOnlyRoute } from "./features";
 
 function App() {
   const router = createBrowserRouter([
@@ -16,18 +23,26 @@ function App() {
           path: "/catalog",
           Component: CatalogPage,
         },
+
         {
-          path: "/login",
-          Component: LoginPage,
+          element: <PublicOnlyRoute />,
+          children: [
+            { path: "/login", Component: LoginPage },
+            { path: "/register", Component: RegisterPage },
+          ],
         },
+
         {
-          path: "/register",
-          Component: RegisterPage,
+          element: <PrivateOnlyRoute />,
+          children: [
+            {
+              path: "/listing-form",
+              // Component: ListingFormPage,
+            },
+            { path: "profile", Component: ProfilePage },
+          ],
         },
-        {
-          path: "/listing-form",
-          // Component: ListingFormPage,
-        },
+
         {
           path: "*",
           element: (

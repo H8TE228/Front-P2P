@@ -44,9 +44,9 @@ function ThemeHeaderToggle() {
 }
 
 const navItems = [
-  { icon: Heart, label: "Избранное" },
-  { icon: MessageCircle, label: "Сообщения" },
-  { icon: User, label: "Профиль" },
+  { icon: Heart, label: "Избранное", to: "/favorite" },
+  { icon: MessageCircle, label: "Сообщения", to: "/messages" },
+  { icon: User, label: "Профиль", to: "/profile" },
 ];
 
 type SiteHeaderProps = {
@@ -105,10 +105,11 @@ export function Header({ catalogOpen, onCatalogOpenChange }: SiteHeaderProps) {
             <ThemeHeaderToggle />
 
             <nav className="hidden items-center gap-4 lg:flex">
-              {navItems.map(({ icon: Icon, label }) => (
+              {navItems.map(({ icon: Icon, label, to }) => (
                 <button
                   key={label}
                   className="flex min-w-[56px] cursor-pointer flex-col items-center gap-2 px-0.5 py-0.5 text-[#62748E] transition-colors hover:text-[#0F172B] dark:text-[#90A1B9] dark:hover:text-[#F1F5F9]"
+                  onClick={() => navigate(to)}
                 >
                   <Icon className="size-5 shrink-0" strokeWidth={2} />
                   <span className="max-w-[4.5rem] text-center text-[10px] leading-tight font-medium tracking-normal">
