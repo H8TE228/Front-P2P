@@ -1,5 +1,6 @@
 import { Camera, Shield } from "lucide-react";
 import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 const outerShadow =
   "shadow-[0_1px_2px_-1px_rgba(0,0,0,0.1),0_1px_3px_0_rgba(0,0,0,0.1)]";
@@ -7,6 +8,8 @@ const tiltedShadow =
   "shadow-[0_8px_10px_-6px_rgba(0,0,0,0.1),0_20px_25px_-5px_rgba(0,0,0,0.1)]";
 
 export function SafeListingCtaSection() {
+  const navigate = useNavigate();
+
   return (
     <section
       className={`mt-16 w-full rounded-3xl border border-[#E2E8F0] bg-white ${outerShadow} dark:border-[#1D293D] dark:bg-[#0F172B]`}
@@ -35,6 +38,9 @@ export function SafeListingCtaSection() {
           <Button
             variant="blue"
             className="mt-8 h-12 rounded-xl px-6 text-base font-medium tracking-normal"
+            onClick={() => {
+              navigate("/listing-form");
+            }}
           >
             Разместить объявление
           </Button>

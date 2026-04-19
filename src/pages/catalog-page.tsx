@@ -256,7 +256,7 @@ export function CatalogPage() {
   };
 
   return (
-    <main className="mx-auto min-h-[calc(100vh-416px)] max-w-[1280px] px-4 py-8">
+    <main className="mx-auto max-w-[1280px] px-4 py-8">
       <div className="flex items-center gap-2 text-sm text-gray-400">
         <Link
           to="/"

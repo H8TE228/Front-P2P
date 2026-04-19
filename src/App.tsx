@@ -25,9 +25,13 @@ function App() {
           Component: RegisterPage,
         },
         {
+          path: "/listing-form",
+          // Component: ListingFormPage,
+        },
+        {
           path: "*",
           element: (
-            <div className="flex min-h-[calc(100vh-416px)] flex-col items-center px-4 pt-8">
+            <div className="flex flex-col items-center px-4 pt-8">
               <img
                 src={cats}
                 alt="404котики"

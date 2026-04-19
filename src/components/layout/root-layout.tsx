@@ -10,7 +10,9 @@ export function RootLayout() {
   return (
     <>
       <Header catalogOpen={catalogOpen} onCatalogOpenChange={setCatalogOpen} />
-      <Outlet />
+      <div className="min-h-[calc(100vh-416px)]">
+        <Outlet />
+      </div>
       <Footer />
       <CatalogMegaMenu
         open={catalogOpen}

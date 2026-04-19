@@ -3,7 +3,7 @@ import { REG_LOGIN_TEXT } from "@/constants";
 
 export function RegisterPage() {
   return (
-    <main className="min-h-[calc(100vh-416px)] bg-[#f5f7fb] px-4 py-6 md:px-6 md:py-10">
+    <main className="bg-[#f5f7fb] px-4 py-6 md:px-6 md:py-10">
       <div className="mx-auto grid w-full max-w-[1240px] overflow-hidden rounded-[36px] border border-white/70 bg-white shadow-lg lg:grid-cols-[1.15fr_0.85fr]">
         <section className="relative flex min-h-[720px] flex-col justify-between bg-[#f9fbfd] px-8 py-8 md:px-12 md:py-12">
           <div>

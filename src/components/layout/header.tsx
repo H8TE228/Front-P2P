@@ -9,14 +9,12 @@ import {
   Menu,
   MessageCircle,
   Moon,
-  Search,
   Sun,
   User,
 } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SearchInput } from "../search";
-import { ListingMenu } from "./listing-menu";
 
 function ThemeHeaderToggle() {
   const { theme, setTheme } = useTheme();
@@ -57,6 +55,7 @@ type SiteHeaderProps = {
 };
 
 export function Header({ catalogOpen, onCatalogOpenChange }: SiteHeaderProps) {
+  const navigate = useNavigate();
   const [city, setCity] = useState("Екатеринбург");
 
   return (
@@ -119,7 +118,14 @@ export function Header({ catalogOpen, onCatalogOpenChange }: SiteHeaderProps) {
               ))}
             </nav>
 
-            <ListingMenu />
+            <Button
+              type="button"
+              variant="blue"
+              onClick={() => navigate("/listing-form")}
+              className="h-9 rounded-[10px] px-4"
+            >
+              Разместить
+            </Button>
           </div>
         </div>
       </div>
