@@ -18,7 +18,7 @@ export const authQueries = {
   //   return res.data;
   // },
   profile: async () => {
-    const res = await api.get<unknown>("/auth/profile/");
+    const res = await api.get<any>("/auth/profile/");
     return res.data;
   },
 };

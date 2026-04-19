@@ -45,6 +45,66 @@ const parseMultiValueParam = (
   return fallback ? fallback.split(",").filter(Boolean) : [];
 };
 
+export const listings = {
+  results: [
+    {
+      id: "1",
+      tag: "rent",
+      imageSrc: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
+      priceRub: 1200,
+      price: { kind: "per_day" },
+      title: "iPhone 14 Pro",
+      rating: 4.8,
+      reviewsCount: 128,
+      location: "Москва, центр",
+    },
+    {
+      id: "2",
+      tag: "coownership",
+      imageSrc: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
+      priceRub: 45000,
+      price: { kind: "share", percent: 25 },
+      title: "MacBook Pro M2",
+      rating: 4.9,
+      reviewsCount: 64,
+      location: "Санкт-Петербург",
+    },
+    {
+      id: "3",
+      tag: "rent",
+      imageSrc: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
+      priceRub: 800,
+      price: { kind: "per_day" },
+      title: "Sony WH-1000XM5",
+      rating: 4.7,
+      reviewsCount: 210,
+      location: "Казань",
+    },
+    {
+      id: "4",
+      tag: "rent",
+      imageSrc: "https://images.unsplash.com/photo-1518770660439-4636190af475",
+      priceRub: 300,
+      price: { kind: "per_day" },
+      title: "Nintendo Switch",
+      rating: 4.6,
+      reviewsCount: 89,
+      location: "Екатеринбург",
+    },
+    {
+      id: "5",
+      tag: "coownership",
+      imageSrc: "https://images.unsplash.com/photo-1526948128573-703ee1aeb6fa",
+      priceRub: 90000,
+      price: { kind: "share", percent: 40 },
+      title: "PlayStation 5",
+      rating: 4.9,
+      reviewsCount: 340,
+      location: "Новосибирск",
+    },
+  ],
+};
+
 export function CatalogPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -95,70 +155,6 @@ export function CatalogPage() {
   );
 
   // убрать потом
-  const listings = {
-    results: [
-      {
-        id: "1",
-        tag: "rent",
-        imageSrc:
-          "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
-        priceRub: 1200,
-        price: { kind: "per_day" },
-        title: "iPhone 14 Pro",
-        rating: 4.8,
-        reviewsCount: 128,
-        location: "Москва, центр",
-      },
-      {
-        id: "2",
-        tag: "coownership",
-        imageSrc:
-          "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
-        priceRub: 45000,
-        price: { kind: "share", percent: 25 },
-        title: "MacBook Pro M2",
-        rating: 4.9,
-        reviewsCount: 64,
-        location: "Санкт-Петербург",
-      },
-      {
-        id: "3",
-        tag: "rent",
-        imageSrc:
-          "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
-        priceRub: 800,
-        price: { kind: "per_day" },
-        title: "Sony WH-1000XM5",
-        rating: 4.7,
-        reviewsCount: 210,
-        location: "Казань",
-      },
-      {
-        id: "4",
-        tag: "rent",
-        imageSrc:
-          "https://images.unsplash.com/photo-1518770660439-4636190af475",
-        priceRub: 300,
-        price: { kind: "per_day" },
-        title: "Nintendo Switch",
-        rating: 4.6,
-        reviewsCount: 89,
-        location: "Екатеринбург",
-      },
-      {
-        id: "5",
-        tag: "coownership",
-        imageSrc:
-          "https://images.unsplash.com/photo-1526948128573-703ee1aeb6fa",
-        priceRub: 90000,
-        price: { kind: "share", percent: 40 },
-        title: "PlayStation 5",
-        rating: 4.9,
-        reviewsCount: 340,
-        location: "Новосибирск",
-      },
-    ],
-  };
 
   // это потом убрать и юзать реальные данные с бэка
   const categories = {

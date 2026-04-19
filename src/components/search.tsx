@@ -6,6 +6,7 @@ import { useProducts } from "@/hooks";
 import { Search } from "lucide-react";
 import { X } from "lucide-react";
 
+// надо починить серч
 export function SearchInput({
   onSelect,
   className,

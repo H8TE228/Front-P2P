@@ -49,19 +49,21 @@ export function Footer() {
               <li>
                 <Button
                   asChild
+                  disabled
                   variant="secondary"
                   className="h-10 w-32 rounded-[10px] bg-[#E2E8F0] text-xs leading-4 font-medium text-[#45556C] hover:bg-[#CAD5E2] dark:bg-[#1D293D] dark:text-[#E2E8F0] dark:hover:bg-[#1D293D]/80"
                 >
-                  <Link to="#">App Store</Link>
+                  <Link to="#">App Store (нет)</Link>
                 </Button>
               </li>
               <li>
                 <Button
                   asChild
+                  disabled
                   variant="secondary"
                   className="h-10 w-32 rounded-[10px] bg-[#E2E8F0] text-xs leading-4 font-medium text-[#45556C] hover:bg-[#CAD5E2] dark:bg-[#1D293D] dark:text-[#E2E8F0] dark:hover:bg-[#1D293D]/80"
                 >
-                  <Link to="#">Google Play</Link>
+                  <Link to="#">Google Play (нет)</Link>
                 </Button>
               </li>
             </ul>

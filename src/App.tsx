@@ -40,6 +40,8 @@ function App() {
               // Component: ListingFormPage,
             },
             { path: "profile", Component: ProfilePage },
+            // { path: "favorite", Component: FavoritePage },
+            // { path: "messages", Component: MessagesPage },
           ],
         },
 

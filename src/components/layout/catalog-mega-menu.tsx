@@ -1,7 +1,7 @@
 import { CATALOG_CATEGORIES } from "@/constants/constants";
 import { cn } from "@/lib/utils";
 import { ChevronRight, CornerUpRight, Sparkles } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 type CatalogMegaMenuProps = {
@@ -11,6 +11,7 @@ type CatalogMegaMenuProps = {
 
 export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const ref = useRef(null);
 
   const handleEscape = useCallback(
     (event: KeyboardEvent) => {
@@ -41,6 +42,7 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
     <div className="pointer-events-none fixed inset-x-0 top-16 z-[75]">
       <div className="mx-auto w-full max-w-[1280px] px-4">
         <div
+          ref={ref}
           className={cn(
             "pointer-events-auto flex max-h-[min(578px,calc(100vh-5rem))] w-full max-w-[1160px] flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_8px_10px_-6px_rgba(0,0,0,0.1),0_20px_25px_-5px_rgba(0,0,0,0.1)] md:flex-row",
             "dark:border-[#1D293D] dark:bg-[#0F172B]",
