@@ -4,6 +4,7 @@ import {
   CatalogPage,
   FavoritePage,
   HomePage,
+  ItemDetailPage,
   ListingFormPage,
   LoginPage,
   MessagesPage,
@@ -26,6 +27,10 @@ function App() {
         {
           path: "/catalog",
           Component: CatalogPage,
+        },
+        {
+          path: "/item/:id",
+          Component: ItemDetailPage,
         },
 
         {

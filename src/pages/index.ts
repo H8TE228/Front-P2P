@@ -7,3 +7,4 @@ export { ProfileEditPage } from "./profile-edit-page";
 export { FavoritePage } from "./favorite-page";
 export { MessagesPage } from "./messages-page";
 export { ListingFormPage } from "./listing-form-page";
+export { ItemDetailPage } from "./item-detail-page";
