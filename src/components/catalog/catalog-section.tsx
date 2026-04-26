@@ -1,4 +1,3 @@
-import { MOCK_LISTINGS } from "@/constants";
 import { ListingCard } from "./listing-card";
 
 // Потом скорее всего переименовать в РекомендуемВамСекшн

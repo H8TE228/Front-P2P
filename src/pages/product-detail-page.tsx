@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 
 import { ListingCard } from "@/components";
-import { MOCK_LISTINGS } from "@/constants";
 import {
   Card,
   CardContent,
