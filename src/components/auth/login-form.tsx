@@ -48,7 +48,7 @@ export function LoginForm({
     try {
       setError("");
       await login(data);
-      navigate("/profile");
+      navigate("/my-profile");
     } catch (error) {
       if (error instanceof AxiosError) {
         setError(error.response?.data.detail ?? "Непредвиденная ошибка");

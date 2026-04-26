@@ -10,9 +10,10 @@ export function CatalogSection() {
       </h2>
 
       <div className="mt-6 grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {MOCK_LISTINGS.map((listing) => (
-          <ListingCard key={listing.id} listing={listing} />
-        ))}
+        {/* {MOCK_LISTINGS.map((product) => (
+          <ListingCard key={product.id} product={product} />
+        ))} */}
+        тут будет система рекомендаций
       </div>
     </section>
   );

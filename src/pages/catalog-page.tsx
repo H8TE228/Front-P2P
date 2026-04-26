@@ -1,4 +1,5 @@
-﻿import { ListingCard } from "@/components";
+﻿import type { Item } from "@/api/schema";
+import { ListingCard } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,21 +17,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useProducts } from "@/hooks";
-import { ChevronRight, SlidersHorizontal, X } from "lucide-react";
+import { useCategories, useProducts } from "@/hooks";
+import { ChevronRight, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router-dom";
 
 type FormValues = {
   category: string;
-  price__gt: string;
-  price__lt: string;
+  min_price: string;
+  max_price: string;
   deal_type: string[];
   condition: string[];
 };
 
-const PAGE_SIZE = 32;
+const dealTypes = [
+  { value: "any", label: "Любой тип" },
+  { value: "rent", label: "Только аренда" },
+  { value: "coownership", label: "Совместное владение" },
+];
+
+const conditions = [
+  { value: "new", label: "Новое" },
+  { value: "used", label: "Б/у" },
+];
 
 const parseMultiValueParam = (
   searchParams: URLSearchParams,
@@ -45,75 +55,16 @@ const parseMultiValueParam = (
   return fallback ? fallback.split(",").filter(Boolean) : [];
 };
 
-export const listings = {
-  results: [
-    {
-      id: "1",
-      tag: "rent",
-      imageSrc: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
-      priceRub: 1200,
-      price: { kind: "per_day" },
-      title: "iPhone 14 Pro",
-      rating: 4.8,
-      reviewsCount: 128,
-      location: "Москва, центр",
-    },
-    {
-      id: "2",
-      tag: "coownership",
-      imageSrc: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
-      priceRub: 45000,
-      price: { kind: "share", percent: 25 },
-      title: "MacBook Pro M2",
-      rating: 4.9,
-      reviewsCount: 64,
-      location: "Санкт-Петербург",
-    },
-    {
-      id: "3",
-      tag: "rent",
-      imageSrc: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
-      priceRub: 800,
-      price: { kind: "per_day" },
-      title: "Sony WH-1000XM5",
-      rating: 4.7,
-      reviewsCount: 210,
-      location: "Казань",
-    },
-    {
-      id: "4",
-      tag: "rent",
-      imageSrc: "https://images.unsplash.com/photo-1518770660439-4636190af475",
-      priceRub: 300,
-      price: { kind: "per_day" },
-      title: "Nintendo Switch",
-      rating: 4.6,
-      reviewsCount: 89,
-      location: "Екатеринбург",
-    },
-    {
-      id: "5",
-      tag: "coownership",
-      imageSrc: "https://images.unsplash.com/photo-1526948128573-703ee1aeb6fa",
-      priceRub: 90000,
-      price: { kind: "share", percent: 40 },
-      title: "PlayStation 5",
-      rating: 4.9,
-      reviewsCount: 340,
-      location: "Новосибирск",
-    },
-  ],
-};
-
 export function CatalogPage() {
+  const PAGE_SIZE = 32;
   const [searchParams, setSearchParams] = useSearchParams();
   const [filtersOpen, setFiltersOpen] = useState(false);
   const productsRef = useRef<HTMLDivElement | null>(null);
 
   const page = Number(searchParams.get("page")) || 1;
   const category = searchParams.get("category") || "";
-  const price__gt = searchParams.get("price__gt") || "";
-  const price__lt = searchParams.get("price__lt") || "";
+  const min_price = searchParams.get("min_price") || "";
+  const max_price = searchParams.get("max_price") || "";
   const sort = searchParams.get("sort") || "";
   const dealTypeKey = searchParams.getAll("deal_type").join(",");
   const conditionKey = searchParams.getAll("condition").join(",");
@@ -126,73 +77,51 @@ export function CatalogPage() {
     [conditionKey],
   );
 
-  const { handleSubmit, reset, control } = useForm<FormValues>({
-    defaultValues: {
-      category,
-      price__gt,
-      price__lt,
-      deal_type,
-      condition,
-    },
-  });
-
-  useEffect(() => {
-    reset({ category, price__gt, price__lt, deal_type, condition });
-  }, [category, price__gt, price__lt, deal_type, condition, reset]);
-
   const productsQuery = useMemo(
     () => ({
       page,
       page_size: PAGE_SIZE,
       category_name: category || undefined,
-      price__gt: price__gt || undefined,
-      price__lt: price__lt || undefined,
+      min_price: min_price || undefined,
+      max_price: max_price || undefined,
       deal_type: deal_type.length > 0 ? deal_type : undefined,
       condition: condition.length > 0 ? condition : undefined,
       ordering: sort || undefined,
     }),
-    [page, category, price__gt, price__lt, deal_type, condition, sort],
+    [page, category, min_price, max_price, deal_type, condition, sort],
   );
 
-  // убрать потом
-
-  // это потом убрать и юзать реальные данные с бэка
-  const categories = {
-    results: [
-      { id: 1, name: "Электроника" },
-      { id: 2, name: "Одежда" },
-      { id: 3, name: "Книги" },
-      { id: 4, name: "Дом и сад" },
-      { id: 5, name: "Спорт и отдых" },
-    ],
-  };
-
-  const dealTypes = [
-    { value: "any", label: "Любой тип" },
-    { value: "rent", label: "Только аренда" },
-    { value: "coownership", label: "Совместное владение" },
-  ];
-
-  const conditions = [
-    { value: "new", label: "Новое" },
-    { value: "used", label: "Б/у" },
-  ];
-
   const { data, isLoading } = useProducts(productsQuery);
+  const { data: categoriesData } = useCategories();
 
-  const products = listings?.results ?? [];
+  const products = data?.results ?? [];
+  const categories = categoriesData?.results ?? [];
   const totalPages = data ? Math.ceil(data.count / PAGE_SIZE) : 1;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [page]);
 
+  const { handleSubmit, reset, control } = useForm<FormValues>({
+    defaultValues: {
+      category,
+      min_price,
+      max_price,
+      deal_type,
+      condition,
+    },
+  });
+
+  useEffect(() => {
+    reset({ category, min_price, max_price, deal_type, condition });
+  }, [category, min_price, max_price, deal_type, condition, reset]);
+
   const onSubmit = (values: FormValues) => {
     const params = new URLSearchParams();
 
     if (values.category) params.set("category", values.category);
-    if (values.price__gt) params.set("price__gt", values.price__gt);
-    if (values.price__lt) params.set("price__lt", values.price__lt);
+    if (values.min_price) params.set("min_price", values.min_price);
+    if (values.max_price) params.set("max_price", values.max_price);
     values.deal_type.forEach((value) => params.append("deal_type", value));
     values.condition.forEach((value) => params.append("condition", value));
     params.set("page", "1");
@@ -281,7 +210,7 @@ export function CatalogPage() {
           Все товары
         </button>
 
-        {categories?.results.map((c: any) => (
+        {categories?.map((c: any) => (
           <button
             key={c.id}
             type="button"
@@ -353,7 +282,7 @@ export function CatalogPage() {
                 <div className="flex items-center gap-2">
                   <Controller
                     control={control}
-                    name="price__gt"
+                    name="min_price"
                     render={({ field }) => {
                       return (
                         <Input
@@ -368,7 +297,7 @@ export function CatalogPage() {
                   {"-"}
                   <Controller
                     control={control}
-                    name="price__lt"
+                    name="max_price"
                     render={({ field }) => (
                       <Input
                         {...field}
@@ -467,7 +396,7 @@ export function CatalogPage() {
             {isLoading && <div>Загрузка...</div>}
 
             {!isLoading &&
-              products.map((p: any) => <ListingCard key={p.id} listing={p} />)}
+              products.map((p: Item) => <ListingCard key={p.id} product={p} />)}
           </div>
 
           {!isLoading && products.length === 0 && (

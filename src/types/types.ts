@@ -1,3 +1,5 @@
+import type { Category, Item, User } from "@/api/schema";
+
 export type Theme = "dark" | "light" | "system";
 
 export type ThemeProviderProps = {
@@ -11,20 +13,22 @@ export type ThemeProviderState = {
   setTheme: (theme: Theme) => void;
 };
 
-export type ListingTag = "rent" | "coownership";
+export interface ILoginResponse {
+  access: string;
+  refresh: string;
+  user: User;
+}
 
-export type ListingPrice =
-  | { kind: "per_day" }
-  | { kind: "share"; percent: number };
+export interface IProductsResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Item[];
+}
 
-export type Listing = {
-  id: string;
-  tag: ListingTag;
-  imageSrc: string;
-  priceRub: number;
-  price: ListingPrice;
-  title: string;
-  rating: number;
-  reviewsCount: number;
-  location: string;
-};
+export interface ICategoriesResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Category[];
+}

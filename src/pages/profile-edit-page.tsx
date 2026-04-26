@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { useProfile, useUpdateProfile } from "@/hooks";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { listings } from "./catalog-page";
 import z from "zod";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -44,7 +43,7 @@ export function ProfileEditPage() {
     try {
       setError("");
       await updateProfile(data);
-      navigate("/profile");
+      navigate("/my-profile");
     } catch (error) {
       if (error instanceof AxiosError) {
         setError(error.response?.data.detail ?? "Непредвиденная ошибка");
@@ -219,7 +218,7 @@ export function ProfileEditPage() {
               <Button
                 variant="outline"
                 className="h-10 rounded-2xl border shadow-sm"
-                onClick={() => navigate("/profile")}
+                onClick={() => navigate("/my-profile")}
               >
                 <ArrowLeft className="size-4" />
                 Назад
@@ -257,7 +256,7 @@ export function ProfileEditPage() {
 
         <section className="grid min-h-104 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {listings?.results.map((p: any) => (
-            <ListingCard key={p.id} listing={p} />
+            <ListingCard key={p.id} product={p} />
           ))}
         </section>
       </div>

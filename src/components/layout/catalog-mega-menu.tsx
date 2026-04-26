@@ -11,7 +11,7 @@ type CatalogMegaMenuProps = {
 
 export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   const handleEscape = useCallback(
     (event: KeyboardEvent) => {
@@ -26,7 +26,9 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
     if (!open) {
       return;
     }
+
     window.addEventListener("keydown", handleEscape);
+
     return () => {
       window.removeEventListener("keydown", handleEscape);
     };
@@ -39,12 +41,12 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
   const selected = CATALOG_CATEGORIES[selectedIndex];
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-16 z-[75]">
-      <div className="mx-auto w-full max-w-[1280px] px-4">
+    <div className="absolute top-full left-0 z-90 mt-2">
+      <div className="w-screen max-w-[1280px]">
         <div
           ref={ref}
           className={cn(
-            "pointer-events-auto flex max-h-[min(578px,calc(100vh-5rem))] w-full max-w-[1160px] flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_8px_10px_-6px_rgba(0,0,0,0.1),0_20px_25px_-5px_rgba(0,0,0,0.1)] md:flex-row",
+            "flex max-h-[min(578px,calc(100vh-5rem))] w-full max-w-[1160px] flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_8px_10px_-6px_rgba(0,0,0,0.1),0_20px_25px_-5px_rgba(0,0,0,0.1)] md:flex-row",
             "dark:border-[#1D293D] dark:bg-[#0F172B]",
           )}
         >

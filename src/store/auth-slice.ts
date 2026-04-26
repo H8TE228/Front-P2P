@@ -1,10 +1,12 @@
+import type { User } from "@/api/schema";
+import type { ILoginResponse } from "@/types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface IAuthState {
   isAuth: boolean;
   accessToken: string | null;
   refreshToken: string | null;
-  user: object | null;
+  user: User | null;
 }
 
 const initialState: IAuthState = {
@@ -18,10 +20,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    login(
-      state,
-      action: PayloadAction<{ access: string; refresh: string; user: object }>,
-    ) {
+    login(state, action: PayloadAction<ILoginResponse>) {
       state.isAuth = true;
       state.accessToken = action.payload.access;
       state.refreshToken = action.payload.refresh;

@@ -1,8 +1,9 @@
 import { CityPickerMenu } from "./city-picker-menu";
+import { CatalogMegaMenu } from "./catalog-mega-menu";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks";
-import type { Theme } from "@/types";
 import { cn } from "@/lib/utils";
+import type { Theme } from "@/types";
 import {
   Heart,
   Laptop,
@@ -12,9 +13,9 @@ import {
   Sun,
   User,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { SearchInput } from "../search";
+import { SearchInput } from "./search";
 
 function ThemeHeaderToggle() {
   const { theme, setTheme } = useTheme();
@@ -46,17 +47,35 @@ function ThemeHeaderToggle() {
 const navItems = [
   { icon: Heart, label: "Избранное", to: "/favorite" },
   { icon: MessageCircle, label: "Сообщения", to: "/messages" },
-  { icon: User, label: "Профиль", to: "/profile" },
+  { icon: User, label: "Профиль", to: "/my-profile" },
 ];
 
-type SiteHeaderProps = {
-  catalogOpen: boolean;
-  onCatalogOpenChange: (open: boolean) => void;
-};
-
-export function Header({ catalogOpen, onCatalogOpenChange }: SiteHeaderProps) {
+export function Header() {
   const navigate = useNavigate();
   const [city, setCity] = useState("Екатеринбург");
+  const [catalogOpen, setCatalogOpen] = useState(false);
+  const catalogAreaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!catalogOpen) {
+      return;
+    }
+
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      const target = event.target;
+      if (target instanceof Node && !catalogAreaRef.current?.contains(target)) {
+        setCatalogOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+    };
+  }, [catalogOpen]);
 
   return (
     <header className="bg-header relative z-[100] box-border flex h-16 w-full items-center border-b border-[#E5E7EB] dark:border-[#1D293D]">
@@ -75,11 +94,14 @@ export function Header({ catalogOpen, onCatalogOpenChange }: SiteHeaderProps) {
           </Link>
         </div>
 
-        <div className="flex shrink-0 items-center">
+        <div
+          ref={catalogAreaRef}
+          className="relative flex shrink-0 items-center"
+        >
           <Button
             type="button"
             variant={catalogOpen ? "blue" : "default"}
-            onClick={() => onCatalogOpenChange(!catalogOpen)}
+            onClick={() => setCatalogOpen((open) => !open)}
             className={cn(
               "h-10 rounded-[10px] px-3 text-sm leading-5 font-medium",
               catalogOpen
@@ -90,6 +112,11 @@ export function Header({ catalogOpen, onCatalogOpenChange }: SiteHeaderProps) {
             <Menu className="h-4 w-4 shrink-0" strokeWidth={2} />
             <span className="hidden sm:inline">Каталог</span>
           </Button>
+
+          <CatalogMegaMenu
+            open={catalogOpen}
+            onClose={() => setCatalogOpen(false)}
+          />
         </div>
 
         <div className="flex min-w-0 flex-1 items-center gap-3">

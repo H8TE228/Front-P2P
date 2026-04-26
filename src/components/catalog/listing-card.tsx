@@ -1,73 +1,94 @@
 ﻿import { Star } from "lucide-react";
 import { formatRubAmount, reviewsLabel } from "@/lib/format-listing";
 import { cn } from "@/lib/utils";
-import type { Listing } from "@/types";
 import { Link } from "react-router-dom";
+import type { Item } from "@/api/schema";
 
-const tagCoClass =
-  "rounded-full bg-[#155DFC] px-2.5 py-1 text-[10px] font-bold uppercase leading-[15px] tracking-[0.5px] text-white";
-
-const tagRentClass =
-  "rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[10px] font-bold uppercase leading-[15px] tracking-[0.5px] text-[#314158] dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#CAD5E2]";
-
-export function ListingCard({ listing }: { listing: Listing }) {
-  const priceStr = `${formatRubAmount(listing.priceRub)} ₽`;
-  const suffix =
-    listing.price.kind === "per_day"
-      ? "день"
-      : `доля ${listing.price.percent}%`;
-
-  const ratingStr =
-    listing.rating % 1 === 0 ? `${listing.rating}.0` : String(listing.rating);
+export function ListingCard({ product }: { product: Item }) {
+  // const priceStr = `${formatRubAmount(product.priceRub)} ₽`;
+  // const suffix =
+  //   product.price.kind === "per_day"
+  //     ? "день"
+  //     : `доля ${product.price.percent}%`;
 
   return (
-    <Link to="#" className="flex w-full min-w-0 cursor-pointer flex-col">
+    <Link
+      to={`/product/${product.id}`}
+      className="flex w-full min-w-0 cursor-pointer flex-col"
+    >
       <div className="relative w-full">
         <img
-          src={listing.imageSrc}
-          alt={listing.title}
+          src={
+            product.images![0]?.url ||
+            "https://via.placeholder.com/300?text=No+Image"
+          }
+          alt={product.name}
           className="aspect-square w-full rounded-[14px] border border-[#E2E8F0] object-cover dark:border-[#1D293D]"
         />
-        {listing.tag === "coownership" ? (
-          <span className={cn("absolute top-[13px] left-[13px]", tagCoClass)}>
+        {/* {product.tag === "coownership" ? (
+          <span
+            className={cn(
+              "absolute top-[13px] left-[13px]",
+              "rounded-full bg-[#155DFC] px-2.5 py-1 text-[10px] leading-[15px] font-bold tracking-[0.5px] text-white uppercase",
+            )}
+          >
             Совладение
           </span>
         ) : (
-          <span className={cn("absolute top-[13px] left-[13px]", tagRentClass)}>
+          <span
+            className={cn(
+              "absolute top-[13px] left-[13px]",
+              "rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[10px] leading-[15px] font-bold tracking-[0.5px] text-[#314158] uppercase dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#CAD5E2]",
+            )}
+          >
             Аренда
           </span>
-        )}
+        )} */}
+        <span
+          className={cn(
+            "absolute top-[13px] left-[13px]",
+            "rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[10px] leading-[15px] font-bold tracking-[0.5px] text-[#314158] uppercase dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#CAD5E2]",
+          )}
+        >
+          пока текст
+        </span>
       </div>
 
       <div className="mt-3 flex flex-col">
         <p className="flex flex-wrap items-baseline gap-x-1">
           <span className="text-lg leading-[22.5px] font-bold text-[#0F172B] dark:text-[#F1F5F9]">
-            {priceStr}
+            {product.price
+              ? `${formatRubAmount(Number(product.price))} ₽`
+              : "Цена не указана"}
           </span>
-          <span className="text-sm leading-5 font-normal tracking-normal text-[#62748E] dark:text-[#90A1B9]">
+          {/* <span className="text-sm leading-5 font-normal tracking-normal text-[#62748E] dark:text-[#90A1B9]">
             / {suffix}
-          </span>
+          </span> */}
         </p>
 
         <h3 className="mt-1 text-sm leading-[19.25px] font-medium text-[#0F172B] dark:text-[#F1F5F9]">
-          {listing.title}
+          {product.name}
         </h3>
 
+        <div className="text-muted-foreground mt-1 text-sm leading-[19.25px]">
+          {product.description}
+        </div>
+
         <div className="mt-2 flex flex-wrap items-center gap-x-1 text-xs leading-4">
-          <Star
+          {/* <Star
             className="size-3.5 shrink-0 fill-[#F5B400] text-[#F5B400]"
             aria-hidden
-          />
+          /> */}
           <span className="font-medium text-[#314158] dark:text-[#CAD5E2]">
-            {ratingStr}
+            {/* {ratingStr} */}
           </span>
           <span className="font-normal text-[#62748E] dark:text-[#90A1B9]">
-            · {reviewsLabel(listing.reviewsCount)}
+            {/* · {reviewsLabel(product.reviewsCount)} */}
           </span>
         </div>
 
         <p className="mt-1 text-xs leading-4 font-normal text-[#62748E] dark:text-[#90A1B9]">
-          {listing.location}
+          {/* {product.location} */}
         </p>
       </div>
     </Link>

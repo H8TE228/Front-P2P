@@ -5,3 +5,6 @@ export { useProducts } from "./use-products";
 export { useProfile } from "./use-profile";
 export { useUpdateProfile } from "./use-update-profile";
 export { useProduct } from "./use-product";
+export { useUserProfile } from "./use-user-profile";
+export { useCategories } from "./use-categories";
+export { useCategory } from "./use-category";

@@ -37,7 +37,8 @@ export function CityPickerMenu({ city, onCityChange }: CityPickerMenuProps) {
       }
     };
     document.addEventListener("pointerdown", onPointerDown, true);
-    return () => document.removeEventListener("pointerdown", onPointerDown, true);
+    return () =>
+      document.removeEventListener("pointerdown", onPointerDown, true);
   }, [open, close]);
 
   useEffect(() => {
@@ -63,19 +64,16 @@ export function CityPickerMenu({ city, onCityChange }: CityPickerMenuProps) {
         type="button"
         variant="outline"
         onClick={() => setOpen((value) => !value)}
-        className="h-10 w-36 !justify-start gap-1.5 rounded-[10px] border-[#E5E7EB] bg-[#F9FAFB] px-3 text-left text-sm font-medium leading-5 text-[#1D293D] hover:bg-[#F3F4F6] dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#E2E8F0] dark:hover:bg-[#0F172B]"
+        className="h-10 w-36 !justify-start gap-1.5 rounded-[10px] border-[#E5E7EB] bg-[#F9FAFB] px-3 text-left text-sm leading-5 font-medium text-[#1D293D] hover:bg-[#F3F4F6] dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#E2E8F0] dark:hover:bg-[#0F172B]"
       >
-        <MapPin
-          className="size-4 shrink-0 text-[#155DFC]"
-          strokeWidth={2}
-        />
+        <MapPin className="size-4 shrink-0 text-[#155DFC]" strokeWidth={2} />
         <span className="min-w-0 flex-1 truncate">{city}</span>
       </Button>
 
       {open ? (
         <div
           className={cn(
-            "absolute top-full left-0 z-[110] mt-2 w-80 max-w-[min(320px,calc(100vw-2rem))] rounded-[14px] border border-[#E5E7EB] bg-white p-px shadow-[0_8px_10px_-6px_rgba(0,0,0,0.1),0_20px_25px_-5px_rgba(0,0,0,0.1)]",
+            "absolute top-full left-0 z-110 mt-2 w-80 max-w-[min(320px,calc(100vw-2rem))] rounded-[14px] border border-[#E5E7EB] bg-white p-px shadow-[0_8px_10px_-6px_rgba(0,0,0,0.1),0_20px_25px_-5px_rgba(0,0,0,0.1)]",
             "dark:border-[#1D293D] dark:bg-[#0F172B]",
           )}
         >
@@ -86,7 +84,7 @@ export function CityPickerMenu({ city, onCityChange }: CityPickerMenuProps) {
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Поиск города..."
-                className="h-9 w-full min-w-0 rounded-lg border border-[#E5E7EB] bg-[#F9FAFB] px-3 text-sm leading-5 text-[#0F172B] placeholder:text-[#90A1B9] outline-none focus:border-[#155DFC] focus:ring-1 focus:ring-[#155DFC] dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#F1F5F9] dark:placeholder:text-[#62748E]"
+                className="h-9 w-full min-w-0 rounded-lg border border-[#E5E7EB] bg-[#F9FAFB] px-3 text-sm leading-5 text-[#0F172B] outline-none placeholder:text-[#90A1B9] focus:border-[#155DFC] focus:ring-1 focus:ring-[#155DFC] dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#F1F5F9] dark:placeholder:text-[#62748E]"
               />
             </div>
 
@@ -105,7 +103,7 @@ export function CityPickerMenu({ city, onCityChange }: CityPickerMenuProps) {
             </button>
 
             <div className="px-3 py-2">
-              <p className="text-xs font-medium leading-4 tracking-[0.6px] text-[#90A1B9] uppercase dark:text-[#94A3B8]">
+              <p className="text-xs leading-4 font-medium tracking-[0.6px] text-[#90A1B9] uppercase dark:text-[#94A3B8]">
                 Популярные города
               </p>
               <ul className="mt-2 flex flex-col">
@@ -113,7 +111,7 @@ export function CityPickerMenu({ city, onCityChange }: CityPickerMenuProps) {
                   <li key={name}>
                     <button
                       type="button"
-                      className="w-full rounded-md py-1.5 pr-2 pl-0 text-left text-sm font-medium leading-5 text-[#314158] transition-colors hover:bg-[#F3F4F6] dark:text-[#CBD5E1] dark:hover:bg-[#1D293D]"
+                      className="w-full rounded-md py-1.5 pr-2 pl-0 text-left text-sm leading-5 font-medium text-[#314158] transition-colors hover:bg-[#F3F4F6] dark:text-[#CBD5E1] dark:hover:bg-[#1D293D]"
                       onClick={() => {
                         onCityChange(name);
                         close();

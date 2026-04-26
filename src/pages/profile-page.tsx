@@ -6,7 +6,6 @@ import { logout } from "@/store/auth-slice";
 import { MapPin, MapPinOff, Pen, Shield, Star } from "lucide-react";
 import { DoorClosed } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { listings } from "./catalog-page";
 
 export function ProfilePage() {
   const navigate = useNavigate();
@@ -40,7 +39,7 @@ export function ProfilePage() {
               <span className="text-muted-foreground mb-2 flex gap-5 text-sm">
                 <div className="flex items-center gap-1">
                   <Star className="size-4.5" />
-                  Нет отзывов
+                  {data?.rating || 0}
                 </div>
                 <div className="flex items-center gap-1">
                   <Shield className="size-4.5" />
@@ -56,7 +55,7 @@ export function ProfilePage() {
             <div className="flex w-full max-w-40 flex-col justify-between">
               <Button
                 className="h-10 rounded-2xl border shadow-sm"
-                onClick={() => navigate("/profile/edit")}
+                onClick={() => navigate("/my-profile/edit")}
                 variant="outline"
               >
                 <Pen className="size-4" />
@@ -95,9 +94,9 @@ export function ProfilePage() {
         </section>
 
         <section className="grid min-h-104 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {listings?.results.map((p: any) => (
-            <ListingCard key={p.id} listing={p} />
-          ))}
+          {/* {listings?.results.map((p: any) => (
+            <ListingCard key={p.id} product={p} />
+          ))} */}
         </section>
       </div>
     </main>

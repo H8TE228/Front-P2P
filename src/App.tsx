@@ -4,13 +4,14 @@ import {
   CatalogPage,
   FavoritePage,
   HomePage,
-  ItemDetailPage,
   ListingFormPage,
   LoginPage,
   MessagesPage,
+  ProductDetailPage,
   ProfileEditPage,
   ProfilePage,
   RegisterPage,
+  UserProfilePage,
 } from "@/pages";
 import cats from "@/assets/cats.png";
 import { PrivateOnlyRoute, PublicOnlyRoute } from "./features";
@@ -29,8 +30,12 @@ function App() {
           Component: CatalogPage,
         },
         {
-          path: "/item/:id",
-          Component: ItemDetailPage,
+          path: "/product/:id",
+          Component: ProductDetailPage,
+        },
+        {
+          path: "/profile/:id",
+          Component: UserProfilePage,
         },
 
         {
@@ -48,8 +53,8 @@ function App() {
               path: "/listing-form",
               Component: ListingFormPage,
             },
-            { path: "profile", Component: ProfilePage },
-            { path: "profile/edit", Component: ProfileEditPage },
+            { path: "my-profile", Component: ProfilePage },
+            { path: "my-profile/edit", Component: ProfileEditPage },
             { path: "favorite", Component: FavoritePage },
             { path: "messages", Component: MessagesPage },
           ],
