@@ -1,17 +1,48 @@
 import { ListingCard } from "@/components";
 import { Button } from "@/components/ui/button";
-import { useProfile } from "@/hooks";
+import { useProducts, useProfile } from "@/hooks";
 import { useAppDispatch } from "@/hooks/rtk";
 import { logout } from "@/store/auth-slice";
 import { MapPin, MapPinOff, Pen, Shield, Star } from "lucide-react";
 import { DoorClosed } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { listings } from "./catalog-page";
+import listingPlaceholder from "@/assets/react.svg";
 
 export function ProfilePage() {
   const navigate = useNavigate();
   const { data } = useProfile();
+  const { data: listingsData, isLoading: isListingsLoading } = useProducts({
+    page_size: 200,
+    owner: data?.id,
+  });
   const dispatch = useAppDispatch();
+  const myListingsRaw = Array.isArray((listingsData as any)?.results)
+    ? (listingsData as any).results
+    : [];
+  const myListings = myListingsRaw
+    .filter((item: any) => {
+      const ownerId =
+        typeof item?.owner === "number"
+          ? item.owner
+          : typeof item?.owner?.id === "number"
+            ? item.owner.id
+            : undefined;
+      return data?.id ? ownerId === data.id : true;
+    })
+    .map((item: any) => ({
+      id: String(item.id),
+      tag: "rent" as const,
+      imageSrc:
+        item.images?.find((image: any) => image?.is_main)?.url ||
+        item.images?.[0]?.url ||
+        listingPlaceholder,
+      priceRub: Number(item.price) || 0,
+      price: { kind: "per_day" as const },
+      title: item.name || "Без названия",
+      rating: 0,
+      reviewsCount: 0,
+      location: item.owner?.city || item.category_name || "Локация не указана",
+    }));
 
   return (
     <main className="mx-auto max-w-[1280px] px-4 py-8">
@@ -95,9 +126,14 @@ export function ProfilePage() {
         </section>
 
         <section className="grid min-h-104 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {listings?.results.map((p: any) => (
-            <ListingCard key={p.id} listing={p} />
-          ))}
+          {isListingsLoading ? <div>Загрузка...</div> : null}
+          {!isListingsLoading &&
+            myListings.map((p: any) => <ListingCard key={p.id} listing={p} />)}
+          {!isListingsLoading && myListings.length === 0 ? (
+            <div className="text-muted-foreground col-span-full py-10 text-center">
+              У вас пока нет объявлений
+            </div>
+          ) : null}
         </section>
       </div>
     </main>
