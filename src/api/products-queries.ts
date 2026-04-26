@@ -11,4 +11,8 @@ export const productsQueries = {
     const res = await api.get<ItemDetail>(`/listings/item/${id}`);
     return res.data;
   },
+  getMyProducts: async () => {
+    const res = await api.get<IProductsResponse>(`/listings/item/my/`);
+    return res.data;
+  },
 };

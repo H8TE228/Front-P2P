@@ -11,7 +11,7 @@ type CatalogMegaMenuProps = {
 };
 
 export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef(null);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
   );

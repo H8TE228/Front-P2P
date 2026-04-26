@@ -1,15 +1,17 @@
+import type { Item } from "@/api/schema";
 import { ListingCard } from "@/components";
 import { Button } from "@/components/ui/button";
-import { useProfile } from "@/hooks";
+import { useMyProducts, useProfile } from "@/hooks";
 import { useAppDispatch } from "@/hooks/rtk";
 import { logout } from "@/store/auth-slice";
-import { MapPin, MapPinOff, Pen, Shield, Star } from "lucide-react";
+import { MapPin, Pen, Shield, Star } from "lucide-react";
 import { DoorClosed } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export function ProfilePage() {
   const navigate = useNavigate();
   const { data } = useProfile();
+  const { data: myProducts, isLoading } = useMyProducts();
   const dispatch = useAppDispatch();
 
   return (
@@ -94,9 +96,9 @@ export function ProfilePage() {
         </section>
 
         <section className="grid min-h-104 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {/* {listings?.results.map((p: any) => (
+          {myProducts?.results.map((p: Item) => (
             <ListingCard key={p.id} product={p} />
-          ))} */}
+          ))}
         </section>
       </div>
     </main>

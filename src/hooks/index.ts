@@ -8,3 +8,4 @@ export { useProduct } from "./use-product";
 export { useUserProfile } from "./use-user-profile";
 export { useCategories } from "./use-categories";
 export { useCategory } from "./use-category";
+export { useMyProducts } from "./use-my-products";

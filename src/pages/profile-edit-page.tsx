@@ -1,6 +1,6 @@
 import { ListingCard } from "@/components";
 import { Button } from "@/components/ui/button";
-import { useProfile, useUpdateProfile } from "@/hooks";
+import { useMyProducts, useProfile, useUpdateProfile } from "@/hooks";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import z from "zod";
@@ -15,6 +15,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import type { Item } from "@/api/schema";
 
 const formSchema = z.object({
   first_name: z.string(),
@@ -27,6 +28,7 @@ export function ProfileEditPage() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { data } = useProfile();
+  const { data: myProducts, isLoading } = useMyProducts();
   const { mutateAsync: updateProfile, isPending } = useUpdateProfile();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -255,7 +257,7 @@ export function ProfileEditPage() {
         </section>
 
         <section className="grid min-h-104 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {listings?.results.map((p: any) => (
+          {myProducts?.results.map((p: Item) => (
             <ListingCard key={p.id} product={p} />
           ))}
         </section>

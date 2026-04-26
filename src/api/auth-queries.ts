@@ -34,7 +34,7 @@ export const authQueries = {
     return res.data;
   },
   userProfile: async (id: string) => {
-    const res = await api.get<ProfilePage>(`/auth/profile/${id}/`);
+    const res = await api.get<ProfilePage>(`/auth/users/${id}/`);
     return res.data;
   },
 };
