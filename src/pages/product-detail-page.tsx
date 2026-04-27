@@ -11,6 +11,7 @@ import {
   Shield,
   CircleAlert,
   ChevronRight,
+  SpaceIcon,
 } from "lucide-react";
 
 import { ListingCard } from "@/components";
@@ -163,7 +164,7 @@ export function ProductDetailPage() {
               {product.images?.length === 0 && (
                 <Camera className="h-16 w-16 self-center text-slate-300 dark:text-slate-600" />
               )}
-              {product.images?.length && (
+              {product.images?.length !== 0 && (
                 <Carousel
                   className="relative h-full w-full"
                   setApi={setApi}
@@ -194,9 +195,20 @@ export function ProductDetailPage() {
             </section>
 
             <section className="mb-4">
-              {product.images?.length && (
+              {product.images?.length === 0 && (
+                <button
+                  className={`h-16 w-16 cursor-pointer overflow-hidden rounded-lg border transition`}
+                >
+                  <img
+                    src={"#"}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                </button>
+              )}
+              {product.images?.length !== 0 && (
                 <div className="mt-3 flex gap-2 overflow-x-auto">
-                  {product.images.map((image, index) => {
+                  {product?.images?.map((image, index) => {
                     const isActive = current === index + 1;
 
                     return (
@@ -227,11 +239,11 @@ export function ProductDetailPage() {
               </h2>
             </section>
 
-            <section>
+            <section className="">
               <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-slate-100">
                 Описание
               </h2>
-              <p className="leading-relaxed whitespace-pre-wrap text-slate-700 dark:text-slate-300">
+              <p className="overflow-hidden leading-relaxed wrap-break-word whitespace-pre-wrap text-slate-700 dark:text-slate-300">
                 {product.description || "Описание отсутствует."}
               </p>
             </section>
@@ -240,7 +252,7 @@ export function ProductDetailPage() {
               <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-slate-100">
                 Характеристики
               </h2>
-              <p className="leading-relaxed whitespace-pre-wrap text-slate-700 dark:text-slate-300">
+              <p className="leading-relaxed wrap-break-word whitespace-pre-wrap text-slate-700 dark:text-slate-300">
                 {product.characteristics || "Характеристики отсутствуют."}
               </p>
             </section>

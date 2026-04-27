@@ -15,9 +15,9 @@ export function ProfilePage() {
   const dispatch = useAppDispatch();
 
   return (
-    <main className="mx-auto max-w-[1280px] px-4 py-8">
-      <div className="w-full max-w-[1248px]">
-        <section className="mb-10 flex items-center gap-5 border-b pb-8">
+    <main className="mx-auto max-w-7xl px-4 py-8">
+      <div className="w-full max-w-312">
+        <section className="mb-10 flex h-32 items-center gap-5 border-b pb-8">
           <div className="flex h-20 w-20 shrink-0 items-center justify-center self-start overflow-hidden rounded-full bg-[#e2e8f0]">
             {data?.profile_picture ? (
               <img
@@ -103,6 +103,11 @@ export function ProfilePage() {
           {isMyProductsLoading && (
             <div className="text-muted-foreground col-span-full text-center">
               Загрузка объявлений...
+            </div>
+          )}
+          {!isMyProductsLoading && !myProducts?.results.length && (
+            <div className="text-muted-foreground col-span-full text-center">
+              У вас пока нет объявлений
             </div>
           )}
         </section>

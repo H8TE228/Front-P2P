@@ -6,7 +6,9 @@ import { Navigate, useParams } from "react-router-dom";
 export function UserProfilePage() {
   const { id } = useParams();
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
-  const isOwnProfile = Boolean(id && currentUserId && id === String(currentUserId));
+  const isOwnProfile = Boolean(
+    id && currentUserId && id === String(currentUserId),
+  );
   const { data } = useUserProfile(id ?? "", !isOwnProfile);
 
   if (isOwnProfile) {
@@ -16,7 +18,7 @@ export function UserProfilePage() {
   return (
     <main className="mx-auto max-w-[1280px] px-4 py-8">
       <div className="w-full max-w-[1248px]">
-        <section className="mb-10 flex items-center gap-5 border-b pb-8">
+        <section className="mb-10 flex h-32 items-center gap-5 border-b pb-8">
           {/* <div className="flex h-20 w-20 shrink-0 items-center justify-center self-start overflow-hidden rounded-full bg-[#e2e8f0]">
             {data?.profile_picture ? (
               <img

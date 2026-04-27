@@ -70,7 +70,7 @@ export function ListingCard({ product }: { product: Item }) {
           {product.name}
         </h3>
 
-        <div className="text-muted-foreground mt-1 text-sm leading-[19.25px]">
+        <div className="text-muted-foreground mt-1 line-clamp-2 overflow-hidden text-sm leading-[19.25px] break-words">
           {product.description}
         </div>
 

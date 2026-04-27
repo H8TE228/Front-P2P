@@ -56,8 +56,8 @@ export function ProfileEditPage() {
   }
 
   return (
-    <main className="mx-auto max-w-[1280px] px-4 py-8">
-      <div className="w-full max-w-[1248px]">
+    <main className="mx-auto max-w-7xl px-4 py-8">
+      <div className="w-full max-w-312">
         <section className="mb-10 flex items-center gap-5 border-b pb-8">
           <div className="flex h-20 w-20 shrink-0 items-center justify-center self-start overflow-hidden rounded-full bg-[#e2e8f0]">
             {data?.profile_picture ? (
