@@ -3,7 +3,8 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ProfileItem } from './profileItem';
+
+import type { Item } from "./item";
 
 export interface ProfilePage {
   readonly id: number;
@@ -13,12 +14,19 @@ export interface ProfilePage {
    * @pattern ^[\w.@+-]+$
    */
   username: string;
+  /** @nullable */
+  profile_picture?: string | null;
+  /** @maxLength 150 */
+  first_name?: string;
+  /** @maxLength 150 */
+  last_name?: string;
   /**
    * @maxLength 20
    * @pattern ^\+?1?\d{9,15}$
    */
   phone_number?: string;
-  readonly items: readonly ProfileItem[];
+  /** @maxLength 254 */
+  email: string;
   /** @maxLength 256 */
   country: string;
   /** @maxLength 256 */
@@ -27,4 +35,7 @@ export interface ProfilePage {
   city: string;
   /** @maxLength 256 */
   district: string;
+  readonly rating: string;
+  readonly reviews_count: string;
+  items: Item[];
 }

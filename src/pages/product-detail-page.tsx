@@ -102,7 +102,11 @@ export function ProductDetailPage() {
     },
     product?.type_name && {
       label: product.type_name,
-      to: `/catalog?type=${product.type_name}`,
+      to: `/catalog?category=${product.category_name}&type=${product.type_name}`,
+    },
+    product?.name && {
+      label: product.name,
+      to: `/catalog?category=${product.category_name}&type=${product.type_name}`,
     },
   ].filter(Boolean);
 
@@ -171,7 +175,7 @@ export function ProductDetailPage() {
               {product.images?.length === 0 && (
                 <Camera className="h-16 w-16 self-center text-slate-300 dark:text-slate-600" />
               )}
-              {product.images?.length && (
+              {product.images?.length !== 0 && (
                 <Carousel
                   className="relative h-full w-full"
                   setApi={setApi}

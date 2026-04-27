@@ -1,4 +1,5 @@
 ﻿import type { Item } from "@/api/schema";
+import type { Category } from "@/api/schema";
 import { ListingCard } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,12 +20,13 @@ import {
 } from "@/components/ui/select";
 import { useCategories, useProducts } from "@/hooks";
 import { ChevronRight, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router-dom";
 
 type FormValues = {
   category: string;
+  type: string;
   min_price: string;
   max_price: string;
   deal_type: string[];
@@ -58,11 +60,11 @@ const parseMultiValueParam = (
 export function CatalogPage() {
   const PAGE_SIZE = 32;
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filtersOpen, setFiltersOpen] = useState(false);
   const productsRef = useRef<HTMLDivElement | null>(null);
 
   const page = Number(searchParams.get("page")) || 1;
   const category = searchParams.get("category") || "";
+  const type = searchParams.get("type") || "";
   const min_price = searchParams.get("min_price") || "";
   const max_price = searchParams.get("max_price") || "";
   const sort = searchParams.get("sort") || "";
@@ -82,20 +84,26 @@ export function CatalogPage() {
       page,
       page_size: PAGE_SIZE,
       category_name: category || undefined,
+      type_name: type || undefined,
       min_price: min_price || undefined,
       max_price: max_price || undefined,
       deal_type: deal_type.length > 0 ? deal_type : undefined,
       condition: condition.length > 0 ? condition : undefined,
       ordering: sort || undefined,
     }),
-    [page, category, min_price, max_price, deal_type, condition, sort],
+    [page, category, min_price, max_price, deal_type, condition, sort, type],
   );
 
   const { data, isLoading } = useProducts(productsQuery);
   const { data: categoriesData } = useCategories();
 
   const products = data?.results ?? [];
-  const categories = categoriesData?.results ?? [];
+  const categories: Category[] = categoriesData?.results ?? [];
+  const selectedCategory = useMemo(
+    () => categories.find((item) => item.name === category),
+    [categories, category],
+  );
+  const availableTypes = selectedCategory?.types ?? [];
   const totalPages = data ? Math.ceil(data.count / PAGE_SIZE) : 1;
 
   useEffect(() => {
@@ -105,6 +113,7 @@ export function CatalogPage() {
   const { handleSubmit, reset, control } = useForm<FormValues>({
     defaultValues: {
       category,
+      type,
       min_price,
       max_price,
       deal_type,
@@ -113,13 +122,14 @@ export function CatalogPage() {
   });
 
   useEffect(() => {
-    reset({ category, min_price, max_price, deal_type, condition });
-  }, [category, min_price, max_price, deal_type, condition, reset]);
+    reset({ category, type, min_price, max_price, deal_type, condition });
+  }, [category, type, min_price, max_price, deal_type, condition, reset]);
 
   const onSubmit = (values: FormValues) => {
     const params = new URLSearchParams();
 
     if (values.category) params.set("category", values.category);
+    if (values.category && values.type) params.set("type", values.type);
     if (values.min_price) params.set("min_price", values.min_price);
     if (values.max_price) params.set("max_price", values.max_price);
     values.deal_type.forEach((value) => params.append("deal_type", value));
@@ -128,8 +138,6 @@ export function CatalogPage() {
     if (sort) params.set("sort", sort);
 
     setSearchParams(params);
-    setFiltersOpen(false);
-
     if (window.innerWidth < 1024 && productsRef.current) {
       const top =
         productsRef.current.getBoundingClientRect().top + window.scrollY - 20;
@@ -139,7 +147,6 @@ export function CatalogPage() {
 
   const onReset = () => {
     setSearchParams({});
-    setFiltersOpen(false);
   };
 
   const goToPage = (newPage: number) => {
@@ -164,6 +171,7 @@ export function CatalogPage() {
     else params.delete("category");
 
     params.set("page", "1");
+    params.delete("type");
     setSearchParams(params);
   };
 
@@ -186,6 +194,10 @@ export function CatalogPage() {
     category && {
       label: category,
       to: `/catalog?category=${category}`,
+    },
+    type && {
+      label: type,
+      to: `/catalog?category=${category}&type=${type}`,
     },
   ].filter(Boolean);
 
@@ -252,15 +264,55 @@ export function CatalogPage() {
           <div className="bg-aside-background rounded-2xl p-6 pt-0 pl-0 lg:sticky lg:top-24">
             <div className="mb-4 flex justify-between">
               <h3 className="font-semibold">Фильтры</h3>
-              <button
-                onClick={() => setFiltersOpen(false)}
-                className="cursor-pointer lg:hidden"
-              >
+              <button type="button" className="cursor-pointer lg:hidden">
                 <X />
               </button>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)}>
+              {selectedCategory && (
+                <div className="mb-8 border-b pb-8">
+                  <h4 className="text-muted-foreground mb-3 text-sm font-semibold uppercase">
+                    Тип товара
+                  </h4>
+
+                  <Controller
+                    control={control}
+                    name="type"
+                    render={({ field }) => (
+                      <div className="space-y-3">
+                        <label className="flex cursor-pointer items-center gap-3 text-sm text-[#0F172A]">
+                          <input
+                            type="radio"
+                            name="type"
+                            checked={!field.value}
+                            onChange={() => field.onChange("")}
+                            className="size-4 border border-[#D9E2F2]"
+                          />
+                          Все типы
+                        </label>
+
+                        {availableTypes.map((item) => (
+                          <label
+                            key={item.id}
+                            className="flex cursor-pointer items-center gap-3 text-sm text-[#0F172A]"
+                          >
+                            <input
+                              type="radio"
+                              name="type"
+                              checked={field.value === item.name}
+                              onChange={() => field.onChange(item.name)}
+                              className="size-4 border border-[#D9E2F2]"
+                            />
+                            {item.name}
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  />
+                </div>
+              )}
+
               <div className="mb-8 border-b pb-8">
                 <h4 className="text-muted-foreground mb-3 text-sm font-semibold uppercase">
                   Тип сделки

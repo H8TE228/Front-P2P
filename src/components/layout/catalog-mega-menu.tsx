@@ -53,7 +53,7 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
   return (
     categories.length && (
       <div className="absolute top-full left-0 z-90 mt-2">
-        <div className="w-screen max-w-[1280px]">
+        <div className="w-screen max-w-[1160px]">
           <div
             ref={ref}
             className={cn(
@@ -120,20 +120,20 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
                 </div>
 
                 <ul className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {/* {selectedCategory?.types?.map((type) => (
+                  {selectedCategory?.types?.map((type: any) => (
                     <li
                       key={type.id}
                       className="flex h-7 cursor-pointer px-2 py-1 hover:rounded-sm hover:bg-blue-100"
                     >
                       <Link
-                        to={`/catalog?category=${selectedCategory.id}&type=${type.id}`}
+                        to={`/catalog?category=${selectedCategory.name}&type=${type.name}`}
                         onClick={onClose}
                         className="w-full text-sm font-medium text-[#314158] decoration-transparent transition-colors hover:text-[#155DFC] dark:text-[#CBD5E1] dark:hover:text-[#60A5FA]"
                       >
                         {type.name}
                       </Link>
                     </li>
-                  ))} */}
+                  ))}
                 </ul>
               </div>
 

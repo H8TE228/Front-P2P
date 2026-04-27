@@ -4,16 +4,16 @@
  * OpenAPI spec version: 0.0.0
  */
 
-export interface ItemImage {
-  readonly id: number;
-  item: number;
+export interface PatchedItemImage {
+  readonly id?: number;
+  item?: number;
   /** Изображение предмета */
-  image: string;
+  image?: string;
   /**
    * @maxLength 200
    * @nullable
    */
   alt_text?: string | null;
   is_main?: boolean;
-  readonly created_at: string;
+  readonly created_at?: string;
 }

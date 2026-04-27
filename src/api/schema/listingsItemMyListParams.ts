@@ -3,16 +3,9 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ListingsItemListStatus } from './listingsItemListStatus';
+import type { ListingsItemMyListStatus } from './listingsItemMyListStatus';
 
-export type ListingsItemListParams = {
-category?: number;
-category_name?: string;
-created_at__gte?: string;
-created_at__lte?: string;
-max_price?: number;
-min_price?: number;
-owner?: number;
+export type ListingsItemMyListParams = {
 /**
  * A page number within the paginated result set.
  */
@@ -21,13 +14,11 @@ page?: number;
  * Number of results to return per page.
  */
 page_size?: number;
-search?: string;
 /**
  * * `available` - Доступен
 * `rented` - Сдан
 * `maintenance` - На обслуживании
 * `unavailable` - Недоступен
  */
-status?: ListingsItemListStatus;
-type?: number;
+status?: ListingsItemMyListStatus;
 };

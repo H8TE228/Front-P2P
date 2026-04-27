@@ -1,3 +1,5 @@
+import type { Item } from "@/api/schema";
+import { ListingCard } from "@/components";
 import { useUserProfile } from "@/hooks";
 import { useAppSelector } from "@/hooks/rtk";
 import { MapPin, Shield, Star } from "lucide-react";
@@ -16,8 +18,8 @@ export function UserProfilePage() {
   }
 
   return (
-    <main className="mx-auto max-w-[1280px] px-4 py-8">
-      <div className="w-full max-w-[1248px]">
+    <main className="mx-auto max-w-7xl px-4 py-8">
+      <div className="w-full max-w-312">
         <section className="mb-10 flex h-32 items-center gap-5 border-b pb-8">
           {/* <div className="flex h-20 w-20 shrink-0 items-center justify-center self-start overflow-hidden rounded-full bg-[#e2e8f0]">
             {data?.profile_picture ? (
@@ -71,9 +73,9 @@ export function UserProfilePage() {
         </section>
 
         <section className="grid min-h-104 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {/* {data?.items?.map((p: any) => (
+          {data?.items?.map((p: Item) => (
             <ListingCard key={p.id} product={p} />
-          ))} */}
+          ))}
         </section>
       </div>
     </main>

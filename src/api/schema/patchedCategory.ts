@@ -3,11 +3,13 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
+import type { CategoryType } from './categoryType';
 
 export interface PatchedCategory {
   readonly id?: number;
   /** @maxLength 100 */
   name?: string;
+  readonly types?: readonly CategoryType[];
   readonly created_at?: string;
   readonly updated_at?: string;
 }
