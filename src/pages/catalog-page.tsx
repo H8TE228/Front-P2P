@@ -180,19 +180,40 @@ export function CatalogPage() {
     onChange([...currentValues, value]);
   };
 
+  const breadcrumbs = [
+    { label: "Главная", to: "/" },
+    { label: "Каталог", to: "/catalog" },
+    category && {
+      label: category,
+      to: `/catalog?category=${category}`,
+    },
+  ].filter(Boolean);
+
   return (
-    <main className="mx-auto max-w-[1280px] px-4 py-8">
+    <main className="mx-auto max-w-7xl px-4 py-8">
       <div className="flex items-center gap-2 text-sm text-gray-400">
-        <Link
-          to="/"
-          className="flex items-center text-gray-400 hover:text-gray-600"
-        >
-          <span>Главная</span>
-          <ChevronRight className="size-4 translate-y-px" />
-        </Link>
-        <Link to="/catalog" className="text-black">
-          Каталог
-        </Link>
+        {breadcrumbs.map((item: any, index) => {
+          const isLast = index === breadcrumbs.length - 1;
+
+          return (
+            <div key={item.label} className="flex items-center gap-1">
+              {item.to && !isLast ? (
+                <Link
+                  to={item.to}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <span className="text-black">{item.label}</span>
+              )}
+
+              {!isLast && (
+                <ChevronRight className="size-4 translate-y-px text-gray-400" />
+              )}
+            </div>
+          );
+        })}
       </div>
 
       <h1 className="mt-4 text-3xl font-bold">Каталог</h1>

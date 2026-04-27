@@ -10,6 +10,7 @@ import {
   ArrowRight,
   Shield,
   CircleAlert,
+  ChevronRight,
 } from "lucide-react";
 
 import { ListingCard } from "@/components";
@@ -21,17 +22,111 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useProduct } from "@/hooks";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { useEffect, useState } from "react";
+
+const formatDate = (iso: string) => {
+  const date = new Date(iso);
+
+  const months = [
+    "января",
+    "февраля",
+    "марта",
+    "апреля",
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентября",
+    "октября",
+    "ноября",
+    "декабря",
+  ];
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = months[date.getMonth()];
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${day} ${month} ${hours}:${minutes}`;
+};
 
 export function ProductDetailPage() {
   const { id } = useParams();
   const location = useLocation();
+  const [api, setApi] = useState<any>(null);
+  const [current, setCurrent] = useState(0);
 
   const { data: product } = useProduct(id!);
+  const imgCount = product?.images?.length || 0;
+
+  useEffect(() => {
+    if (!api) return;
+
+    const onSelect = () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    };
+
+    api.on("select", onSelect);
+    onSelect();
+
+    return () => {
+      api.off("select", onSelect);
+    };
+  }, [api]);
+
+  const handleThumbClick = (index: number) => {
+    api?.scrollTo(index);
+  };
+
+  const breadcrumbs = [
+    { label: "Главная", to: "/" },
+    { label: "Каталог", to: "/catalog" },
+    product?.category_name && {
+      label: product.category_name,
+      to: `/catalog?category=${product.category_name}`,
+    },
+    product?.type_name && {
+      label: product.type_name,
+      to: `/catalog?type=${product.type_name}`,
+    },
+  ].filter(Boolean);
 
   return (
     product && (
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:py-8">
-        <div className="mb-6 flex items-center gap-4">
+      <main className="mx-auto max-w-7xl px-4 py-8">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
+          {breadcrumbs.map((item: any, index) => {
+            const isLast = index === breadcrumbs.length - 1;
+
+            return (
+              <div key={item.label} className="flex items-center gap-1">
+                {item.to && !isLast ? (
+                  <Link
+                    to={item.to}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <span className="text-black">{item.label}</span>
+                )}
+
+                {!isLast && (
+                  <ChevronRight className="size-4 translate-y-px text-gray-400" />
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-4 mb-6 flex items-center gap-4">
           <Link
             to={location.state?.from || -1}
             className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600 transition-colors hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-slate-800"
@@ -44,28 +139,87 @@ export function ProductDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          <div className="space-y-8 lg:col-span-2">
-            <section className="relative flex aspect-video items-center justify-center overflow-hidden rounded-3xl bg-slate-100 dark:bg-slate-800">
-              <Camera className="h-16 w-16 text-slate-300 dark:text-slate-600" />
-              {/* {product.images?.map((image) => (
-                <img
-                  key={image.id}
-                  src={image.url}
-                  alt={product.name}
-                  className="h-full w-full object-cover"
-                />
-              ))} */}
-              <div className="absolute right-4 bottom-4 flex gap-2">
+          <div className="space-y-4 lg:col-span-2">
+            <section className="relative flex h-126 items-center justify-center overflow-hidden rounded-3xl bg-slate-100 dark:bg-slate-800">
+              <div className="absolute bottom-2 left-3 z-1000 flex gap-2">
                 <Button
                   variant="outline"
-                  className="rounded-xl px-3 py-1.5 text-xs font-medium"
+                  className="rounded-xl px-3 py-1.5 text-xs font-medium dark:bg-[#1f2937] dark:hover:bg-[#1f2937]/80"
                 >
-                  1 / 5
+                  {current} / {imgCount}
                 </Button>
               </div>
+
+              <div className="absolute top-2 right-3 z-1000 flex gap-2">
+                <Button
+                  variant="outline"
+                  disabled
+                  className="rounded-xl px-3 py-1.5 text-xs font-medium dark:bg-[#1f2937] dark:hover:bg-[#1f2937]/80"
+                >
+                  <Heart />
+                </Button>
+              </div>
+
+              {product.images?.length === 0 && (
+                <Camera className="h-16 w-16 self-center text-slate-300 dark:text-slate-600" />
+              )}
+              {product.images?.length && (
+                <Carousel
+                  className="relative h-full w-full"
+                  setApi={setApi}
+                  orientation="horizontal"
+                >
+                  <CarouselContent className="max-h-126">
+                    {product.images?.map((image) => {
+                      return (
+                        <CarouselItem
+                          key={image.id}
+                          className="max-h-126 basis-full"
+                        >
+                          <img
+                            src={image.url}
+                            alt={product.name}
+                            className="h-full w-full object-cover object-center"
+                          />
+                        </CarouselItem>
+                      );
+                    })}
+                  </CarouselContent>
+                  <div className="absolute right-3 bottom-2 flex h-10 w-17 items-center justify-between rounded-2xl bg-white/70 dark:bg-[#1f2937]">
+                    <CarouselPrevious className="absolute left-0 ml-1" />
+                    <CarouselNext className="absolute right-0 mr-1" />
+                  </div>
+                </Carousel>
+              )}
             </section>
 
-            <section className="mb-4">Слайдер в будущем</section>
+            <section className="mb-4">
+              {product.images?.length && (
+                <div className="mt-3 flex gap-2 overflow-x-auto">
+                  {product.images.map((image, index) => {
+                    const isActive = current === index + 1;
+
+                    return (
+                      <button
+                        key={image.id}
+                        onClick={() => handleThumbClick(index)}
+                        className={`h-16 w-16 cursor-pointer overflow-hidden rounded-lg border transition ${
+                          isActive
+                            ? ""
+                            : "border-transparent opacity-60 hover:opacity-100"
+                        }`}
+                      >
+                        <img
+                          src={image.url}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
 
             <section>
               <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-slate-100">
@@ -82,7 +236,7 @@ export function ProductDetailPage() {
               </p>
             </section>
 
-            <section>
+            <section className="mb-12">
               <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-slate-100">
                 Характеристики
               </h2>
@@ -90,6 +244,8 @@ export function ProductDetailPage() {
                 {product.characteristics || "Характеристики отсутствуют."}
               </p>
             </section>
+
+            <section className="text-muted-foreground text-xs">{`№ ${product.id} | ${formatDate(product.updated_at)}`}</section>
 
             <section>
               <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-slate-100">

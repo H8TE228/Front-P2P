@@ -3,8 +3,8 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { StatusFeaEnum } from './statusFeaEnum';
-import type { ItemImage } from './itemImage';
+import type { StatusFeaEnum } from "./statusFeaEnum";
+import type { ItemImage } from "./itemImage";
 
 export interface Item {
   readonly id: number;
@@ -16,7 +16,7 @@ export interface Item {
   /** @maxLength 200 */
   name: string;
   description: string;
-  characteristics?: unknown;
+  characteristics?: string;
   status?: StatusFeaEnum;
   /** @pattern ^-?\d{0,8}(?:\.\d{0,2})?$ */
   price: string;
