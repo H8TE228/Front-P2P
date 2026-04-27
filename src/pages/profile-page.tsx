@@ -19,6 +19,11 @@ export function ProfilePage() {
   const myListingsRaw = Array.isArray((listingsData as any)?.results)
     ? (listingsData as any).results
     : [];
+  const rawDealFormatMap = localStorage.getItem("listing-deal-format-map");
+  const dealFormatMap: Record<string, "rent" | "coownership"> =
+    rawDealFormatMap && rawDealFormatMap.trim().length > 0
+      ? JSON.parse(rawDealFormatMap)
+      : {};
   const myListings = myListingsRaw
     .filter((item: any) => {
       const ownerId =
@@ -29,20 +34,26 @@ export function ProfilePage() {
             : undefined;
       return data?.id ? ownerId === data.id : true;
     })
-    .map((item: any) => ({
-      id: String(item.id),
-      tag: "rent" as const,
-      imageSrc:
-        item.images?.find((image: any) => image?.is_main)?.url ||
-        item.images?.[0]?.url ||
-        listingPlaceholder,
-      priceRub: Number(item.price) || 0,
-      price: { kind: "per_day" as const },
-      title: item.name || "Без названия",
-      rating: 0,
-      reviewsCount: 0,
-      location: item.owner?.city || item.category_name || "Локация не указана",
-    }));
+    .map((item: any) => {
+      const listingTag = dealFormatMap[String(item.id)] ?? "rent";
+      return {
+        id: String(item.id),
+        tag: listingTag,
+        imageSrc:
+          item.images?.find((image: any) => image?.is_main)?.url ||
+          item.images?.[0]?.url ||
+          listingPlaceholder,
+        priceRub: Number(item.price) || 0,
+        price:
+          listingTag === "coownership"
+            ? ({ kind: "share", percent: 50 } as const)
+            : ({ kind: "per_day" } as const),
+        title: item.name || "Без названия",
+        rating: 0,
+        reviewsCount: 0,
+        location: item.owner?.city || item.category_name || "Локация не указана",
+      };
+    });
 
   return (
     <main className="mx-auto max-w-[1280px] px-4 py-8">

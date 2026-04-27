@@ -42,9 +42,9 @@ type ListingFormValues = {
 };
 
 const statusOptions = [
-  { value: "available", label: "Доступно" },
-  { value: "reserved", label: "Забронировано" },
-  { value: "rented", label: "Сдано" },
+  { value: "new", label: "Новое" },
+  { value: "used_ideal", label: "Б/у, идеальное" },
+  { value: "used_good", label: "Б/у, хорошее" },
 ];
 
 export function ListingFormPage() {
@@ -69,7 +69,7 @@ export function ListingFormPage() {
     defaultValues: {
       name: "",
       type: "",
-      status: "available",
+      status: "new",
       location: "",
       dealFormat: "rent",
       pricePerDay: "",
@@ -80,7 +80,7 @@ export function ListingFormPage() {
     },
   });
 
-  const typeOptions = useMemo(() => {
+  const typeOptions = useMemo<Array<{ value: string; label: string }>>(() => {
     const results = Array.isArray((listingTypesData as any)?.results)
       ? (listingTypesData as any).results
       : [];
@@ -156,15 +156,29 @@ export function ListingFormPage() {
         );
         return;
       }
-      await createListing({
+      const createdListing = await createListing({
         type: parsedType,
         name: data.name,
         description: data.description,
         characteristics: data.characteristics,
-        status: data.status,
+        status: "available",
         price: data.pricePerDay,
         images: [],
       });
+      const createdId =
+        createdListing && typeof createdListing === "object"
+          ? (createdListing as any).id
+          : undefined;
+      if (createdId != null) {
+        const raw = localStorage.getItem("listing-deal-format-map");
+        const parsed =
+          raw && raw.trim().length > 0
+            ? (JSON.parse(raw) as Record<string, "rent" | "coownership">)
+            : {};
+        parsed[String(createdId)] =
+          data.dealFormat === "share" ? "coownership" : "rent";
+        localStorage.setItem("listing-deal-format-map", JSON.stringify(parsed));
+      }
       navigate("/profile");
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -331,11 +345,7 @@ export function ListingFormPage() {
                         <FieldLabel className="text-sm font-bold text-[#0f172b] dark:text-white">
                           Категория
                         </FieldLabel>
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                          modal={false}
-                        >
+                        <Select value={field.value} onValueChange={field.onChange}>
                           <SelectTrigger
                             className="h-[50px]! w-full rounded-[14px]! border-[#e2e8f0] bg-[#f8fafc] px-4 text-base text-[#0f172b] data-placeholder:text-[#90a1b9] dark:border-white/10 dark:bg-[#020618] dark:text-white dark:data-placeholder:text-[#62748e]"
                           >
@@ -365,19 +375,15 @@ export function ListingFormPage() {
                   <Controller
                     name="status"
                     control={form.control}
-                    rules={{ required: "Выберите состояние" }}
+                    rules={{ required: "Выберите состояние товара" }}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel className="text-sm font-bold text-[#0f172b] dark:text-white">
-                          Состояние
+                          Состояние товара
                         </FieldLabel>
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                          modal={false}
-                        >
+                        <Select value={field.value} onValueChange={field.onChange}>
                           <SelectTrigger className="h-[50px]! w-full rounded-[14px]! border-[#e2e8f0] bg-[#f8fafc] px-4 text-base text-[#0f172b] data-placeholder:text-[#90a1b9] dark:border-white/10 dark:bg-[#020618] dark:text-white dark:data-placeholder:text-[#62748e]">
-                            <SelectValue placeholder="Выберите состояние" />
+                            <SelectValue placeholder="Выберите состояние товара" />
                           </SelectTrigger>
                           <SelectContent position="popper">
                             {statusOptions.map((option) => (
