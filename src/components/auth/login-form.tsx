@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, replace, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
 import { ArrowRight } from "lucide-react";
@@ -48,7 +48,7 @@ export function LoginForm({
     try {
       setError("");
       await login(data);
-      navigate("/my-profile");
+      navigate("/my-profile", { replace: true });
     } catch (error) {
       if (error instanceof AxiosError) {
         setError(error.response?.data.detail ?? "Непредвиденная ошибка");

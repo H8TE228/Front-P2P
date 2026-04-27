@@ -1,13 +1,17 @@
-import type { Item, ProfileItem } from "@/api/schema";
-import { ListingCard } from "@/components";
 import { useUserProfile } from "@/hooks";
-import { useAppDispatch } from "@/hooks/rtk";
+import { useAppSelector } from "@/hooks/rtk";
 import { MapPin, Shield, Star } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
 export function UserProfilePage() {
   const { id } = useParams();
-  const { data } = useUserProfile(id!);
+  const currentUserId = useAppSelector((state) => state.auth.user?.id);
+  const isOwnProfile = Boolean(id && currentUserId && id === String(currentUserId));
+  const { data } = useUserProfile(id ?? "", !isOwnProfile);
+
+  if (isOwnProfile) {
+    return <Navigate to="/my-profile" replace />;
+  }
 
   return (
     <main className="mx-auto max-w-[1280px] px-4 py-8">
@@ -40,7 +44,7 @@ export function UserProfilePage() {
               <span className="text-muted-foreground mb-2 flex gap-5 text-sm">
                 <div className="flex items-center gap-1">
                   <Star className="size-4.5" />
-                  {/* {data?.rating || 0} */}
+                  {data?.rating || 0}
                 </div>
                 <div className="flex items-center gap-1">
                   <Shield className="size-4.5" />
@@ -65,9 +69,9 @@ export function UserProfilePage() {
         </section>
 
         <section className="grid min-h-104 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {data?.items?.map((p: any) => (
+          {/* {data?.items?.map((p: any) => (
             <ListingCard key={p.id} product={p} />
-          ))}
+          ))} */}
         </section>
       </div>
     </main>

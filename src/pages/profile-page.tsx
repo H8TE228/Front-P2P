@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 export function ProfilePage() {
   const navigate = useNavigate();
   const { data } = useProfile();
-  const { data: myProducts, isLoading } = useMyProducts();
+  const { data: myProducts, isLoading: isMyProductsLoading } = useMyProducts();
   const dispatch = useAppDispatch();
 
   return (
@@ -96,9 +96,15 @@ export function ProfilePage() {
         </section>
 
         <section className="grid min-h-104 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {myProducts?.results.map((p: Item) => (
-            <ListingCard key={p.id} product={p} />
-          ))}
+          {!isMyProductsLoading &&
+            myProducts?.results.map((p: Item) => (
+              <ListingCard key={p.id} product={p} />
+            ))}
+          {isMyProductsLoading && (
+            <div className="text-muted-foreground col-span-full text-center">
+              Загрузка объявлений...
+            </div>
+          )}
         </section>
       </div>
     </main>
