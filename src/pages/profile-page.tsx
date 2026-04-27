@@ -98,7 +98,7 @@ export function ProfilePage() {
         <section className="grid min-h-104 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {!isMyProductsLoading &&
             myProducts?.results.map((p: Item) => (
-              <ListingCard key={p.id} product={p} />
+              <ListingCard key={p.id} product={p} isMine={true} />
             ))}
           {isMyProductsLoading && (
             <div className="text-muted-foreground col-span-full text-center">

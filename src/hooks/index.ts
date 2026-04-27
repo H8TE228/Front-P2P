@@ -11,3 +11,4 @@ export { useCategory } from "./use-category";
 export { useMyProducts } from "./use-my-products";
 export { useCreateListing } from "./use-create-listing";
 export { useListingTypes } from "./use-listing-types";
+export { useDeleteProduct } from "./use-delete-product";

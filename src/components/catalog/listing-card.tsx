@@ -1,10 +1,18 @@
-﻿import { Star } from "lucide-react";
+﻿import { Star, Trash } from "lucide-react";
 import { formatRubAmount, reviewsLabel } from "@/lib/format-listing";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import type { Item } from "@/api/schema";
+import { useDeleteProduct } from "@/hooks";
 
-export function ListingCard({ product }: { product: Item }) {
+export function ListingCard({
+  product,
+  isMine,
+}: {
+  product: Item;
+  isMine?: boolean;
+}) {
+  const { mutate, isPending } = useDeleteProduct();
   // const priceStr = `${formatRubAmount(product.priceRub)} ₽`;
   // const suffix =
   //   product.price.kind === "per_day"
@@ -14,7 +22,7 @@ export function ListingCard({ product }: { product: Item }) {
   return (
     <Link
       to={`/product/${product.id}`}
-      className="flex w-full min-w-0 cursor-pointer flex-col"
+      className="flex w-full min-w-0 cursor-pointer flex-col rounded-xl p-2 transition-all hover:shadow-sm"
     >
       <div className="relative w-full">
         <img
@@ -52,6 +60,22 @@ export function ListingCard({ product }: { product: Item }) {
         >
           пока текст
         </span>
+        {isMine && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const isConfirmed = window.confirm("Удалить товар?");
+
+              if (!isConfirmed) return;
+
+              mutate(String(product.id));
+            }}
+            className="absolute top-[13px] right-[13px] rounded-2xl bg-red-400 p-1.5 shadow transition-all hover:cursor-pointer hover:bg-red-600"
+          >
+            <Trash />
+          </button>
+        )}
       </div>
 
       <div className="mt-3 flex flex-col">

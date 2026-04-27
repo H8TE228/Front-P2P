@@ -48,7 +48,7 @@ export function FavoritePage() {
           </div>
         </section>
 
-        <section className="pt-4">Тут будут любимые категории</section>
+        <section className="pt-4">Тут будут понравившиеся объявления</section>
       </div>
     </main>
   );

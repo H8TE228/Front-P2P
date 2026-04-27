@@ -32,6 +32,13 @@ import {
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
 
+const productStatus = {
+  available: "Доступен",
+  rented: "Сдан",
+  maintenance: "На обслуживании",
+  unavailable: "Недоступен",
+};
+
 const formatDate = (iso: string) => {
   const date = new Date(iso);
 
@@ -164,7 +171,7 @@ export function ProductDetailPage() {
               {product.images?.length === 0 && (
                 <Camera className="h-16 w-16 self-center text-slate-300 dark:text-slate-600" />
               )}
-              {product.images?.length !== 0 && (
+              {product.images?.length && (
                 <Carousel
                   className="relative h-full w-full"
                   setApi={setApi}
@@ -333,7 +340,7 @@ export function ProductDetailPage() {
                       аренда
                     </div>
                     <div className="rounded-lg border-2 border-[#B9F8CF] bg-[#f0fdf4] px-2.5 py-1 text-xs font-semibold text-[#008236] uppercase">
-                      свободно завтра
+                      {productStatus[product.status!]}
                     </div>
                   </div>
                 </div>
