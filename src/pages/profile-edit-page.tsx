@@ -28,7 +28,7 @@ export function ProfileEditPage() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { data } = useProfile();
-  const { data: myProducts, isLoading: isMyProductsLoading } = useMyProducts();
+  // const { data: myProducts, isLoading: isMyProductsLoading } = useMyProducts();
   const { mutateAsync: updateProfile, isPending } = useUpdateProfile();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -58,7 +58,7 @@ export function ProfileEditPage() {
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
       <div className="w-full max-w-312">
-        <section className="mb-10 flex items-center gap-5 border-b pb-8">
+        <section className="mb-10 flex items-center gap-5 pb-8">
           <div className="flex h-20 w-20 shrink-0 items-center justify-center self-start overflow-hidden rounded-full bg-[#e2e8f0]">
             {data?.profile_picture ? (
               <img
@@ -239,7 +239,7 @@ export function ProfileEditPage() {
           </div>
         </section>
 
-        <section className="mb-8">
+        {/* <section className="mb-8">
           <div className="relative flex justify-between border-b">
             <div className="w-41 border-b-3 border-black pb-5">
               <h2 className="text-lg font-semibold">Мои объявления</h2>
@@ -266,7 +266,7 @@ export function ProfileEditPage() {
               Загрузка объявлений...
             </div>
           )}
-        </section>
+        </section> */}
       </div>
     </main>
   );

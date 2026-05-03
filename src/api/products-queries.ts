@@ -16,7 +16,11 @@ export const productsQueries = {
     return res.data;
   },
   createListingItem: async (data: unknown) => {
-    const res = await api.post(`/listings/item/`, data);
+    const res = await api.post(`/listings/item/`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return res.data;
   },
   updateListingItem: async (id: number, data: unknown) => {

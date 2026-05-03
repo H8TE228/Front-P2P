@@ -4,8 +4,8 @@ import { REG_LOGIN_TEXT } from "@/constants";
 export function RegisterPage() {
   return (
     <main className="bg-[#f5f7fb] px-4 py-6 md:px-6 md:py-10">
-      <div className="mx-auto grid w-full max-w-[1240px] overflow-hidden rounded-[36px] border border-white/70 bg-white shadow-lg lg:grid-cols-[1.15fr_0.85fr]">
-        <section className="relative flex min-h-[720px] flex-col justify-between bg-[#f9fbfd] px-8 py-8 md:px-12 md:py-12">
+      <div className="mx-auto grid w-full max-w-310 overflow-hidden rounded-[36px] border border-white/70 bg-white shadow-lg lg:grid-cols-[1.15fr_0.85fr]">
+        <section className="relative flex min-h-180 flex-col justify-between bg-[#f9fbfd] px-8 py-8 md:px-12 md:py-12">
           <div>
             <span className="mb-10 flex size-14 items-center justify-center rounded-2xl bg-[#155DFC] text-white shadow-[0_18px_30px_rgba(47,98,244,0.28)]">
               <span className="box-border size-6 shrink-0 rounded-[6px] border-2 border-white bg-transparent" />

@@ -34,7 +34,6 @@ type FormValues = {
 };
 
 const dealTypes = [
-  { value: "any", label: "Любой тип" },
   { value: "rent", label: "Только аренда" },
   { value: "coownership", label: "Совместное владение" },
 ];
@@ -348,7 +347,7 @@ export function CatalogPage() {
                 />
               </div>
 
-              <div className="mb-8 border-b pb-8">
+              <div className="">
                 <h4 className="text-muted-foreground mb-3 text-sm font-semibold uppercase">
                   Цена, ₽
                 </h4>
@@ -383,7 +382,7 @@ export function CatalogPage() {
                 </div>
               </div>
 
-              <div className="">
+              {/* <div className="">
                 <h4 className="text-muted-foreground mb-3 text-sm font-semibold uppercase">
                   Состояние
                 </h4>
@@ -416,7 +415,7 @@ export function CatalogPage() {
                     </div>
                   )}
                 />
-              </div>
+              </div> */}
 
               <div className="flex flex-col items-center">
                 <Button

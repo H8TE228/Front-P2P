@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
@@ -42,9 +42,10 @@ type ListingFormValues = {
 };
 
 const statusOptions = [
-  { value: "available", label: "Доступно" },
-  { value: "reserved", label: "Забронировано" },
-  { value: "rented", label: "Сдано" },
+  { value: "available", label: "Доступен" },
+  { value: "rented", label: "Сдан" },
+  { value: "maintenance", label: "На обслуживании" },
+  { value: "unavailable", label: "Недоступен" },
 ];
 
 export function ListingFormPage() {
@@ -59,10 +60,18 @@ export function ListingFormPage() {
   );
   const [photoError, setPhotoError] = useState("");
   const [submitError, setSubmitError] = useState("");
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { mutateAsync: createListing, isPending: isCreatingListing } =
     useCreateListing();
-  const { data: listingTypesData } = useListingTypes({ page_size: 200 });
+  const { data: listingTypesData } = useListingTypes();
+
+  useEffect(() => {
+    return () => {
+      photos.forEach((p) => URL.revokeObjectURL(p.preview));
+    };
+  }, []);
+
   const form = useForm<ListingFormValues>({
     mode: "onSubmit",
     reValidateMode: "onChange",
@@ -79,6 +88,7 @@ export function ListingFormPage() {
       agreement: false,
     },
   });
+  const dealFormat = form.watch("dealFormat");
 
   const typeOptions = useMemo(() => {
     const results = Array.isArray((listingTypesData as any)?.results)
@@ -160,15 +170,31 @@ export function ListingFormPage() {
         );
         return;
       }
-      await createListing({
-        type: parsedType,
-        name: data.name,
-        description: data.description,
-        characteristics: data.characteristics,
-        status: data.status,
-        price: data.pricePerDay,
-        images: [],
+
+      const formData = new FormData();
+
+      formData.append("type", String(parsedType));
+      formData.append("name", data.name);
+      formData.append("description", data.description);
+      formData.append("characteristics", data.characteristics);
+      formData.append("status", data.status);
+      formData.append("price", data.pricePerDay);
+
+      photos.forEach((photo) => {
+        formData.append("images", photo.file);
       });
+
+      await createListing(formData);
+
+      // await createListing({
+      //   type: parsedType,
+      //   name: data.name,
+      //   description: data.description,
+      //   characteristics: data.characteristics,
+      //   status: data.status,
+      //   price: data.pricePerDay,
+      //   images: [],
+      // });
       navigate("/my-profile");
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -197,47 +223,44 @@ export function ListingFormPage() {
   }
 
   function processSelectedFiles(fileList: FileList | null) {
-    if (!fileList) {
-      return;
-    }
-    const files = Array.from(fileList);
-    if (files.length === 0) {
-      return;
-    }
+    if (!fileList) return;
 
-    const validMime = new Set(["image/jpeg", "image/png"]);
     const maxSize = 5 * 1024 * 1024;
+    const maxCount = 10;
 
-    const validFiles = files.filter(
-      (file) => validMime.has(file.type) && file.size <= maxSize,
-    );
-    const currentCount = photos.length;
-    const availableSlots = Math.max(0, 10 - currentCount);
-    const filesToAdd = validFiles.slice(0, availableSlots);
+    setPhotos((prev) => {
+      const availableSlots = maxCount - prev.length;
+      if (availableSlots <= 0) return prev;
 
-    if (filesToAdd.length === 0) {
-      setPhotoError(
-        "Можно загрузить только JPEG/PNG до 5 МБ и не более 10 фото.",
-      );
-      return;
-    }
+      const newPhotos = Array.from(fileList)
+        .filter(
+          (file) => file.size <= maxSize && file.type.match("image/(jpeg|png)"),
+        )
+        .slice(0, availableSlots)
+        .map((file) => ({
+          file,
+          preview: URL.createObjectURL(file),
+        }));
 
-    const nextPhotos = filesToAdd.map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-    }));
-    setPhotos((prev) => [...prev, ...nextPhotos]);
-    setPhotoError("");
+      return [...prev, ...newPhotos];
+    });
+  }
 
-    if (filesToAdd.length < files.length) {
-      setPhotoError("Часть файлов пропущена: поддерживаются JPEG/PNG до 5 МБ.");
-    }
+  function removePhoto(index: number) {
+    setPhotos((prev) => {
+      const updated = [...prev];
+
+      URL.revokeObjectURL(updated[index].preview);
+
+      updated.splice(index, 1);
+      return updated;
+    });
   }
 
   const photoSlotsCount = Math.min(10, Math.max(3, photos.length + 1));
 
   return (
-    <main className="min-h-[calc(100vh-80px)] bg-[#f8fafc] px-4 pt-8 pb-10 md:px-6 dark:bg-[#020618]">
+    <main className="bg-[#f8fafc] px-4 pt-8 pb-10 md:px-6 dark:bg-[#020618]">
       <div className="mx-auto w-full max-w-[768px]">
         <div className="flex items-center gap-4">
           <Button
@@ -308,11 +331,15 @@ export function ListingFormPage() {
                   rules={{ required: "Укажите название вещи" }}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel className="text-sm font-bold text-[#0f172b] dark:text-white">
+                      <FieldLabel
+                        htmlFor="name"
+                        className="text-sm font-bold text-[#0f172b] dark:text-white"
+                      >
                         Что это за вещь?
                       </FieldLabel>
                       <Input
                         {...field}
+                        id="name"
                         placeholder="Например: Камера Sony A7 III"
                         className="h-[50px] rounded-[14px] border-[#e2e8f0] bg-[#f8fafc] px-4 text-base text-[#0f172b] placeholder:text-[#90a1b9] dark:border-white/10 dark:bg-[#020618] dark:text-white dark:placeholder:text-[#62748e]"
                       />
@@ -334,15 +361,18 @@ export function ListingFormPage() {
                     rules={{ required: "Выберите категорию" }}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel className="text-sm font-bold text-[#0f172b] dark:text-white">
+                        <FieldLabel
+                          htmlFor="type"
+                          className="text-sm font-bold text-[#0f172b] dark:text-white"
+                        >
                           Категория
                         </FieldLabel>
                         <Select
                           value={field.value}
                           onValueChange={field.onChange}
-                          modal={false}
+                          // modal={false}
                         >
-                          <SelectTrigger className="h-[50px]! w-full rounded-[14px]! border-[#e2e8f0] bg-[#f8fafc] px-4 text-base text-[#0f172b] data-placeholder:text-[#90a1b9] dark:border-white/10 dark:bg-[#020618] dark:text-white dark:data-placeholder:text-[#62748e]">
+                          <SelectTrigger className="h-[50px]! w-full cursor-pointer rounded-[14px]! border-[#e2e8f0] bg-[#f8fafc] px-4 text-base text-[#0f172b] data-placeholder:text-[#90a1b9] dark:border-white/10 dark:bg-[#020618] dark:text-white dark:data-placeholder:text-[#62748e]">
                             <SelectValue
                               placeholder={
                                 typeOptions.length === 0
@@ -352,7 +382,7 @@ export function ListingFormPage() {
                             />
                           </SelectTrigger>
                           <SelectContent position="popper">
-                            {typeOptions.map((option) => (
+                            {typeOptions.map((option: any) => (
                               <SelectItem
                                 key={option.value}
                                 value={option.value}
@@ -381,9 +411,9 @@ export function ListingFormPage() {
                         <Select
                           value={field.value}
                           onValueChange={field.onChange}
-                          modal={false}
+                          // modal={false}
                         >
-                          <SelectTrigger className="h-[50px]! w-full rounded-[14px]! border-[#e2e8f0] bg-[#f8fafc] px-4 text-base text-[#0f172b] data-placeholder:text-[#90a1b9] dark:border-white/10 dark:bg-[#020618] dark:text-white dark:data-placeholder:text-[#62748e]">
+                          <SelectTrigger className="h-12.5! w-full cursor-pointer rounded-[14px]! border-[#e2e8f0] bg-[#f8fafc] px-4 text-base text-[#0f172b] data-placeholder:text-[#90a1b9] dark:border-white/10 dark:bg-[#020618] dark:text-white dark:data-placeholder:text-[#62748e]">
                             <SelectValue placeholder="Выберите состояние" />
                           </SelectTrigger>
                           <SelectContent position="popper">
@@ -411,13 +441,17 @@ export function ListingFormPage() {
                   rules={{ required: "Укажите местоположение" }}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel className="text-sm font-bold text-[#0f172b] dark:text-white">
+                      <FieldLabel
+                        htmlFor="location"
+                        className="text-sm font-bold text-[#0f172b] dark:text-white"
+                      >
                         Местоположение
                       </FieldLabel>
                       <div className="relative">
                         <MapPin className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-[#90a1b9] dark:text-[#62748e]" />
                         <Input
                           {...field}
+                          id="location"
                           placeholder="Город, улица, дом"
                           className="h-[50px] rounded-[14px] border-[#e2e8f0] bg-[#f8fafc] pr-14 pl-10 text-base text-[#0f172b] placeholder:text-[#90a1b9] dark:border-white/10 dark:bg-[#020618] dark:text-white dark:placeholder:text-[#62748e]"
                         />
@@ -462,8 +496,10 @@ export function ListingFormPage() {
                           <button
                             key={option.value}
                             type="button"
-                            onClick={() => field.onChange(option.value)}
-                            className={`flex min-h-[116px] items-start gap-4 rounded-2xl border bg-[#f8fafc] px-5 py-5 text-left transition-colors dark:bg-[#020618] ${
+                            onClick={() => {
+                              field.onChange(option.value);
+                            }}
+                            className={`flex min-h-[116px] cursor-pointer items-start gap-4 rounded-2xl border bg-[#f8fafc] px-5 py-5 text-left transition-colors dark:bg-[#020618] ${
                               checked
                                 ? "border-[#155dfc] shadow-[0_0_0_1px_rgba(37,99,235,0.10)]"
                                 : "border-[#e2e8f0] dark:border-white/10"
@@ -514,12 +550,16 @@ export function ListingFormPage() {
                   }}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel className="text-sm font-bold text-[#0f172b] dark:text-white">
+                      <FieldLabel
+                        htmlFor="pricePerDay"
+                        className="text-sm font-bold text-[#0f172b] dark:text-white"
+                      >
                         Стоимость аренды (₽ / день)
                       </FieldLabel>
                       <div className="relative">
                         <Input
                           {...field}
+                          id="pricePerDay"
                           placeholder="0"
                           className="h-[50px] rounded-[14px] border-[#e2e8f0] bg-[#f8fafc] px-4 pr-10 text-base text-[#0f172b] placeholder:text-[#90a1b9] dark:border-white/10 dark:bg-[#020618] dark:text-white dark:placeholder:text-[#62748e]"
                         />
@@ -537,21 +577,28 @@ export function ListingFormPage() {
                 <Controller
                   name="maxPeople"
                   control={form.control}
+                  disabled={dealFormat === "rent"}
                   rules={{
                     required: "Укажите количество людей",
                     pattern: {
-                      value: /^[1-5]$/,
-                      message: "Допустимо значение от 1 до 5",
+                      value: /^(10|[1-9])$/,
+                      message: "Допустимо значение от 1 до 10",
                     },
                   }}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel className="text-sm font-bold text-[#0f172b] dark:text-white">
+                      <FieldLabel
+                        htmlFor="maxPeople"
+                        className="text-sm font-bold text-[#0f172b] dark:text-white"
+                      >
                         Сколько максимум людей
                       </FieldLabel>
                       <Input
                         {...field}
-                        placeholder="1-5"
+                        // disabled={}
+                        type="number"
+                        id="maxPeople"
+                        placeholder="Количество (числом)"
                         className="h-[50px] rounded-[14px] border-[#e2e8f0] bg-[#f8fafc] px-4 text-base text-[#0f172b] placeholder:text-[#90a1b9] dark:border-white/10 dark:bg-[#020618] dark:text-white dark:placeholder:text-[#62748e]"
                       />
                       {stepTwoValidationAttempted && fieldState.invalid && (
@@ -599,7 +646,7 @@ export function ListingFormPage() {
                   <p className="text-destructive text-sm">{photoError}</p>
                 ) : null}
 
-                <div className="flex flex-wrap gap-4">
+                <div className="relative flex flex-wrap gap-4">
                   {Array.from({ length: photoSlotsCount }).map((_, index) => {
                     const photo = photos[index];
                     return (
@@ -608,11 +655,20 @@ export function ListingFormPage() {
                         className="relative flex size-[121px] items-center justify-center overflow-hidden rounded-[14px] border border-[#e2e8f0] bg-[#f1f5f9] dark:border-white/10 dark:bg-[#020618]"
                       >
                         {photo ? (
-                          <img
-                            src={photo.preview}
-                            alt={photo.file.name}
-                            className="size-full object-cover"
-                          />
+                          <>
+                            <img
+                              src={photo.preview}
+                              alt={photo.file.name}
+                              className="size-full object-cover"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removePhoto(index)}
+                              className="absolute top-1 right-1 flex size-6 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
+                            >
+                              ✕
+                            </button>
+                          </>
                         ) : (
                           <Camera className="size-6 text-[#cad5e2] dark:text-[#62748e]" />
                         )}
@@ -686,7 +742,7 @@ export function ListingFormPage() {
                       <button
                         type="button"
                         onClick={() => field.onChange(!field.value)}
-                        className="flex w-full items-start rounded-[14px] border border-[#dbeafe] bg-[#eff6ff80] p-4 text-left transition-colors hover:bg-[#eff6ff] dark:border-[#263247] dark:bg-[#0b1429]"
+                        className="flex w-full cursor-pointer items-start rounded-[14px] border border-[#dbeafe] bg-[#eff6ff80] p-4 text-left transition-colors hover:bg-[#eff6ff] dark:border-[#263247] dark:bg-[#0b1429]"
                       >
                         <span
                           className={`mt-[2px] flex size-4 shrink-0 items-center justify-center rounded-[4px] border ${

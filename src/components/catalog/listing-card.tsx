@@ -58,7 +58,7 @@ export function ListingCard({
             "rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[10px] leading-[15px] font-bold tracking-[0.5px] text-[#314158] uppercase dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#CAD5E2]",
           )}
         >
-          пока текст
+          показать текст
         </span>
         {isMine && (
           <button
@@ -71,9 +71,9 @@ export function ListingCard({
 
               mutate(String(product.id));
             }}
-            className="absolute top-[13px] right-[13px] rounded-2xl bg-red-400 p-1.5 shadow transition-all hover:cursor-pointer hover:bg-red-600"
+            className="absolute top-[13px] right-[13px] flex size-6 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80 dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#CAD5E2]"
           >
-            <Trash />
+            ✕
           </button>
         )}
       </div>
