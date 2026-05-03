@@ -427,7 +427,7 @@ export function TransactionsPage() {
               viewerIsOwner={ownerLens}
             />
           ) : (
-            <div className="text-muted-foreground rounded-[24px] border border-transparent border-t-[#E2E8F0] bg-white p-12 text-center text-sm shadow-sm">
+            <div className="text-muted-foreground rounded-[24px] border border-[#E2E8F0] bg-white p-12 text-center text-sm shadow-sm">
               Выберите сделку из списка.
             </div>
           )}

@@ -30,9 +30,9 @@ export function TransactionListCard({
       type="button"
       onClick={() => onSelect(transaction.id)}
       className={cn(
-        "relative flex min-h-[10rem] w-full cursor-pointer flex-col rounded-2xl border border-transparent border-t-[#BEDBFF] bg-white p-[17px] pb-4 text-left shadow-sm ring-[#155DFC1A] ring-offset-0 hover:brightness-[99%]",
-        "[box-shadow:0_1px_2px_-1px_rgba(0,0,0,0.1),0_1px_3px_0_rgba(0,0,0,0.1)]",
-        selected && "shadow-md ring-[3px]",
+        "relative flex min-h-[10rem] w-full cursor-pointer flex-col rounded-2xl border-t border-[#E2E8F0] bg-white p-[17px] pb-4 text-left ring-[#155DFC1A] ring-offset-0 hover:brightness-[99%]",
+        "[box-shadow:0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]",
+        selected && "ring-[3px]",
       )}
     >
       <div className="flex gap-4">

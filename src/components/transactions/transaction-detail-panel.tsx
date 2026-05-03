@@ -106,7 +106,7 @@ export function TransactionDetailPanel({
   return (
     <section
       className={cn(
-        "sticky top-[88px] w-full shrink-0 rounded-[24px] border border-transparent border-t-[#E2E8F0] bg-white lg:max-w-[400px] lg:flex-1",
+        "sticky top-[88px] w-full shrink-0 rounded-[24px] border border-[#E2E8F0] bg-white lg:max-w-[400px] lg:flex-1",
         "[box-shadow:0_1px_2px_-1px_rgba(0,0,0,0.1),0_1px_3px_0_rgba(0,0,0,0.1)]",
       )}
     >
@@ -134,7 +134,7 @@ export function TransactionDetailPanel({
           {presentation.statusSubtitle}
         </p>
 
-        <div className="mt-6 rounded-[16px] border border-transparent border-t-[#E2E8F0] bg-[#F8FAFC] p-[17px]">
+        <div className="mt-6 rounded-[16px] border border-[#E2E8F0] bg-[#F8FAFC] p-[17px]">
           <div className="flex items-start gap-3">
             <div
               className={cn(
