@@ -94,9 +94,10 @@ export function resolveCardUi(params: {
   transaction: Transaction;
   viewerId: number;
   counterpartName: string;
-  reviewSubmitted: boolean;
+  viewerHasSubmittedReview: boolean;
 }): CardUi {
-  const { transaction, viewerId, counterpartName, reviewSubmitted } = params;
+  const { transaction, viewerId, counterpartName, viewerHasSubmittedReview } =
+    params;
   const counterpartLine = counterpartName.trim() || "Сторона";
   const isRenterViewer = viewerId === transaction.renter;
 
@@ -176,12 +177,9 @@ export function resolveCardUi(params: {
   }
 
   if (transaction.status === TransactionStatusEnum.completed) {
-    const description =
-      reviewSubmitted && isRenterViewer
-        ? "Аренда завершена. Отзыв по сделке уже опубликован."
-        : isRenterViewer
-          ? "Аренда завершена. Можно поставить оценку и оставить отзыв по этой сделке."
-          : "Аренда завершена.";
+    const description = viewerHasSubmittedReview
+      ? "Аренда завершена. Ваш отзыв по этой сделке уже опубликован."
+      : "Аренда завершена. Можно поставить оценку и оставить отзыв контрагенту по этой сделке.";
     const chipTone: TransactionStatusTone = "completed";
     return {
       chipLabel: "Завершена",
@@ -204,9 +202,9 @@ export function resolveCardUi(params: {
 export function resolveDetailUi(params: {
   transaction: Transaction;
   viewerId: number;
-  reviewSubmitted: boolean;
+  viewerHasSubmittedReview: boolean;
 }): DetailUi {
-  const { transaction, viewerId, reviewSubmitted } = params;
+  const { transaction, viewerId, viewerHasSubmittedReview } = params;
 
   let chipLabel = "";
   let chipTone: TransactionStatusTone = "completed";
@@ -224,11 +222,9 @@ export function resolveDetailUi(params: {
   const reviewAvailablity =
     transaction.status !== TransactionStatusEnum.completed
       ? "locked"
-      : reviewSubmitted
+      : viewerHasSubmittedReview
         ? "submitted"
-        : viewerId === transaction.renter
-          ? "open"
-          : "locked";
+        : "open";
 
   if (transaction.status === TransactionStatusEnum.pending) {
     chipLabel = "Ожидает";
@@ -298,7 +294,7 @@ export function resolveDetailUi(params: {
         ? "Аренда завершена"
         : "Аренда завершена";
 
-    rows = reviewSubmitted
+    rows = viewerHasSubmittedReview
       ? [
           { kind: "done", title: "Запрос подтверждён" },
           { kind: "done", title: "Получение подтверждено" },

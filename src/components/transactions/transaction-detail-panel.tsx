@@ -136,7 +136,12 @@ export function TransactionDetailPanel({
 
         <div className="mt-6 rounded-[16px] border border-transparent border-t-[#E2E8F0] bg-[#F8FAFC] p-[17px]">
           <div className="flex items-start gap-3">
-            <div className="flex size-[56px] shrink-0 items-center justify-center overflow-hidden rounded-[14px] bg-white px-3.5">
+            <div
+              className={cn(
+                "flex size-[56px] shrink-0 items-center justify-center overflow-hidden rounded-[14px] px-3.5",
+                primaryImageUrl ? "bg-white" : "bg-[#F1F5F9]",
+              )}
+            >
               {primaryImageUrl ? (
                 <img
                   alt={productName}
@@ -230,7 +235,7 @@ export function TransactionDetailPanel({
           </div>
         </div>
 
-        <div className="mt-6 flex flex-col gap-5">
+        <div className="mt-6 flex flex-col gap-2">
           {presentation.passiveHintVisible ? (
             <div className="flex min-h-11 flex-col justify-center rounded-[14px] bg-[#F8FAFC] px-4 py-3">
               <p className="text-sm leading-5 font-normal text-[#62748E]">
@@ -308,28 +313,28 @@ export function TransactionDetailPanel({
               ) : null}
             </div>
           )}
-        </div>
 
-        <div className="mt-8 grid grid-cols-2 gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            className="h-11 cursor-pointer rounded-[14px] px-4 text-[#314158]"
-            onClick={() => navigate(`/product/${transaction.item}`)}
-          >
-            <PackageOpen className="size-4 text-[#314158]" />
-            Товар
-          </Button>
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="h-11 cursor-pointer rounded-[14px] px-4 text-[#314158]"
+              onClick={() => navigate(`/product/${transaction.item}`)}
+            >
+              <PackageOpen className="size-4 text-[#314158]" />
+              Товар
+            </Button>
 
-          <Button
-            type="button"
-            variant="outline"
-            className="h-11 cursor-pointer rounded-[14px] px-4 text-[#314158]"
-            onClick={() => navigate("/messages")}
-          >
-            <MessageSquare className="size-4 text-[#314158]" />
-            Написать
-          </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="h-11 cursor-pointer rounded-[14px] px-4 text-[#314158]"
+              onClick={() => navigate("/messages")}
+            >
+              <MessageSquare className="size-4 text-[#314158]" />
+              Написать
+            </Button>
+          </div>
         </div>
 
         <div className="mt-6">

@@ -44,7 +44,7 @@ export function TransactionListCard({
               className="size-full rounded-[14px] object-cover"
             />
           ) : (
-            <span className="flex size-full items-center justify-center rounded-[14px] bg-white">
+            <span className="flex size-full items-center justify-center rounded-[14px] bg-[#F1F5F9]">
               <Camera className="size-8 text-[#CAD5E2]" strokeWidth={1.75} />
             </span>
           )}
@@ -73,8 +73,8 @@ export function TransactionListCard({
             </div>
           </div>
 
-          <div className="flex flex-wrap items-start justify-between gap-3 pt-4">
-            <div className="flex flex-wrap items-baseline gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-4">
+            <div className="flex flex-wrap items-center gap-3">
               <span className="text-lg leading-7 font-bold text-[#0F172B]">
                 {priceLabel}
               </span>
@@ -84,7 +84,7 @@ export function TransactionListCard({
             </div>
 
             {presentation.footerAccent ? (
-              <span className="inline-flex shrink-0 self-start text-sm leading-5 font-medium text-[#155DFC]">
+              <span className="inline-flex shrink-0 text-sm leading-5 font-medium text-[#155DFC]">
                 {presentation.footerAccent}
               </span>
             ) : (

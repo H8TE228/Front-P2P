@@ -36,6 +36,10 @@ import { useEffect, useMemo, useState } from "react";
 
 const PAGE_LIMIT = 8;
 
+function reviewDraftKey(transactionId: number, viewerIsOwner: boolean) {
+  return `${transactionId}:${viewerIsOwner ? "owner" : "renter"}`;
+}
+
 export function TransactionsPage() {
   const viewer = useAppSelector((state) => state.auth.user);
   const viewerId = viewer?.id;
@@ -45,9 +49,7 @@ export function TransactionsPage() {
   const [selectedTransactionId, setSelectedTransactionId] = useState<number | null>(
     null,
   );
-  const [publishedReviewRecords, setPublishedReviewRecords] = useState<number[]>(
-    [],
-  );
+  const [publishedReviewKeys, setPublishedReviewKeys] = useState<string[]>([]);
   const [reviewStarsState, setReviewStarsState] = useState<
     Record<number, number>
   >({});
@@ -184,25 +186,34 @@ export function TransactionsPage() {
       ? focusedTransaction.owner === viewerId
       : false;
 
-  const reviewPublicationSet = useMemo(
-    () => new Set(publishedReviewRecords),
-    [publishedReviewRecords],
+  const publishedReviewSet = useMemo(
+    () => new Set(publishedReviewKeys),
+    [publishedReviewKeys],
   );
 
   const detailCopy =
     focusedTransaction !== undefined && viewerId !== undefined
       ? resolveDetailUi({
-          reviewSubmitted: reviewPublicationSet.has(focusedTransaction.id),
           transaction: focusedTransaction,
+          viewerHasSubmittedReview: publishedReviewSet.has(
+            reviewDraftKey(focusedTransaction.id, ownerLens),
+          ),
           viewerId,
         })
       : null;
 
-  const reviewGrade =
-    focusedTransaction !== undefined ? reviewStarsState[focusedTransaction.id] ?? 0 : 0;
-  const reviewBody =
+  const activeReviewDraftKey =
     focusedTransaction !== undefined
-      ? reviewBodiesState[focusedTransaction.id] ?? ""
+      ? reviewDraftKey(focusedTransaction.id, ownerLens)
+      : "";
+
+  const reviewGrade =
+    activeReviewDraftKey !== ""
+      ? (reviewStarsState[activeReviewDraftKey] ?? 0)
+      : 0;
+  const reviewBody =
+    activeReviewDraftKey !== ""
+      ? (reviewBodiesState[activeReviewDraftKey] ?? "")
       : "";
 
   const synchronizeReviewStars = (value: number) => {
@@ -210,9 +221,11 @@ export function TransactionsPage() {
       return;
     }
 
+    const ledger = reviewDraftKey(focusedTransaction.id, ownerLens);
+
     setReviewStarsState((before) => ({
       ...before,
-      [focusedTransaction.id]: value,
+      [ledger]: value,
     }));
   };
 
@@ -221,9 +234,11 @@ export function TransactionsPage() {
       return;
     }
 
+    const ledger = reviewDraftKey(focusedTransaction.id, ownerLens);
+
     setReviewBodiesState((before) => ({
       ...before,
-      [focusedTransaction.id]: value,
+      [ledger]: value,
     }));
   };
 
@@ -236,8 +251,10 @@ export function TransactionsPage() {
       return;
     }
 
-    setPublishedReviewRecords((past) =>
-      past.includes(focusedTransaction.id) ? past : [...past, focusedTransaction.id],
+    const ledger = reviewDraftKey(focusedTransaction.id, ownerLens);
+
+    setPublishedReviewKeys((past) =>
+      past.includes(ledger) ? past : [...past, ledger],
     );
   };
 
@@ -316,8 +333,13 @@ export function TransactionsPage() {
 
                 const narration = resolveCardUi({
                   counterpartName: counterpartShort,
-                  reviewSubmitted: reviewPublicationSet.has(payload.id),
                   transaction: payload,
+                  viewerHasSubmittedReview: publishedReviewSet.has(
+                    reviewDraftKey(
+                      payload.id,
+                      payload.owner === observerId,
+                    ),
+                  ),
                   viewerId: observerId,
                 });
 

@@ -23,15 +23,15 @@ export function TransactionTabBar<T extends string>({
             type="button"
             onClick={() => onChange(tab.id)}
             className={cn(
-              "relative shrink-0 cursor-pointer border-0 border-b-[3px] bg-transparent pb-4 text-lg leading-7 font-bold transition-colors hover:text-[#314158]",
+              "relative shrink-0 cursor-pointer border-0 border-b-[3px] bg-transparent pb-4 text-lg leading-7 font-bold transition-colors",
               selected
-                ? "border-[#0F172B] text-[#0F172B]"
-                : "border-transparent text-[#0F172B]",
+                ? "border-[#0F172B] text-[#0F172B] hover:text-[#0F172B]"
+                : "border-transparent text-[#62748E] hover:text-[#45556C]",
             )}
           >
             <span className={cn("inline-flex items-center gap-1.5 whitespace-nowrap")}>
               <span>{tab.label}</span>
-              <span className="text-base leading-6 font-semibold text-[#45556C]">
+              <span className="text-base leading-6 font-semibold text-[#90A1B9]">
                 {count === undefined ? "—" : count}
               </span>
             </span>
