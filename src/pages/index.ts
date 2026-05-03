@@ -9,3 +9,4 @@ export { MessagesPage } from "./messages-page";
 export { ListingFormPage } from "./listing-form-page";
 export { ProductDetailPage } from "./product-detail-page";
 export { UserProfilePage } from "./user-profile-page";
+export { TransactionsPage } from "./transactions-page";

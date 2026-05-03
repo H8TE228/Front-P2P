@@ -5,6 +5,13 @@ import { Link } from "react-router-dom";
 import type { Item } from "@/api/schema";
 import { useDeleteProduct } from "@/hooks";
 
+const productStatus: Record<string, string> = {
+  available: "Доступен",
+  rented: "Сдан",
+  maintenance: "На обслуживании",
+  unavailable: "Недоступен",
+};
+
 export function ListingCard({
   product,
   isMine,
@@ -58,7 +65,7 @@ export function ListingCard({
             "rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[10px] leading-[15px] font-bold tracking-[0.5px] text-[#314158] uppercase dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#CAD5E2]",
           )}
         >
-          показать текст
+          {productStatus[String(product.status)] ?? "Статус не указан"}
         </span>
         {isMine && (
           <button

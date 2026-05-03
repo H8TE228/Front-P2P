@@ -11,6 +11,7 @@ import {
   ProfileEditPage,
   ProfilePage,
   RegisterPage,
+  TransactionsPage,
   UserProfilePage,
 } from "@/pages";
 import cats from "@/assets/cats.png";
@@ -57,6 +58,7 @@ function App() {
             { path: "my-profile/edit", Component: ProfileEditPage },
             { path: "favorite", Component: FavoritePage },
             { path: "messages", Component: MessagesPage },
+            { path: "transactions", Component: TransactionsPage },
           ],
         },
 
