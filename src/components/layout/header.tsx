@@ -5,6 +5,7 @@ import { useTheme } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { Theme } from "@/types";
 import {
+  FileText,
   Heart,
   Laptop,
   Menu,
@@ -46,6 +47,7 @@ function ThemeHeaderToggle() {
 
 const navItems = [
   { icon: Heart, label: "Избранное", to: "/favorite" },
+  { icon: FileText, label: "Сделки", to: "/transactions" },
   { icon: MessageCircle, label: "Сообщения", to: "/messages" },
   { icon: User, label: "Профиль", to: "/my-profile" },
 ];
