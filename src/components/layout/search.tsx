@@ -26,13 +26,13 @@ export function SearchInput({
 
   const { data: products, isLoading } = useProducts(searchParams);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setSearchParams(query ? { search: query } : {});
-    }, 300);
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     setSearchParams(query ? { search: query } : {});
+  //   }, 300);
 
-    return () => clearTimeout(timeout);
-  }, [query]);
+  //   return () => clearTimeout(timeout);
+  // }, [query]);
 
   const closeResults = useCallback(() => {
     setOpen(false);
@@ -110,7 +110,7 @@ export function SearchInput({
             setQuery("");
             setOpen(false);
           }}
-          className="absolute top-1/2 right-9 -translate-y-1/2 cursor-pointer"
+          className="absolute top-1/2 right-10 -translate-y-1/2 cursor-pointer"
         >
           <X
             className="size-6 text-[#90A1B9] dark:text-[#62748E]"
@@ -118,10 +118,16 @@ export function SearchInput({
           />
         </button>
       )}
-      <Search
-        className="absolute top-1/2 right-3 size-6 -translate-y-1/2 cursor-default text-[#90A1B9] dark:text-[#62748E]"
-        strokeWidth={2}
-      />
+      <button
+        onClick={() => {
+          setSearchParams({ search: query });
+        }}
+      >
+        <Search
+          className="absolute top-1/2 right-3 size-6 -translate-y-1/2 cursor-pointer text-[#90A1B9] dark:text-[#62748E]"
+          strokeWidth={2}
+        />
+      </button>
 
       {query && open && (
         <ul className="absolute top-full left-0 z-10 mt-2 w-full rounded-lg bg-white shadow-md">
@@ -146,7 +152,7 @@ export function SearchInput({
               <li
                 key={product.id}
                 className={cn(
-                  "flex h-10 cursor-pointer items-center justify-between rounded-lg px-2 py-2 hover:bg-gray-100",
+                  "flex h-11 cursor-pointer items-center justify-between rounded-lg px-4 py-2 hover:bg-gray-100",
                   className,
                 )}
                 onClick={() => handleSelect(product.id)}

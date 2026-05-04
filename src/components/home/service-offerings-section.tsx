@@ -19,7 +19,7 @@ export function ServiceOfferingsSection() {
               подсказки по выбору, использованию и безопасности.
             </p>
             <Link
-              to="#"
+              to="/catalog"
               className="mt-[18px] inline-block text-base leading-6 font-medium tracking-normal text-[#155DFC] transition-opacity hover:opacity-80 dark:text-[#51A2FF]"
             >
               Найти вещь →

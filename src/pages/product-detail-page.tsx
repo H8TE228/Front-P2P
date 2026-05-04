@@ -31,6 +31,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
+import { useAppSelector } from "@/hooks/rtk";
 
 const productStatus = {
   available: "Доступен",
@@ -73,6 +74,8 @@ export function ProductDetailPage() {
 
   const { data: product } = useProduct(id!);
   const imgCount = product?.images?.length || 0;
+
+  const user = useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
     if (!api) return;
@@ -162,7 +165,7 @@ export function ProductDetailPage() {
                 </Button>
               </div>
 
-              <div className="absolute top-2 right-3 z-1000 flex gap-2">
+              <div className="absolute top-2 right-3 flex gap-2">
                 <Button
                   variant="outline"
                   disabled
@@ -349,12 +352,26 @@ export function ProductDetailPage() {
                   </div>
                 </div>
                 <div>
-                  <Button variant="blue" className="mb-3 h-13 w-full">
+                  <Button
+                    disabled={user?.id === product.owner.id}
+                    variant="blue"
+                    className="mb-3 h-13 w-full"
+                  >
                     Арендовать
                   </Button>
                   <div className="">
-                    <Button className="h-12 w-1/2">Написать</Button>
-                    <Button className="h-12 w-1/2">Позвонить</Button>
+                    <Button
+                      disabled={user?.id === product.owner.id}
+                      className="h-12 w-1/2"
+                    >
+                      Написать
+                    </Button>
+                    <Button
+                      disabled={user?.id === product.owner.id}
+                      className="h-12 w-1/2"
+                    >
+                      Позвонить
+                    </Button>
                   </div>
                 </div>
               </CardContent>

@@ -52,12 +52,12 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
 
   return (
     categories.length && (
-      <div className="absolute top-full left-0 z-90 mt-2">
-        <div className="w-screen max-w-[1160px]">
+      <div className="absolute top-full -left-1/2 z-90 mt-2">
+        <div className="w-screen max-w-270">
           <div
             ref={ref}
             className={cn(
-              "flex max-h-[min(578px,calc(100vh-5rem))] w-full max-w-[1160px] flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_8px_10px_-6px_rgba(0,0,0,0.1),0_20px_25px_-5px_rgba(0,0,0,0.1)] md:flex-row",
+              "flex max-h-[min(578px,calc(100vh-5rem))] w-full max-w-270 flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_8px_10px_-6px_rgba(0,0,0,0.1),0_20px_25px_-5px_rgba(0,0,0,0.1)] md:flex-row",
               "dark:border-[#201d3d] dark:bg-[#0F172B]",
             )}
           >
@@ -123,7 +123,7 @@ export function CatalogMegaMenu({ open, onClose }: CatalogMegaMenuProps) {
                   {selectedCategory?.types?.map((type: any) => (
                     <li
                       key={type.id}
-                      className="flex h-7 cursor-pointer px-2 py-1 hover:rounded-sm hover:bg-blue-100"
+                      className="flex h-9 cursor-pointer px-2 py-2 hover:rounded-sm hover:bg-blue-100"
                     >
                       <Link
                         to={`/catalog?category=${selectedCategory.name}&type=${type.name}`}

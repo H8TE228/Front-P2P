@@ -13,8 +13,11 @@ export const transactionsQueries = {
     );
     return res.data;
   },
-  createItemTransaction: async (itemId: number | string) => {
-    const res = await api.post<Transaction>(`/listings/${itemId}/transactions/`, {});
+  createItemTransaction: async (itemId: string) => {
+    const res = await api.post<Transaction>(
+      `/listings/${itemId}/transactions/`,
+      {},
+    );
     return res.data;
   },
   getTransactions: async (params?: TransactionsListParams) => {
@@ -40,9 +43,12 @@ export const transactionsQueries = {
     return res.data;
   },
   getPendingTransactions: async (params?: TransactionsPendingListParams) => {
-    const res = await api.get<PaginatedTransactionList>("/transactions/pending/", {
-      params,
-    });
+    const res = await api.get<PaginatedTransactionList>(
+      "/transactions/pending/",
+      {
+        params,
+      },
+    );
     return res.data;
   },
 };

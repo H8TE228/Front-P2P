@@ -4,6 +4,19 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import type { Item } from "@/api/schema";
 import { useDeleteProduct } from "@/hooks";
+import {
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
+import { Button } from "../ui/button";
+import { useState } from "react";
 
 const productStatus: Record<string, string> = {
   available: "Доступен",
@@ -19,7 +32,9 @@ export function ListingCard({
   product: Item;
   isMine?: boolean;
 }) {
-  const { mutate, isPending } = useDeleteProduct();
+  const { mutateAsync, isPending } = useDeleteProduct();
+
+  const [open, setOpen] = useState(false);
   // const priceStr = `${formatRubAmount(product.priceRub)} ₽`;
   // const suffix =
   //   product.price.kind === "per_day"
@@ -40,25 +55,7 @@ export function ListingCard({
           alt={product.name}
           className="aspect-square w-full rounded-[14px] border border-[#E2E8F0] object-cover dark:border-[#1D293D]"
         />
-        {/* {product.tag === "coownership" ? (
-          <span
-            className={cn(
-              "absolute top-[13px] left-[13px]",
-              "rounded-full bg-[#155DFC] px-2.5 py-1 text-[10px] leading-[15px] font-bold tracking-[0.5px] text-white uppercase",
-            )}
-          >
-            Совладение
-          </span>
-        ) : (
-          <span
-            className={cn(
-              "absolute top-[13px] left-[13px]",
-              "rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[10px] leading-[15px] font-bold tracking-[0.5px] text-[#314158] uppercase dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#CAD5E2]",
-            )}
-          >
-            Аренда
-          </span>
-        )} */}
+
         <span
           className={cn(
             "absolute top-[13px] left-[13px]",
@@ -68,20 +65,50 @@ export function ListingCard({
           {productStatus[String(product.status)] ?? "Статус не указан"}
         </span>
         {isMine && (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const isConfirmed = window.confirm("Удалить товар?");
-
-              if (!isConfirmed) return;
-
-              mutate(String(product.id));
-            }}
-            className="absolute top-[13px] right-[13px] flex size-6 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80 dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#CAD5E2]"
-          >
-            ✕
-          </button>
+          <AlertDialog open={open} onOpenChange={setOpen}>
+            <AlertDialogTrigger asChild>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setOpen(true);
+                }}
+                className="absolute top-[13px] right-[13px] flex size-6 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80 dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#CAD5E2]"
+              >
+                ✕
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent size="sm">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  Отмена
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  variant="destructive"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    try {
+                      await mutateAsync(String(product.id));
+                      setOpen(false);
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                  disabled={isPending}
+                >
+                  Удалить
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         )}
       </div>
 

@@ -5,12 +5,14 @@ export function useCreateTransaction() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (itemId: number | string) =>
+    mutationFn: (itemId: string) =>
       transactionsQueries.createItemTransaction(itemId),
     onSuccess: (_data, itemId) => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["pending-transactions"] });
-      queryClient.invalidateQueries({ queryKey: ["item-transactions", itemId] });
+      queryClient.invalidateQueries({
+        queryKey: ["item-transactions", itemId],
+      });
     },
     onError: () => {},
   });

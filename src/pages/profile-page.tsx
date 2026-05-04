@@ -1,12 +1,20 @@
 import type { Item } from "@/api/schema";
 import { ListingCard } from "@/components";
 import { Button } from "@/components/ui/button";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { useMyProducts, useProfile } from "@/hooks";
 import { useAppDispatch } from "@/hooks/rtk";
 import { logout } from "@/store/auth-slice";
 import { MapPin, Pen, Shield, Star } from "lucide-react";
 import { DoorClosed } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export function ProfilePage() {
   const navigate = useNavigate();
@@ -95,11 +103,7 @@ export function ProfilePage() {
           </div>
         </section>
 
-        <section className="grid min-h-104 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {!isMyProductsLoading &&
-            myProducts?.results.map((p: Item) => (
-              <ListingCard key={p.id} product={p} isMine={true} />
-            ))}
+        <section className="pb-4 sm:min-h-97">
           {isMyProductsLoading && (
             <div className="text-muted-foreground col-span-full text-center">
               Загрузка объявлений...
@@ -109,6 +113,22 @@ export function ProfilePage() {
             <div className="text-muted-foreground col-span-full text-center">
               У вас пока нет объявлений
             </div>
+          )}
+          {!isMyProductsLoading && (
+            <Carousel className="relative w-full">
+              <CarouselContent className="relative lg:h-86">
+                {myProducts?.results.map((p: Item) => (
+                  <CarouselItem
+                    className="basis-1/2 sm:basis-1/3 lg:basis-1/5"
+                    key={p.id}
+                  >
+                    <ListingCard key={p.id} product={p} isMine={true} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious style={{ bottom: "-35px", right: "40px" }} />
+              <CarouselNext style={{ bottom: "-35px", right: 0 }} />
+            </Carousel>
           )}
         </section>
       </div>

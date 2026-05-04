@@ -47,8 +47,8 @@ function ThemeHeaderToggle() {
 
 const navItems = [
   { icon: Heart, label: "Избранное", to: "/favorite" },
-  { icon: FileText, label: "Сделки", to: "/transactions" },
   { icon: MessageCircle, label: "Сообщения", to: "/messages" },
+  { icon: FileText, label: "Сделки", to: "/transactions" },
   { icon: User, label: "Профиль", to: "/my-profile" },
 ];
 
@@ -80,7 +80,7 @@ export function Header() {
   }, [catalogOpen]);
 
   return (
-    <header className="bg-header relative z-[100] box-border flex h-16 w-full items-center border-b border-[#E5E7EB] dark:border-[#1D293D]">
+    <header className="bg-header relative box-border flex h-16 w-full items-center border-b border-[#E5E7EB] dark:border-[#1D293D]">
       <div className="mx-auto flex h-full w-full max-w-[1280px] min-w-0 items-center gap-6 px-4">
         <div className="flex shrink-0 items-center">
           <Link
