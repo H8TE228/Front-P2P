@@ -21,6 +21,7 @@ import {
 import {
   useApproveTransaction,
   useCreateReview,
+  useMyReviews,
   useRejectTransaction,
   useReturnTransaction,
   useTransactionLookups,
@@ -50,7 +51,6 @@ export function TransactionsPage() {
   const [selectedTransactionId, setSelectedTransactionId] = useState<number | null>(
     null,
   );
-  const [publishedReviewKeys, setPublishedReviewKeys] = useState<string[]>([]);
   const [reviewStarsState, setReviewStarsState] = useState<
     Record<string, number>
   >({});
@@ -151,6 +151,13 @@ export function TransactionsPage() {
   const returnMutation = useReturnTransaction();
   const createReviewMutation = useCreateReview();
 
+  const myReviewsQuery = useMyReviews(viewerId !== undefined);
+
+  const reviewedTransactionIds = useMemo(() => {
+    const rows = myReviewsQuery.data ?? [];
+    return new Set(rows.map((row) => row.transaction));
+  }, [myReviewsQuery.data]);
+
   const counterpartIdentifier =
     focusedTransaction && viewerId !== undefined
       ? focusedTransaction.owner === viewerId
@@ -188,17 +195,12 @@ export function TransactionsPage() {
       ? focusedTransaction.owner === viewerId
       : false;
 
-  const publishedReviewSet = useMemo(
-    () => new Set(publishedReviewKeys),
-    [publishedReviewKeys],
-  );
-
   const detailCopy =
     focusedTransaction !== undefined && viewerId !== undefined
       ? resolveDetailUi({
           transaction: focusedTransaction,
-          viewerHasSubmittedReview: publishedReviewSet.has(
-            reviewDraftKey(focusedTransaction.id, ownerLens),
+          viewerHasSubmittedReview: reviewedTransactionIds.has(
+            focusedTransaction.id,
           ),
           viewerId,
         })
@@ -253,9 +255,7 @@ export function TransactionsPage() {
       return;
     }
 
-    const ledger = reviewDraftKey(focusedTransaction.id, ownerLens);
-
-    if (publishedReviewSet.has(ledger)) {
+    if (reviewedTransactionIds.has(focusedTransaction.id)) {
       return;
     }
 
@@ -263,20 +263,11 @@ export function TransactionsPage() {
       return;
     }
 
-    createReviewMutation.mutate(
-      {
-        transaction: focusedTransaction.id,
-        rating: reviewGrade,
-        comment: reviewBody.trim() ? reviewBody.trim() : null,
-      },
-      {
-        onSuccess: () => {
-          setPublishedReviewKeys((past) =>
-            past.includes(ledger) ? past : [...past, ledger],
-          );
-        },
-      },
-    );
+    createReviewMutation.mutate({
+      transaction: focusedTransaction.id,
+      rating: reviewGrade,
+      comment: reviewBody.trim() ? reviewBody.trim() : null,
+    });
   };
 
   return (
@@ -355,11 +346,8 @@ export function TransactionsPage() {
                 const narration = resolveCardUi({
                   counterpartName: counterpartShort,
                   transaction: payload,
-                  viewerHasSubmittedReview: publishedReviewSet.has(
-                    reviewDraftKey(
-                      payload.id,
-                      payload.owner === observerId,
-                    ),
+                  viewerHasSubmittedReview: reviewedTransactionIds.has(
+                    payload.id,
                   ),
                   viewerId: observerId,
                 });

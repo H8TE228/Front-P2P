@@ -10,6 +10,7 @@ export function useCreateReview() {
       reviewsQueries.createReview(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["reviews", "my"] });
     },
     onError: () => {},
   });
