@@ -1,20 +1,17 @@
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   Camera,
   Heart,
   Star,
   ShieldCheck,
   Clock,
-  X,
   ChevronLeft,
   ArrowRight,
   Shield,
   CircleAlert,
   ChevronRight,
-  SpaceIcon,
 } from "lucide-react";
 
-import { ListingCard } from "@/components";
 import {
   Card,
   CardContent,
@@ -22,7 +19,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useProduct } from "@/hooks";
+import { useCreateTransaction, useProduct } from "@/hooks";
 import {
   Carousel,
   CarouselContent,
@@ -69,13 +66,45 @@ const formatDate = (iso: string) => {
 export function ProductDetailPage() {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const [api, setApi] = useState<any>(null);
   const [current, setCurrent] = useState(0);
+  const [rentError, setRentError] = useState<string | null>(null);
 
   const { data: product } = useProduct(id!);
   const imgCount = product?.images?.length || 0;
 
   const user = useAppSelector((state) => state.auth.user);
+  const createTransaction = useCreateTransaction();
+
+  const rentDisabled =
+    !product ||
+    user?.id === product.owner.id ||
+    createTransaction.isPending ||
+    product.status !== "available";
+
+  const handleRent = () => {
+    if (!product) return;
+    setRentError(null);
+
+    createTransaction.mutate(String(product.id), {
+      onSuccess: () => {
+        navigate("/transactions");
+      },
+      onError: (err) => {
+        const anyErr = err as any;
+        const detail =
+          anyErr?.response?.data?.detail ??
+          anyErr?.response?.data?.message ??
+          anyErr?.message;
+        setRentError(
+          typeof detail === "string" && detail.trim().length > 0
+            ? detail
+            : "Не удалось создать транзакцию",
+        );
+      },
+    });
+  };
 
   useEffect(() => {
     if (!api) return;
@@ -353,12 +382,16 @@ export function ProductDetailPage() {
                 </div>
                 <div>
                   <Button
-                    disabled={user?.id === product.owner.id}
+                    disabled={rentDisabled}
                     variant="blue"
                     className="mb-3 h-13 w-full"
+                    onClick={handleRent}
                   >
-                    Арендовать
+                    {createTransaction.isPending ? "Отправляем..." : "Арендовать"}
                   </Button>
+                  {rentError && (
+                    <div className="mb-3 text-sm text-red-600">{rentError}</div>
+                  )}
                   <div className="">
                     <Button
                       disabled={user?.id === product.owner.id}
