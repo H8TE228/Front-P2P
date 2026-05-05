@@ -6,6 +6,11 @@ import type {
   TransactionsPendingListParams,
 } from "./schema";
 
+export type CreateItemTransactionBody = {
+  planned_start: string;
+  planned_end: string;
+};
+
 export const transactionsQueries = {
   getItemTransactions: async (itemId: number | string) => {
     const res = await api.get<Transaction[]>(
@@ -13,10 +18,13 @@ export const transactionsQueries = {
     );
     return res.data;
   },
-  createItemTransaction: async (itemId: string) => {
+  createItemTransaction: async (
+    itemId: string,
+    body: CreateItemTransactionBody,
+  ) => {
     const res = await api.post<Transaction>(
       `/listings/${itemId}/transactions/`,
-      {},
+      body,
     );
     return res.data;
   },

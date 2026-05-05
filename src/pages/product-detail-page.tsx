@@ -19,6 +19,16 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   useCreateFavoriteItem,
   useCreateTransaction,
@@ -70,6 +80,44 @@ const formatDate = (iso: string) => {
   return `${day} ${month} ${hours}:${minutes}`;
 };
 
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
+const toDatetimeLocalValue = (d: Date) =>
+  `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}T${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+
+const defaultRentRange = () => {
+  const start = new Date();
+  start.setMinutes(0, 0, 0);
+  start.setHours(start.getHours() + 1);
+  const end = new Date(start);
+  end.setHours(end.getHours() + 24);
+  return { start: toDatetimeLocalValue(start), end: toDatetimeLocalValue(end) };
+};
+
+const splitDatetimeLocal = (value: string) => {
+  const [datePart, timePart = ""] = value.split("T");
+  const time = timePart.slice(0, 5);
+  return {
+    date: datePart ?? "",
+    time: time.length === 5 ? time : "00:00",
+  };
+};
+
+const rentFormFromDefaults = () => {
+  const r = defaultRentRange();
+  const s = splitDatetimeLocal(r.start);
+  const e = splitDatetimeLocal(r.end);
+  return {
+    startDate: s.date,
+    startTime: s.time,
+    endDate: e.date,
+    endTime: e.time,
+  };
+};
+
+const combineDateTimeLocal = (date: string, time: string) =>
+  date && time ? `${date}T${time}` : "";
+
 export function ProductDetailPage() {
   const { id } = useParams();
   const location = useLocation();
@@ -77,6 +125,8 @@ export function ProductDetailPage() {
   const [api, setApi] = useState<any>(null);
   const [current, setCurrent] = useState(0);
   const [rentError, setRentError] = useState<string | null>(null);
+  const [rentModalOpen, setRentModalOpen] = useState(false);
+  const [rentForm, setRentForm] = useState(rentFormFromDefaults);
 
   const { data: product } = useProduct(id!);
   const { data: favorites } = useFavoriteItems({ page_size: 200 });
@@ -93,33 +143,68 @@ export function ProductDetailPage() {
   );
   const isFavorite = Boolean(favoriteEntry);
 
-  const rentDisabled =
+  const plannedStart = combineDateTimeLocal(
+    rentForm.startDate,
+    rentForm.startTime,
+  );
+  const plannedEnd = combineDateTimeLocal(rentForm.endDate, rentForm.endTime);
+
+  const rentRangeInvalid =
+    !plannedStart || !plannedEnd || plannedStart >= plannedEnd;
+
+  const rentButtonDisabled =
     !product ||
     user?.id === product.owner.id ||
     createTransaction.isPending ||
     product.status !== "available";
 
+  useEffect(() => {
+    if (!rentModalOpen) return;
+    setRentForm(rentFormFromDefaults());
+    setRentError(null);
+  }, [rentModalOpen]);
+
   const handleRent = () => {
-    if (!product) return;
+    if (!product || rentRangeInvalid) return;
     setRentError(null);
 
-    createTransaction.mutate(String(product.id), {
-      onSuccess: () => {
-        navigate("/transactions");
+    createTransaction.mutate(
+      {
+        itemId: String(product.id),
+        planned_start: new Date(plannedStart).toISOString(),
+        planned_end: new Date(plannedEnd).toISOString(),
       },
-      onError: (err) => {
-        const anyErr = err as any;
-        const detail =
-          anyErr?.response?.data?.detail ??
-          anyErr?.response?.data?.message ??
-          anyErr?.message;
-        setRentError(
-          typeof detail === "string" && detail.trim().length > 0
-            ? detail
-            : "Не удалось создать транзакцию",
-        );
+      {
+        onSuccess: () => {
+          setRentModalOpen(false);
+          navigate("/transactions");
+        },
+        onError: (err) => {
+          const anyErr = err as any;
+          const data = anyErr?.response?.data;
+          let detail =
+            data?.detail ?? data?.message ?? anyErr?.message;
+          if (
+            detail == null &&
+            data &&
+            typeof data === "object" &&
+            !Array.isArray(data)
+          ) {
+            const parts = Object.entries(data).flatMap(([key, val]) =>
+              Array.isArray(val)
+                ? val.map((x) => `${key}: ${String(x)}`)
+                : [`${key}: ${String(val)}`],
+            );
+            if (parts.length > 0) detail = parts.join(" ");
+          }
+          setRentError(
+            typeof detail === "string" && detail.trim().length > 0
+              ? detail
+              : "Не удалось создать транзакцию",
+          );
+        },
       },
-    });
+    );
   };
 
   const toggleFavorite = () => {
@@ -426,16 +511,119 @@ export function ProductDetailPage() {
                 </div>
                 <div>
                   <Button
-                    disabled={rentDisabled}
+                    disabled={rentButtonDisabled}
                     variant="blue"
                     className="mb-3 h-13 w-full"
-                    onClick={handleRent}
+                    onClick={() => setRentModalOpen(true)}
                   >
-                    {createTransaction.isPending ? "Отправляем..." : "Арендовать"}
+                    Арендовать
                   </Button>
-                  {rentError && (
-                    <div className="mb-3 text-sm text-red-600">{rentError}</div>
-                  )}
+                  <Dialog open={rentModalOpen} onOpenChange={setRentModalOpen}>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Заявка на аренду</DialogTitle>
+                        <DialogDescription>
+                          Выберите дату и время начала и окончания. Владелец
+                          объявления подтвердит или отклонит заявку.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-5">
+                        <div className="grid gap-2">
+                          <Label className="text-foreground">
+                            Начало аренды
+                          </Label>
+                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                            <Input
+                              type="date"
+                              className="h-10 min-h-10"
+                              value={rentForm.startDate}
+                              onChange={(e) =>
+                                setRentForm((f) => ({
+                                  ...f,
+                                  startDate: e.target.value,
+                                }))
+                              }
+                            />
+                            <Input
+                              type="time"
+                              step={60}
+                              className="h-10 min-h-10"
+                              value={rentForm.startTime}
+                              onChange={(e) =>
+                                setRentForm((f) => ({
+                                  ...f,
+                                  startTime: e.target.value,
+                                }))
+                              }
+                            />
+                          </div>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label className="text-foreground">
+                            Окончание аренды
+                          </Label>
+                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                            <Input
+                              type="date"
+                              className="h-10 min-h-10"
+                              value={rentForm.endDate}
+                              onChange={(e) =>
+                                setRentForm((f) => ({
+                                  ...f,
+                                  endDate: e.target.value,
+                                }))
+                              }
+                            />
+                            <Input
+                              type="time"
+                              step={60}
+                              className="h-10 min-h-10"
+                              value={rentForm.endTime}
+                              onChange={(e) =>
+                                setRentForm((f) => ({
+                                  ...f,
+                                  endTime: e.target.value,
+                                }))
+                              }
+                            />
+                          </div>
+                        </div>
+                        {rentRangeInvalid &&
+                          rentForm.startDate &&
+                          rentForm.endDate && (
+                            <p className="text-destructive text-sm">
+                              Укажите корректный период: окончание позже начала.
+                            </p>
+                          )}
+                        {rentError && (
+                          <p className="text-destructive text-sm">{rentError}</p>
+                        )}
+                      </div>
+                      <DialogFooter className="sm:justify-end">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full sm:w-auto"
+                          onClick={() => setRentModalOpen(false)}
+                        >
+                          Отмена
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="blue"
+                          className="w-full sm:w-auto"
+                          disabled={
+                            rentRangeInvalid || createTransaction.isPending
+                          }
+                          onClick={handleRent}
+                        >
+                          {createTransaction.isPending
+                            ? "Отправляем..."
+                            : "Отправить заявку"}
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                   <div className="">
                     <Button
                       disabled={user?.id === product.owner.id}
