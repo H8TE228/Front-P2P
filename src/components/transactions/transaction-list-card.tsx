@@ -30,13 +30,13 @@ export function TransactionListCard({
       type="button"
       onClick={() => onSelect(transaction.id)}
       className={cn(
-        "relative flex min-h-[10rem] w-full cursor-pointer flex-col rounded-2xl border-t border-[#E2E8F0] bg-white p-[17px] pb-4 text-left ring-[#155DFC1A] ring-offset-0 hover:brightness-[99%]",
+        "relative flex min-h-[10rem] w-full cursor-pointer flex-col rounded-2xl border-t border-slate-200 bg-white p-[17px] pb-4 text-left ring-blue-500/10 ring-offset-0 hover:brightness-[99%] dark:border-slate-800 dark:bg-slate-900 dark:ring-blue-500/20",
         "[box-shadow:0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]",
         selected && "ring-[3px]",
       )}
     >
       <div className="flex gap-4">
-        <div className="relative size-[80px] shrink-0 overflow-hidden rounded-[16px] border border-[#E2E8F0] bg-white p-[1px]">
+        <div className="relative size-[80px] shrink-0 overflow-hidden rounded-[16px] border border-slate-200 bg-white p-[1px] dark:border-slate-800 dark:bg-slate-900">
           {thumbUrl ? (
             <img
               src={thumbUrl}
@@ -44,8 +44,8 @@ export function TransactionListCard({
               className="size-full rounded-[14px] object-cover"
             />
           ) : (
-            <span className="flex size-full items-center justify-center rounded-[14px] bg-[#F1F5F9]">
-              <Camera className="size-8 text-[#CAD5E2]" strokeWidth={1.75} />
+            <span className="flex size-full items-center justify-center rounded-[14px] bg-slate-100 dark:bg-slate-800">
+              <Camera className="size-8 text-slate-300 dark:text-slate-600" strokeWidth={1.75} />
             </span>
           )}
         </div>
@@ -53,13 +53,13 @@ export function TransactionListCard({
         <div className="min-w-0 flex-1">
           <div className="flex items-start gap-4">
             <div className="min-w-0 flex-1">
-              <p className="text-base leading-6 font-bold text-[#0F172B]">
+              <p className="text-base leading-6 font-bold text-slate-900 dark:text-slate-100">
                 {productName || "Объявление"}
               </p>
-              <p className="mt-1 text-sm leading-5 font-medium text-[#62748E]">
+              <p className="mt-1 text-sm leading-5 font-medium text-slate-500 dark:text-slate-400">
                 {presentation.roleLead}
               </p>
-              <p className="mt-3 text-sm leading-6 font-medium text-[#45556C]">
+              <p className="mt-3 text-sm leading-6 font-medium text-slate-600 dark:text-slate-300">
                 {presentation.description}
               </p>
             </div>
@@ -75,16 +75,16 @@ export function TransactionListCard({
 
           <div className="flex flex-wrap items-center justify-between gap-3 pt-4">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="text-lg leading-7 font-bold text-[#0F172B]">
+              <span className="text-lg leading-7 font-bold text-slate-900 dark:text-slate-100">
                 {priceLabel}
               </span>
-              <span className="text-sm leading-5 font-medium text-[#62748E]">
+              <span className="text-sm leading-5 font-medium text-slate-500 dark:text-slate-400">
                 {rentedAtLabel}
               </span>
             </div>
 
             {presentation.footerAccent ? (
-              <span className="inline-flex shrink-0 text-sm leading-5 font-medium text-[#155DFC]">
+              <span className="inline-flex shrink-0 text-sm leading-5 font-medium text-blue-600 dark:text-blue-500">
                 {presentation.footerAccent}
               </span>
             ) : (

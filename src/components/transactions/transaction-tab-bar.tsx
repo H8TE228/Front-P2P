@@ -12,7 +12,7 @@ export function TransactionTabBar<T extends string>({
   counts: Partial<Record<T, number>>;
 }) {
   return (
-    <div className="-mx-1 flex gap-8 overflow-x-auto border-b border-[#E2E8F0]">
+    <div className="-mx-1 flex gap-8 overflow-x-auto border-b border-slate-200 dark:border-slate-800">
       {items.map((tab) => {
         const selected = tab.id === activeId;
         const count = counts[tab.id];
@@ -25,13 +25,13 @@ export function TransactionTabBar<T extends string>({
             className={cn(
               "relative shrink-0 cursor-pointer border-0 border-b-[3px] bg-transparent pb-4 text-lg leading-7 font-bold transition-colors",
               selected
-                ? "border-[#0F172B] text-[#0F172B] hover:text-[#0F172B]"
-                : "border-transparent text-[#62748E] hover:text-[#45556C]",
+                ? "border-slate-900 text-slate-900 hover:text-slate-900 dark:border-slate-100 dark:text-slate-100 dark:hover:text-slate-100"
+                : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
             )}
           >
             <span className={cn("inline-flex items-center gap-1.5 whitespace-nowrap")}>
               <span>{tab.label}</span>
-              <span className="text-base leading-6 font-semibold text-[#90A1B9]">
+              <span className="text-base leading-6 font-semibold text-slate-400 dark:text-slate-500">
                 {count === undefined ? "—" : count}
               </span>
             </span>

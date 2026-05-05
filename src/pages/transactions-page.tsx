@@ -260,7 +260,7 @@ export function TransactionsPage() {
 
   return (
     <main className="mx-auto w-full max-w-[1280px] px-4 pt-8 pb-16">
-      <h1 className="text-[30px] leading-9 font-bold tracking-[-0.75px] text-[#0F172B]">
+      <h1 className="text-[30px] leading-9 font-bold tracking-[-0.75px] text-slate-900 dark:text-slate-100">
         Транзакции
       </h1>
 
@@ -290,7 +290,7 @@ export function TransactionsPage() {
           ) : null}
 
           {viewerId !== undefined && !isLoading && !transactionRows.length ? (
-            <div className="text-muted-foreground rounded-2xl border border-dashed border-[#CBD5F5] p-12 text-center text-sm leading-6">
+            <div className="text-muted-foreground rounded-2xl border border-dashed border-slate-200 p-12 text-center text-sm leading-6 dark:border-slate-800">
               Пока нет сделок в этом разделе.
             </div>
           ) : null}
@@ -427,7 +427,7 @@ export function TransactionsPage() {
               viewerIsOwner={ownerLens}
             />
           ) : (
-            <div className="text-muted-foreground rounded-[24px] border border-[#E2E8F0] bg-white p-12 text-center text-sm shadow-sm">
+            <div className="text-muted-foreground rounded-[24px] border border-slate-200 bg-white p-12 text-center text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900">
               Выберите сделку из списка.
             </div>
           )}
