@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCategories, useProducts } from "@/hooks";
+import { useCategories, useItemImages, useProducts } from "@/hooks";
 import { ChevronRight, X } from "lucide-react";
 import { useEffect, useMemo, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -95,9 +95,27 @@ export function CatalogPage() {
 
   const { data, isLoading } = useProducts(productsQuery);
   const { data: categoriesData } = useCategories();
+  const { data: itemImagesData } = useItemImages({ page_size: 1000 });
 
   const products = data?.results ?? [];
   const categories: Category[] = categoriesData?.results ?? [];
+  const imagesByItemId = useMemo(() => {
+    const map = new Map<number, string>();
+    const results = itemImagesData?.results ?? [];
+
+    for (const image of results) {
+      if (!image?.item || !image?.image) continue;
+      if (image.is_main) {
+        map.set(image.item, image.image);
+        continue;
+      }
+      if (!map.has(image.item)) {
+        map.set(image.item, image.image);
+      }
+    }
+
+    return map;
+  }, [itemImagesData]);
   const selectedCategory = useMemo(
     () => categories.find((item) => item.name === category),
     [categories, category],
@@ -468,7 +486,13 @@ export function CatalogPage() {
             {isLoading && <div>Загрузка...</div>}
 
             {!isLoading &&
-              products.map((p: Item) => <ListingCard key={p.id} product={p} />)}
+              products.map((p: Item) => (
+                <ListingCard
+                  key={p.id}
+                  product={p}
+                  imageUrl={imagesByItemId.get(p.id)}
+                />
+              ))}
           </div>
 
           {!isLoading && products.length === 0 && (

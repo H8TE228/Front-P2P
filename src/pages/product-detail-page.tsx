@@ -217,30 +217,6 @@ export function ProductDetailPage() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="space-y-4 lg:col-span-2">
             <section className="relative flex h-126 items-center justify-center overflow-hidden rounded-3xl bg-slate-100 dark:bg-slate-800">
-              <div className="absolute bottom-2 left-3 z-1000 flex gap-2">
-                <Button
-                  variant="outline"
-                  className="rounded-xl px-3 py-1.5 text-xs font-medium dark:bg-[#1f2937] dark:hover:bg-[#1f2937]/80"
-                >
-                  {current} / {imgCount}
-                </Button>
-              </div>
-
-              <div className="absolute top-2 right-3 flex gap-2">
-                <Button
-                  variant="outline"
-                  className="cursor-pointer rounded-xl px-3 py-1.5 text-xs font-medium dark:bg-[#1f2937] dark:hover:bg-[#1f2937]/80"
-                  onClick={toggleFavorite}
-                  disabled={createFavorite.isPending || deleteFavorite.isPending}
-                >
-                  <Heart
-                    className={
-                      isFavorite ? "text-red-600 fill-red-600" : undefined
-                    }
-                  />
-                </Button>
-              </div>
-
               {product.images?.length === 0 && (
                 <Camera className="h-16 w-16 self-center text-slate-300 dark:text-slate-600" />
               )}
@@ -258,7 +234,7 @@ export function ProductDetailPage() {
                           className="max-h-126 basis-full"
                         >
                           <img
-                            src={image.url}
+                            src={image.image}
                             alt={product.name}
                             className="h-full w-full object-cover object-center"
                           />
@@ -266,12 +242,43 @@ export function ProductDetailPage() {
                       );
                     })}
                   </CarouselContent>
-                  <div className="absolute right-3 bottom-2 flex h-10 w-17 items-center justify-between rounded-2xl bg-white/70 dark:bg-[#1f2937]">
+                  <div className="absolute right-3 bottom-2 z-10 flex h-10 w-17 items-center justify-between rounded-2xl bg-white/70 dark:bg-[#1f2937]">
                     <CarouselPrevious className="absolute left-0 ml-1" />
                     <CarouselNext className="absolute right-0 mr-1" />
                   </div>
                 </Carousel>
               )}
+
+              <div className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-between p-2 sm:p-3">
+                <div className="pointer-events-none flex justify-end">
+                  <div className="pointer-events-auto">
+                    <Button
+                      variant="outline"
+                      className="cursor-pointer rounded-xl px-3 py-1.5 text-xs font-medium dark:bg-[#1f2937] dark:hover:bg-[#1f2937]/80"
+                      onClick={toggleFavorite}
+                      disabled={
+                        createFavorite.isPending || deleteFavorite.isPending
+                      }
+                    >
+                      <Heart
+                        className={
+                          isFavorite ? "text-red-600 fill-red-600" : undefined
+                        }
+                      />
+                    </Button>
+                  </div>
+                </div>
+                <div className="pointer-events-none flex justify-start">
+                  <div className="pointer-events-auto">
+                    <Button
+                      variant="outline"
+                      className="rounded-xl px-3 py-1.5 text-xs font-medium dark:bg-[#1f2937] dark:hover:bg-[#1f2937]/80"
+                    >
+                      {current} / {imgCount}
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </section>
 
             <section className="mb-4">
@@ -302,7 +309,7 @@ export function ProductDetailPage() {
                         }`}
                       >
                         <img
-                          src={image.url}
+                          src={image.image}
                           alt=""
                           className="h-full w-full object-cover"
                         />

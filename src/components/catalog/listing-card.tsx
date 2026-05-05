@@ -28,18 +28,19 @@ const productStatus: Record<string, string> = {
 export function ListingCard({
   product,
   isMine,
+  imageUrl,
 }: {
   product: Item;
   isMine?: boolean;
+  imageUrl?: string;
 }) {
   const { mutateAsync, isPending } = useDeleteProduct();
 
   const [open, setOpen] = useState(false);
-  // const priceStr = `${formatRubAmount(product.priceRub)} ₽`;
-  // const suffix =
-  //   product.price.kind === "per_day"
-  //     ? "день"
-  //     : `доля ${product.price.percent}%`;
+  const primaryImage =
+    imageUrl ??
+    product.images?.find((x) => x.is_main)?.image ??
+    product.images?.[0]?.image;
 
   return (
     <Link
@@ -49,8 +50,7 @@ export function ListingCard({
       <div className="relative w-full">
         <img
           src={
-            product.images![0]?.url ||
-            "https://via.placeholder.com/300?text=No+Image"
+            primaryImage || "https://via.placeholder.com/300?text=No+Image"
           }
           alt={product.name}
           className="aspect-square w-full rounded-[14px] border border-[#E2E8F0] object-cover dark:border-[#1D293D]"

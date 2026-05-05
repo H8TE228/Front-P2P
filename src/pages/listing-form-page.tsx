@@ -13,6 +13,7 @@ import {
 import { CATALOG_CATEGORIES } from "@/constants";
 import { useCreateListing, useListingTypes } from "@/hooks";
 import { Button } from "@/components/ui/button";
+import { itemImagesQueries } from "@/api";
 import {
   Field,
   FieldDescription,
@@ -176,15 +177,22 @@ export function ListingFormPage() {
       formData.append("type", String(parsedType));
       formData.append("name", data.name);
       formData.append("description", data.description);
-      formData.append("characteristics", data.characteristics);
+      formData.append("characteristics", JSON.stringify(data.characteristics));
       formData.append("status", data.status);
       formData.append("price", data.pricePerDay);
 
-      photos.forEach((photo) => {
-        formData.append("images", photo.file);
-      });
+      const created = await createListing(formData);
+      const createdId = Number((created as any)?.id);
 
-      await createListing(formData);
+      if (Number.isFinite(createdId) && photos.length > 0) {
+        for (let i = 0; i < photos.length; i++) {
+          const payload = new FormData();
+          payload.append("item", String(createdId));
+          payload.append("image", photos[i].file);
+          payload.append("is_main", String(i === 0));
+          await itemImagesQueries.createItemImage(payload);
+        }
+      }
 
       // await createListing({
       //   type: parsedType,
@@ -227,21 +235,32 @@ export function ListingFormPage() {
 
     const maxSize = 5 * 1024 * 1024;
     const maxCount = 10;
+    const allowedTypes = new Set([
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/webp",
+      "image/heic",
+      "image/heif",
+    ]);
 
     setPhotos((prev) => {
       const availableSlots = maxCount - prev.length;
       if (availableSlots <= 0) return prev;
 
       const newPhotos = Array.from(fileList)
-        .filter(
-          (file) => file.size <= maxSize && file.type.match("image/(jpeg|png)"),
-        )
+        .filter((file) => file.size <= maxSize && allowedTypes.has(file.type))
         .slice(0, availableSlots)
         .map((file) => ({
           file,
           preview: URL.createObjectURL(file),
         }));
 
+      setPhotoError(
+        newPhotos.length === 0
+          ? "Выберите изображения (JPEG/PNG/WEBP) до 5 МБ"
+          : "",
+      );
       return [...prev, ...newPhotos];
     });
   }
@@ -634,7 +653,7 @@ export function ListingFormPage() {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept="image/png,image/jpeg"
+                  accept="image/png,image/jpeg,image/jpg,image/webp,image/heic,image/heif"
                   multiple
                   className="hidden"
                   onChange={(event) => {

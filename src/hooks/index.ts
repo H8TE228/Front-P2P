@@ -27,3 +27,4 @@ export { useViewHistoryItems } from "./use-view-history-items";
 export { useFavoriteItems } from "./use-favorite-items";
 export { useCreateFavoriteItem } from "./use-create-favorite-item";
 export { useDeleteFavoriteItem } from "./use-delete-favorite-item";
+export { useItemImages } from "./use-item-images";

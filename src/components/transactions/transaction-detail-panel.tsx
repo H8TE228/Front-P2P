@@ -140,7 +140,7 @@ export function TransactionDetailPanel({
           <div className="flex items-start gap-3">
             <div
               className={cn(
-                "flex size-[56px] shrink-0 items-center justify-center overflow-hidden rounded-[14px] px-3.5",
+                "flex size-[56px] shrink-0 items-center justify-center overflow-hidden rounded-[14px]",
                 primaryImageUrl ? "bg-white dark:bg-slate-900" : "bg-slate-100 dark:bg-slate-800",
               )}
             >
@@ -148,7 +148,7 @@ export function TransactionDetailPanel({
                 <img
                   alt={productName}
                   src={primaryImageUrl}
-                  className="size-full rounded-[14px] object-cover"
+                  className="h-full w-full rounded-[14px] object-cover object-center"
                 />
               ) : (
                 <Camera className="size-7 text-slate-300 dark:text-slate-500" strokeWidth={1.75} />

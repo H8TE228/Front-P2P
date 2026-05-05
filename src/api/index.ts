@@ -5,3 +5,4 @@ export { transactionsQueries } from "./transactions-queries";
 export { reviewsQueries } from "./reviews-queries";
 export { viewHistoryQueries } from "./view-history-queries";
 export { favoriteItemsQueries } from "./favorite-items-queries";
+export { itemImagesQueries } from "./item-images-queries";
