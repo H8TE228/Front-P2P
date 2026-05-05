@@ -19,7 +19,14 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useCreateTransaction, useLogViewHistory, useProduct } from "@/hooks";
+import {
+  useCreateFavoriteItem,
+  useCreateTransaction,
+  useDeleteFavoriteItem,
+  useFavoriteItems,
+  useLogViewHistory,
+  useProduct,
+} from "@/hooks";
 import {
   Carousel,
   CarouselContent,
@@ -72,11 +79,19 @@ export function ProductDetailPage() {
   const [rentError, setRentError] = useState<string | null>(null);
 
   const { data: product } = useProduct(id!);
+  const { data: favorites } = useFavoriteItems({ page_size: 200 });
   const imgCount = product?.images?.length || 0;
 
   const user = useAppSelector((state) => state.auth.user);
   const createTransaction = useCreateTransaction();
   const logView = useLogViewHistory();
+  const createFavorite = useCreateFavoriteItem();
+  const deleteFavorite = useDeleteFavoriteItem();
+
+  const favoriteEntry = favorites?.results?.find(
+    (x) => x.item?.id === Number(product?.id),
+  );
+  const isFavorite = Boolean(favoriteEntry);
 
   const rentDisabled =
     !product ||
@@ -105,6 +120,16 @@ export function ProductDetailPage() {
         );
       },
     });
+  };
+
+  const toggleFavorite = () => {
+    if (!product) return;
+    const fav = favoriteEntry;
+    if (fav) {
+      deleteFavorite.mutate(fav.id);
+      return;
+    }
+    createFavorite.mutate({ item_id: Number(product.id) });
   };
 
   useEffect(() => {
@@ -204,10 +229,15 @@ export function ProductDetailPage() {
               <div className="absolute top-2 right-3 flex gap-2">
                 <Button
                   variant="outline"
-                  disabled
-                  className="rounded-xl px-3 py-1.5 text-xs font-medium dark:bg-[#1f2937] dark:hover:bg-[#1f2937]/80"
+                  className="cursor-pointer rounded-xl px-3 py-1.5 text-xs font-medium dark:bg-[#1f2937] dark:hover:bg-[#1f2937]/80"
+                  onClick={toggleFavorite}
+                  disabled={createFavorite.isPending || deleteFavorite.isPending}
                 >
-                  <Heart />
+                  <Heart
+                    className={
+                      isFavorite ? "text-red-600 fill-red-600" : undefined
+                    }
+                  />
                 </Button>
               </div>
 
