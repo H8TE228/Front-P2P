@@ -7,8 +7,14 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { useProducts } from "@/hooks";
-import { Search, X } from "lucide-react";
+import {
+  useProducts,
+  useSearchHistory,
+  useLogSearch,
+  useDeleteSearchHistory,
+} from "@/hooks";
+import type { SearchHistory } from "@/api/schema";
+import { Clock, Search, X } from "lucide-react";
 import { Input } from "../ui/input";
 
 export function SearchInput({
@@ -21,34 +27,52 @@ export function SearchInput({
   const [query, setQuery] = useState("");
   const [searchParams, setSearchParams] = useState<{ search?: string }>({});
   const [open, setOpen] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
+  const trimmedQuery = query.trim();
+  const showHistory = inputFocused && !trimmedQuery;
+
   const { data: products, isLoading } = useProducts(searchParams);
-
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     setSearchParams(query ? { search: query } : {});
-  //   }, 300);
-
-  //   return () => clearTimeout(timeout);
-  // }, [query]);
+  const { data: searchHistoryData, isLoading: historyLoading } = useSearchHistory(
+    { page_size: 10 },
+    { enabled: showHistory },
+  );
+  const logSearch = useLogSearch();
+  const deleteSearchHistory = useDeleteSearchHistory();
 
   const closeResults = useCallback(() => {
     setOpen(false);
+    setInputFocused(false);
   }, []);
 
   useEffect(() => {
-    if (!query) {
+    const trimmed = query.trim();
+
+    if (!trimmed) {
+      setSearchParams({});
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setSearchParams({ search: trimmed });
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [query]);
+
+  useEffect(() => {
+    if (!trimmedQuery) {
       setOpen(false);
       return;
     }
 
     setOpen(true);
-  }, [query]);
+  }, [trimmedQuery]);
 
   useEffect(() => {
-    if (!open) {
+    if (!open && !showHistory) {
       return;
     }
 
@@ -74,13 +98,33 @@ export function SearchInput({
       document.removeEventListener("touchstart", handlePointerDown);
       window.removeEventListener("keydown", handleEscape);
     };
-  }, [open, closeResults]);
+  }, [open, showHistory, closeResults]);
 
   const handleSelect = (productId: number) => {
+    if (trimmedQuery) {
+      logSearch.mutate({ query_text: trimmedQuery, filters: "" });
+    }
     navigate(`/product/${productId}`);
     setQuery("");
     setOpen(false);
+    setInputFocused(false);
     if (onSelect) onSelect();
+  };
+
+  const handleHistoryPick = (item: SearchHistory) => {
+    setQuery(item.query_text);
+    setSearchParams({ search: item.query_text });
+    setOpen(true);
+    const filters =
+      typeof item.filters === "string" ? item.filters : "";
+    logSearch.mutate({ query_text: item.query_text, filters });
+  };
+
+  const runSearch = () => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    setSearchParams({ search: trimmed });
+    logSearch.mutate({ query_text: trimmed, filters: "" });
   };
 
   return (
@@ -90,9 +134,10 @@ export function SearchInput({
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
           const nextQuery = e.target.value;
           setQuery(nextQuery);
-          setOpen(Boolean(nextQuery));
+          setOpen(Boolean(nextQuery.trim()));
         }}
         onFocus={() => {
+          setInputFocused(true);
           if (query) {
             setOpen(true);
           }
@@ -106,6 +151,7 @@ export function SearchInput({
 
       {query && (
         <button
+          type="button"
           onClick={() => {
             setQuery("");
             setOpen(false);
@@ -119,18 +165,71 @@ export function SearchInput({
         </button>
       )}
       <button
-        onClick={() => {
-          setSearchParams({ search: query });
-        }}
+        type="button"
+        className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0"
+        onClick={runSearch}
+        aria-label="Искать"
       >
         <Search
-          className="absolute top-1/2 right-3 size-6 -translate-y-1/2 cursor-pointer text-[#90A1B9] dark:text-[#62748E]"
+          className="size-6 text-[#90A1B9] dark:text-[#62748E]"
           strokeWidth={2}
         />
       </button>
 
-      {query && open && (
-        <ul className="absolute top-full left-0 z-10 mt-2 w-full rounded-lg bg-white shadow-md">
+      {showHistory && (
+        <div
+          className={cn(
+            "absolute top-full left-0 z-10 mt-2 w-full rounded-lg border border-[#E5E7EB] bg-white p-4 shadow-md dark:border-[#1D293D] dark:bg-[#0F172B]",
+            className,
+          )}
+        >
+          <div className="text-[12px] leading-4 font-semibold tracking-[0.6px] text-[#90A1B9] uppercase">
+            Недавние запросы
+          </div>
+          {historyLoading ? (
+            <div className="mt-3 text-sm text-[#90A1B9]">Загрузка...</div>
+          ) : (
+            <ul className="mt-3 flex flex-col gap-1">
+              {(searchHistoryData?.results ?? [])
+                .filter((item) => item.query_text?.trim())
+                .map((item) => (
+                  <li key={item.id}>
+                    <div className="flex w-full items-center">
+                      <button
+                        type="button"
+                        className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-2 text-left hover:bg-[#F3F4F6] dark:hover:bg-[#1D293D]"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => handleHistoryPick(item)}
+                      >
+                        <div className="flex min-w-0 flex-1 items-start gap-3">
+                          <Clock
+                            className="mt-0.5 size-4 shrink-0 text-[#90A1B9]"
+                            strokeWidth={2}
+                          />
+                          <span className="truncate text-[14px] leading-5 font-medium text-[#314158] dark:text-[#E2E8F0]">
+                            {item.query_text}
+                          </span>
+                        </div>
+                        <span
+                          className="ml-1 flex size-5 shrink-0 items-center justify-center rounded-full text-[#90A1B9] hover:text-[#314158] dark:text-[#62748E] dark:hover:text-[#E2E8F0]"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteSearchHistory.mutate(item.id);
+                          }}
+                        >
+                          <X className="size-3.5" strokeWidth={2} />
+                        </span>
+                      </button>
+                    </div>
+                  </li>
+                ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {trimmedQuery && open && (
+        <ul className="absolute top-full left-0 z-10 mt-2 w-full rounded-lg bg-white shadow-md dark:bg-[#0F172B] dark:shadow-none">
           {isLoading && (
             <li
               className={cn("h-10 px-2 py-2 text-sm text-gray-500", className)}
@@ -152,7 +251,7 @@ export function SearchInput({
               <li
                 key={product.id}
                 className={cn(
-                  "flex h-11 cursor-pointer items-center justify-between rounded-lg px-4 py-2 hover:bg-gray-100",
+                  "flex h-11 cursor-pointer items-center justify-between rounded-lg px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1D293D]",
                   className,
                 )}
                 onClick={() => handleSelect(product.id)}

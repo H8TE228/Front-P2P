@@ -28,3 +28,12 @@ export { useFavoriteItems } from "./use-favorite-items";
 export { useCreateFavoriteItem } from "./use-create-favorite-item";
 export { useDeleteFavoriteItem } from "./use-delete-favorite-item";
 export { useItemImages } from "./use-item-images";
+export {
+  useSearchHistory,
+  useSearchHistoryItem,
+  useCreateSearchHistory,
+  usePutSearchHistory,
+  usePatchSearchHistory,
+  useDeleteSearchHistory,
+  useLogSearch,
+} from "./use-search-history";
