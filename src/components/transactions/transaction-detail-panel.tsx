@@ -59,6 +59,7 @@ export function TransactionDetailPanel({
   onReviewRating,
   onReviewText,
   onPublishReview,
+  isReviewPending,
   onApprove,
   onReject,
   onReturnComplete,
@@ -79,6 +80,7 @@ export function TransactionDetailPanel({
   onReviewRating: (stars: number) => void;
   onReviewText: (value: string) => void;
   onPublishReview: () => void;
+  isReviewPending: boolean;
   onApprove: () => void;
   onReject: () => void;
   onReturnComplete: () => void;
@@ -441,7 +443,7 @@ export function TransactionDetailPanel({
                   "mt-5 h-10 w-full cursor-pointer rounded-[14px] bg-[#155DFC]",
                   reviewRating <= 0 && "pointer-events-none opacity-85",
                 )}
-                disabled={reviewRating <= 0}
+                disabled={reviewRating <= 0 || isReviewPending}
                 onClick={onPublishReview}
               >
                 Опубликовать отзыв

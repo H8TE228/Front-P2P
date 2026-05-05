@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/pagination";
 import {
   useApproveTransaction,
+  useCreateReview,
   useRejectTransaction,
   useReturnTransaction,
   useTransactionLookups,
@@ -51,10 +52,10 @@ export function TransactionsPage() {
   );
   const [publishedReviewKeys, setPublishedReviewKeys] = useState<string[]>([]);
   const [reviewStarsState, setReviewStarsState] = useState<
-    Record<number, number>
+    Record<string, number>
   >({});
   const [reviewBodiesState, setReviewBodiesState] = useState<
-    Record<number, string>
+    Record<string, string>
   >({});
 
   useEffect(() => {
@@ -148,6 +149,7 @@ export function TransactionsPage() {
   const approveMutation = useApproveTransaction();
   const rejectMutation = useRejectTransaction();
   const returnMutation = useReturnTransaction();
+  const createReviewMutation = useCreateReview();
 
   const counterpartIdentifier =
     focusedTransaction && viewerId !== undefined
@@ -253,8 +255,27 @@ export function TransactionsPage() {
 
     const ledger = reviewDraftKey(focusedTransaction.id, ownerLens);
 
-    setPublishedReviewKeys((past) =>
-      past.includes(ledger) ? past : [...past, ledger],
+    if (publishedReviewSet.has(ledger)) {
+      return;
+    }
+
+    if (createReviewMutation.isPending) {
+      return;
+    }
+
+    createReviewMutation.mutate(
+      {
+        transaction: focusedTransaction.id,
+        rating: reviewGrade,
+        comment: reviewBody.trim() ? reviewBody.trim() : null,
+      },
+      {
+        onSuccess: () => {
+          setPublishedReviewKeys((past) =>
+            past.includes(ledger) ? past : [...past, ledger],
+          );
+        },
+      },
     );
   };
 
@@ -407,6 +428,7 @@ export function TransactionsPage() {
               isApprovePending={approveMutation.isPending}
               isRejectPending={rejectMutation.isPending}
               isReturnPending={returnMutation.isPending}
+              isReviewPending={createReviewMutation.isPending}
               item={activeItemRecord}
               onApprove={() => approveMutation.mutate(focusedTransaction.id)}
               onInitiateReturn={() =>
