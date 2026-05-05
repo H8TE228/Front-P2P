@@ -9,11 +9,7 @@ export const itemImagesQueries = {
     return res.data;
   },
   createItemImage: async (data: FormData) => {
-    const res = await api.post("/listings/item-images/", data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const res = await api.post("/listings/item-images/", data);
     return res.data;
   },
 };

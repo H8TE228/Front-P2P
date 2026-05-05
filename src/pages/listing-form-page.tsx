@@ -172,16 +172,20 @@ export function ListingFormPage() {
         return;
       }
 
-      const formData = new FormData();
+      const payload = {
+        type: parsedType,
+        name: data.name,
+        description: data.description,
+        characteristics: data.characteristics,
+        status: data.status,
+        price: data.pricePerDay,
+        delivery_method: "pickup",
+        max_active_transactions:
+          data.dealFormat === "rent" ? 1 : Number(data.maxPeople) || 1,
+        availability_calendar: [],
+      };
 
-      formData.append("type", String(parsedType));
-      formData.append("name", data.name);
-      formData.append("description", data.description);
-      formData.append("characteristics", JSON.stringify(data.characteristics));
-      formData.append("status", data.status);
-      formData.append("price", data.pricePerDay);
-
-      const created = await createListing(formData);
+      const created = await createListing(payload);
       const createdId = Number((created as any)?.id);
 
       if (Number.isFinite(createdId) && photos.length > 0) {
@@ -193,16 +197,6 @@ export function ListingFormPage() {
           await itemImagesQueries.createItemImage(payload);
         }
       }
-
-      // await createListing({
-      //   type: parsedType,
-      //   name: data.name,
-      //   description: data.description,
-      //   characteristics: data.characteristics,
-      //   status: data.status,
-      //   price: data.pricePerDay,
-      //   images: [],
-      // });
       navigate("/my-profile");
     } catch (error) {
       if (error instanceof AxiosError) {
