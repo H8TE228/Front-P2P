@@ -19,7 +19,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useCreateTransaction, useProduct } from "@/hooks";
+import { useCreateTransaction, useLogViewHistory, useProduct } from "@/hooks";
 import {
   Carousel,
   CarouselContent,
@@ -76,6 +76,7 @@ export function ProductDetailPage() {
 
   const user = useAppSelector((state) => state.auth.user);
   const createTransaction = useCreateTransaction();
+  const logView = useLogViewHistory();
 
   const rentDisabled =
     !product ||
@@ -120,6 +121,12 @@ export function ProductDetailPage() {
       api.off("select", onSelect);
     };
   }, [api]);
+
+  useEffect(() => {
+    const itemId = Number(id);
+    if (!Number.isFinite(itemId)) return;
+    logView.mutate({ item: itemId });
+  }, [id]);
 
   const handleThumbClick = (index: number) => {
     api?.scrollTo(index);

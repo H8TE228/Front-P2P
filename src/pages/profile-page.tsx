@@ -8,7 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useMyProducts, useProfile } from "@/hooks";
+import { useMyProducts, useProfile, useViewHistoryItems } from "@/hooks";
 import { useAppDispatch } from "@/hooks/rtk";
 import { logout } from "@/store/auth-slice";
 import { MapPin, Pen, Shield, Star } from "lucide-react";
@@ -20,6 +20,8 @@ export function ProfilePage() {
   const navigate = useNavigate();
   const { data } = useProfile();
   const { data: myProducts, isLoading: isMyProductsLoading } = useMyProducts();
+  const { items: viewHistoryItems, isLoading: isViewHistoryLoading } =
+    useViewHistoryItems({ page_size: 10 });
   const dispatch = useAppDispatch();
 
   return (
@@ -123,6 +125,45 @@ export function ProfilePage() {
                     key={p.id}
                   >
                     <ListingCard key={p.id} product={p} isMine={true} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious style={{ bottom: "-35px", right: "40px" }} />
+              <CarouselNext style={{ bottom: "-35px", right: 0 }} />
+            </Carousel>
+          )}
+        </section>
+
+        <section className="mb-8 mt-8">
+          <div className="relative flex justify-between border-b">
+            <div className="w-41 border-b-3 border-black pb-5">
+              <h2 className="text-lg font-semibold whitespace-nowrap">
+                История просмотра
+              </h2>
+            </div>
+          </div>
+        </section>
+
+        <section className="pb-4 sm:min-h-97">
+          {isViewHistoryLoading && (
+            <div className="text-muted-foreground col-span-full text-center">
+              Загрузка истории...
+            </div>
+          )}
+          {!isViewHistoryLoading && !viewHistoryItems.length && (
+            <div className="text-muted-foreground col-span-full text-center">
+              История просмотра пуста
+            </div>
+          )}
+          {!isViewHistoryLoading && Boolean(viewHistoryItems.length) && (
+            <Carousel className="relative w-full">
+              <CarouselContent className="relative lg:h-86">
+                {viewHistoryItems.map((p: Item) => (
+                  <CarouselItem
+                    className="basis-1/2 sm:basis-1/3 lg:basis-1/5"
+                    key={p.id}
+                  >
+                    <ListingCard key={p.id} product={p} />
                   </CarouselItem>
                 ))}
               </CarouselContent>

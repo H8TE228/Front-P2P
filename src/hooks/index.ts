@@ -22,3 +22,5 @@ export { useRejectTransaction } from "./use-reject-transaction";
 export { useReturnTransaction } from "./use-return-transaction";
 export { useTransactionLookups } from "./use-transaction-lookups";
 export { useCreateReview } from "./use-create-review";
+export { useViewHistory, useLogViewHistory } from "./use-view-history";
+export { useViewHistoryItems } from "./use-view-history-items";
