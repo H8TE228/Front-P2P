@@ -5,9 +5,9 @@
  */
 import type { ItemDetail } from './itemDetail';
 
-export interface FavoriteItem {
-  readonly id: number;
-  readonly item: ItemDetail;
-  item_id: number;
-  readonly created_at: string;
+export interface PatchedFavoriteItem {
+  readonly id?: number;
+  readonly item?: ItemDetail;
+  item_id?: number;
+  readonly created_at?: string;
 }

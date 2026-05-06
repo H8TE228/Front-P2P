@@ -3,10 +3,12 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
+import type { ItemDetail } from './itemDetail';
 
 export interface PatchedViewHistory {
   readonly id?: number;
-  item?: number;
-  readonly item_name?: string;
+  readonly item?: ItemDetail;
+  item_id?: number;
   readonly created_at?: string;
+  readonly last_viewed_at?: string;
 }

@@ -1,4 +1,4 @@
-import type { Item } from "@/api/schema";
+import type { Item, ViewHistory } from "@/api/schema";
 import { ListingCard } from "@/components";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,20 +8,24 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useMyProducts, useProfile, useViewHistoryItems } from "@/hooks";
+import {
+  useMyProducts,
+  useProfile,
+  useViewHistory,
+  useViewHistoryItems,
+} from "@/hooks";
 import { useAppDispatch } from "@/hooks/rtk";
 import { logout } from "@/store/auth-slice";
 import { MapPin, Pen, Shield, Star } from "lucide-react";
 import { DoorClosed } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 export function ProfilePage() {
   const navigate = useNavigate();
   const { data } = useProfile();
   const { data: myProducts, isLoading: isMyProductsLoading } = useMyProducts();
-  const { items: viewHistoryItems, isLoading: isViewHistoryLoading } =
-    useViewHistoryItems({ page_size: 10 });
+  const { data: viewHistoryItems, isLoading: isViewHistoryLoading } =
+    useViewHistory({ page_size: 10 });
   const dispatch = useAppDispatch();
 
   return (
@@ -134,7 +138,7 @@ export function ProfilePage() {
           )}
         </section>
 
-        <section className="mb-8 mt-8">
+        <section className="mt-8 mb-8">
           <div className="relative flex justify-between border-b">
             <div className="w-41 border-b-3 border-black pb-5">
               <h2 className="text-lg font-semibold whitespace-nowrap">
@@ -150,27 +154,28 @@ export function ProfilePage() {
               Загрузка истории...
             </div>
           )}
-          {!isViewHistoryLoading && !viewHistoryItems.length && (
+          {!isViewHistoryLoading && !viewHistoryItems?.results.length && (
             <div className="text-muted-foreground col-span-full text-center">
               История просмотра пуста
             </div>
           )}
-          {!isViewHistoryLoading && Boolean(viewHistoryItems.length) && (
-            <Carousel className="relative w-full">
-              <CarouselContent className="relative lg:h-86">
-                {viewHistoryItems.map((p: Item) => (
-                  <CarouselItem
-                    className="basis-1/2 sm:basis-1/3 lg:basis-1/5"
-                    key={p.id}
-                  >
-                    <ListingCard key={p.id} product={p} />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious style={{ bottom: "-35px", right: "40px" }} />
-              <CarouselNext style={{ bottom: "-35px", right: 0 }} />
-            </Carousel>
-          )}
+          {!isViewHistoryLoading &&
+            Boolean(viewHistoryItems?.results.length) && (
+              <Carousel className="relative w-full">
+                <CarouselContent className="relative lg:h-86">
+                  {viewHistoryItems?.results.map((p: ViewHistory) => (
+                    <CarouselItem
+                      className="basis-1/2 sm:basis-1/3 lg:basis-1/5"
+                      key={p.id}
+                    >
+                      <ListingCard key={p.id} product={p.item} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious style={{ bottom: "-35px", right: "40px" }} />
+                <CarouselNext style={{ bottom: "-35px", right: 0 }} />
+              </Carousel>
+            )}
         </section>
       </div>
     </main>

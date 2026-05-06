@@ -4,7 +4,7 @@
  * OpenAPI spec version: 0.0.0
  */
 
-export type ListingsFavoriteItemsListParams = {
+export type ListingsNotificationsListParams = {
 /**
  * A page number within the paginated result set.
  */

@@ -4,8 +4,6 @@
  * OpenAPI spec version: 0.0.0
  */
 
-import type { Item } from "./item";
-
 export interface ProfilePage {
   readonly id: number;
   /**
@@ -37,5 +35,5 @@ export interface ProfilePage {
   district: string;
   readonly rating: string;
   readonly reviews_count: string;
-  items: Item[];
+  readonly items: string;
 }

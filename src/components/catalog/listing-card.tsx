@@ -18,12 +18,12 @@ import {
 import { Button } from "../ui/button";
 import { useState } from "react";
 
-const productStatus: Record<string, string> = {
-  available: "Доступен",
-  rented: "Сдан",
-  maintenance: "На обслуживании",
-  unavailable: "Недоступен",
-};
+// const productStatus: Record<string, string> = {
+//   available: "Доступен",
+//   rented: "Сдан",
+//   maintenance: "На обслуживании",
+//   unavailable: "Недоступен",
+// };
 
 export function ListingCard({
   product,
@@ -49,9 +49,7 @@ export function ListingCard({
     >
       <div className="relative w-full">
         <img
-          src={
-            primaryImage || "https://via.placeholder.com/300?text=No+Image"
-          }
+          src={primaryImage || "https://via.placeholder.com/300?text=No+Image"}
           alt={product.name}
           className="aspect-square w-full rounded-[14px] border border-[#E2E8F0] object-cover dark:border-[#1D293D]"
         />
@@ -62,7 +60,8 @@ export function ListingCard({
             "rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[10px] leading-[15px] font-bold tracking-[0.5px] text-[#314158] uppercase dark:border-[#1D293D] dark:bg-[#0F172B] dark:text-[#CAD5E2]",
           )}
         >
-          {productStatus[String(product.status)] ?? "Статус не указан"}
+          {/* {productStatus[String(product.status)] ?? "Статус не указан"} */}
+          {product.status === "available" ? "Доступен" : "Недоступен"}
         </span>
         {isMine && (
           <AlertDialog open={open} onOpenChange={setOpen}>

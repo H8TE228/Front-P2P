@@ -30,4 +30,5 @@ search?: string;
  */
 status?: ListingsItemListStatus;
 type?: number;
+type_name?: string;
 };

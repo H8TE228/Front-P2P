@@ -6,7 +6,9 @@
 
 export interface PatchedSearchHistory {
   readonly id?: number;
+  /** @maxLength 255 */
   query_text?: string;
   filters?: unknown;
   readonly created_at?: string;
+  readonly last_searched_at?: string;
 }

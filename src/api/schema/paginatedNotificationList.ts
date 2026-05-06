@@ -3,13 +3,13 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { FavoriteItem } from './favoriteItem';
+import type { Notification } from './notification';
 
-export interface PaginatedFavoriteItemList {
+export interface PaginatedNotificationList {
   count: number;
   /** @nullable */
   next?: string | null;
   /** @nullable */
   previous?: string | null;
-  results: FavoriteItem[];
+  results: Notification[];
 }

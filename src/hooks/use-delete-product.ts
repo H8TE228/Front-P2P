@@ -11,6 +11,7 @@ export function useDeleteProduct() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-products"] });
+      queryClient.invalidateQueries({ queryKey: ["view-history"] });
     },
     onError: () => {},
   });

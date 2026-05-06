@@ -6,6 +6,8 @@
 import type { ItemDetailOwner } from './itemDetailOwner';
 import type { StatusFeaEnum } from './statusFeaEnum';
 import type { ItemImage } from './itemImage';
+import type { ItemDetailDeliveryMethod } from './itemDetailDeliveryMethod';
+import type { AvailabilityCalendar } from './availabilityCalendar';
 
 export interface ItemDetail {
   readonly id: number;
@@ -24,4 +26,11 @@ export interface ItemDetail {
   readonly images: readonly ItemImage[];
   readonly created_at: string;
   readonly updated_at: string;
+  delivery_method?: typeof ItemDetailDeliveryMethod[keyof typeof ItemDetailDeliveryMethod] ;
+  /**
+   * @minimum -2147483648
+   * @maximum 2147483647
+   */
+  max_active_transactions?: number;
+  availability_calendar?: AvailabilityCalendar[];
 }

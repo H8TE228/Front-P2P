@@ -5,6 +5,8 @@
  */
 import type { StatusFeaEnum } from './statusFeaEnum';
 import type { ItemImage } from './itemImage';
+import type { PatchedItemDeliveryMethod } from './patchedItemDeliveryMethod';
+import type { AvailabilityCalendar } from './availabilityCalendar';
 
 export interface PatchedItem {
   readonly id?: number;
@@ -23,4 +25,11 @@ export interface PatchedItem {
   readonly images?: readonly ItemImage[];
   readonly created_at?: string;
   readonly updated_at?: string;
+  delivery_method?: typeof PatchedItemDeliveryMethod[keyof typeof PatchedItemDeliveryMethod] ;
+  /**
+   * @minimum -2147483648
+   * @maximum 2147483647
+   */
+  max_active_transactions?: number;
+  availability_calendar?: AvailabilityCalendar[];
 }

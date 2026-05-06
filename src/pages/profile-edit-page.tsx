@@ -28,7 +28,6 @@ export function ProfileEditPage() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { data } = useProfile();
-  // const { data: myProducts, isLoading: isMyProductsLoading } = useMyProducts();
   const { mutateAsync: updateProfile, isPending } = useUpdateProfile();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -238,35 +237,6 @@ export function ProfileEditPage() {
             </div>
           </div>
         </section>
-
-        {/* <section className="mb-8">
-          <div className="relative flex justify-between border-b">
-            <div className="w-41 border-b-3 border-black pb-5">
-              <h2 className="text-lg font-semibold">Мои объявления</h2>
-            </div>
-            <Button
-              variant="blue"
-              className="absolute right-0 -bottom-1/3 h-9.5 rounded-2xl border-[#155dfc] shadow-md"
-              onClick={() => {
-                navigate("/listing-form");
-              }}
-            >
-              Разместить объявление
-            </Button>
-          </div>
-        </section>
-
-        <section className="grid min-h-104 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {!isMyProductsLoading &&
-            myProducts?.results.map((p: Item) => (
-              <ListingCard key={p.id} product={p} />
-            ))}
-          {isMyProductsLoading && (
-            <div className="text-muted-foreground col-span-full text-center">
-              Загрузка объявлений...
-            </div>
-          )}
-        </section> */}
       </div>
     </main>
   );

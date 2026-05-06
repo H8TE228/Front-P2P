@@ -17,19 +17,12 @@ export function FavoritePage() {
     setSearchParams({ category });
   }
 
-  const { data, isLoading } = useFavoriteItems({ page_size: 100 });
+  const { data, isLoading } = useFavoriteItems({
+    page_size: 100,
+    category: favoriteCategory,
+  });
 
   const items = data?.results ?? [];
-  const filtered =
-    favoriteCategory === "all"
-      ? items
-      : items.filter((x) => {
-          const type = String(x.item.type_name || "").toLowerCase();
-          if (favoriteCategory === "rental") {
-            return type.includes("rent") || type.includes("rental");
-          }
-          return type.includes("co") || type.includes("own");
-        });
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
@@ -64,18 +57,13 @@ export function FavoritePage() {
 
         <section className="pt-4">
           {isLoading && <div>Загрузка...</div>}
-          {!isLoading && filtered.length === 0 && (
+          {!isLoading && items.length === 0 && (
             <div>Тут будут понравившиеся объявления</div>
           )}
-          {!isLoading && filtered.length > 0 && (
+          {!isLoading && items.length > 0 && (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {filtered.map((fav) => {
-                const product = {
-                  ...fav.item,
-                  owner: fav.item.owner?.id ?? (fav.item as any).owner,
-                } as any;
-
-                return <ListingCard key={fav.id} product={product} />;
+              {items.map((item) => {
+                return <ListingCard key={item.id} product={item.item} />;
               })}
             </div>
           )}

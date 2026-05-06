@@ -1,6 +1,6 @@
 export default {
   api: {
-    input: "./schema.yaml",
+    input: "http://127.0.0.1:8000/api/v1/schema/",
     output: {
       target: "./src/api/generated.ts",
       schemas: "./src/api/schema",

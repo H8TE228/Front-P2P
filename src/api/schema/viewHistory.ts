@@ -3,10 +3,13 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
+import type { Item } from "./item";
+import type { ItemDetail } from "./itemDetail";
 
 export interface ViewHistory {
   readonly id: number;
-  item: number;
-  readonly item_name: string;
+  item: Item;
+  item_id?: number;
   readonly created_at: string;
+  readonly last_viewed_at: string;
 }
