@@ -3,7 +3,7 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { TransactionStatusEnum } from './transactionStatusEnum';
+import type { TransactionStatusEnum } from "./transactionStatusEnum";
 
 export interface Transaction {
   readonly id: number;
@@ -14,4 +14,6 @@ export interface Transaction {
   readonly status: TransactionStatusEnum;
   /** @nullable */
   readonly returned_at: string | null;
+  planned_start: string;
+  planned_end: string;
 }

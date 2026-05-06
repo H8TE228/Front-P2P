@@ -26,7 +26,10 @@ function StageIcon({ row }: { row: StageRow }) {
   if (row.kind === "done") {
     return (
       <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/20">
-        <Check className="size-3 text-blue-600 dark:text-blue-500" strokeWidth={3} />
+        <Check
+          className="size-3 text-blue-600 dark:text-blue-500"
+          strokeWidth={3}
+        />
       </span>
     );
   }
@@ -34,14 +37,20 @@ function StageIcon({ row }: { row: StageRow }) {
   if (row.kind === "wait") {
     return (
       <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/20">
-        <Clock className="size-3 text-blue-600 dark:text-blue-500" strokeWidth={2.5} />
+        <Clock
+          className="size-3 text-blue-600 dark:text-blue-500"
+          strokeWidth={2.5}
+        />
       </span>
     );
   }
 
   return (
     <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-rose-50 dark:bg-rose-900/20">
-      <X className="size-3 text-rose-600 dark:text-rose-500" strokeWidth={2.75} />
+      <X
+        className="size-3 text-rose-600 dark:text-rose-500"
+        strokeWidth={2.75}
+      />
     </span>
   );
 }
@@ -92,14 +101,14 @@ export function TransactionDetailPanel({
   const navigate = useNavigate();
 
   const productName = item?.name ?? "Объявление";
-  const primaryImageUrl = item?.images?.find((payload) =>
-    Boolean(payload.is_main),
-  )?.image ?? item?.images?.[0]?.image;
-  const priceLabel = item
-    ? formatTransactionRub(item.price)
-    : "—";
+  const primaryImageUrl =
+    item?.images?.find((payload) => Boolean(payload.is_main))?.image ??
+    item?.images?.[0]?.image;
+  const priceLabel = item ? formatTransactionRub(item.price) : "—";
 
   const createdLabel = formatTransactionDateTime(transaction.rented_at);
+  const plannedStart = formatTransactionDateTime(transaction.planned_start);
+  const plannedEnd = formatTransactionDateTime(transaction.planned_end);
   const rentedLabel = formatTransactionDateTime(transaction.rented_at);
   const returnLabel = transaction.returned_at
     ? formatTransactionDateTime(transaction.returned_at)
@@ -141,7 +150,9 @@ export function TransactionDetailPanel({
             <div
               className={cn(
                 "flex size-[56px] shrink-0 items-center justify-center overflow-hidden rounded-[14px]",
-                primaryImageUrl ? "bg-white dark:bg-slate-900" : "bg-slate-100 dark:bg-slate-800",
+                primaryImageUrl
+                  ? "bg-white dark:bg-slate-900"
+                  : "bg-slate-100 dark:bg-slate-800",
               )}
             >
               {primaryImageUrl ? (
@@ -151,7 +162,10 @@ export function TransactionDetailPanel({
                   className="h-full w-full rounded-[14px] object-cover object-center"
                 />
               ) : (
-                <Camera className="size-7 text-slate-300 dark:text-slate-500" strokeWidth={1.75} />
+                <Camera
+                  className="size-7 text-slate-300 dark:text-slate-500"
+                  strokeWidth={1.75}
+                />
               )}
             </div>
 
@@ -168,21 +182,27 @@ export function TransactionDetailPanel({
 
         <dl className="mt-6 space-y-3 text-sm leading-5">
           <div className="flex gap-6">
-            <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">Тип сделки</dt>
+            <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">
+              Тип сделки
+            </dt>
             <dd className="flex-1 text-right font-medium text-slate-900 dark:text-slate-100">
               Аренда
             </dd>
           </div>
 
           <div className="flex gap-6">
-            <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">Ваша роль</dt>
+            <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">
+              Ваша роль
+            </dt>
             <dd className="flex-1 text-right font-medium text-slate-900 dark:text-slate-100">
               {viewerIsOwner ? "Вы владелец" : "Вы арендатор"}
             </dd>
           </div>
 
           <div className="flex gap-6">
-            <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">Вторая сторона</dt>
+            <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">
+              Вторая сторона
+            </dt>
             <dd className="flex-1 text-right font-medium text-slate-900 dark:text-slate-100">
               {counterpartNameDetail.trim() ||
                 counterpartNameShort.trim() ||
@@ -191,22 +211,37 @@ export function TransactionDetailPanel({
           </div>
 
           <div className="flex gap-6">
-            <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">Создана</dt>
+            <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">
+              Создана
+            </dt>
             <dd className="flex-1 text-right font-medium text-slate-900 dark:text-slate-100">
               {createdLabel}
             </dd>
           </div>
 
           <div className="flex gap-6">
-            <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">Дата аренды</dt>
+            <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">
+              Планируемая дата аренды
+            </dt>
             <dd className="flex-1 text-right font-medium text-slate-900 dark:text-slate-100">
-              {rentedLabel}
+              {plannedStart}
+            </dd>
+          </div>
+
+          <div className="flex gap-6">
+            <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">
+              Планируемая дата возврата
+            </dt>
+            <dd className="flex-1 text-right font-medium text-slate-900 dark:text-slate-100">
+              {plannedEnd}
             </dd>
           </div>
 
           {transaction.status === TransactionStatusEnum.completed && (
             <div className="flex gap-6">
-              <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">Дата возврата</dt>
+              <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">
+                Дата возврата
+              </dt>
               <dd className="flex-1 text-right font-medium text-slate-900 dark:text-slate-100">
                 {returnLabel}
               </dd>
@@ -214,7 +249,9 @@ export function TransactionDetailPanel({
           )}
 
           <div className="flex gap-6">
-            <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">Сумма</dt>
+            <dt className="w-44 shrink-0 text-slate-500 dark:text-slate-400">
+              Сумма
+            </dt>
             <dd className="flex-1 text-right font-medium text-slate-900 dark:text-slate-100">
               {priceLabel}
             </dd>
@@ -343,14 +380,18 @@ export function TransactionDetailPanel({
           {reviewAvailablityKind === "submitted" ? (
             <div className="flex gap-4 rounded-2xl border border-transparent border-t-emerald-200 bg-emerald-50/70 p-[17px] dark:border-t-emerald-900/40 dark:bg-emerald-900/10">
               <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-slate-900">
-                <Check className="size-4 text-emerald-600 dark:text-emerald-500" strokeWidth={3} />
+                <Check
+                  className="size-4 text-emerald-600 dark:text-emerald-500"
+                  strokeWidth={3}
+                />
               </div>
               <div className="min-w-0">
                 <p className="text-sm leading-5 font-bold text-slate-900 dark:text-slate-100">
                   Оценка и отзыв
                 </p>
                 <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                  Отзыв по этой завершённой аренде уже опубликован и учтён в рейтинге участника.
+                  Отзыв по этой завершённой аренде уже опубликован и учтён в
+                  рейтинге участника.
                 </p>
               </div>
             </div>
@@ -405,8 +446,7 @@ export function TransactionDetailPanel({
                 {Array.from({ length: 5 }).map((_entry, idx) => {
                   const tier = idx + 1;
 
-                  const active =
-                    tier <= (reviewRating > 0 ? reviewRating : 0);
+                  const active = tier <= (reviewRating > 0 ? reviewRating : 0);
 
                   return (
                     <button
@@ -414,12 +454,14 @@ export function TransactionDetailPanel({
                       type="button"
                       aria-label={`${tier} звёзды`}
                       onClick={() => onReviewRating(tier)}
-                      className="cursor-pointer border-none bg-transparent p-0 leading-none outline-none transition-transform hover:translate-y-[1px]"
+                      className="cursor-pointer border-none bg-transparent p-0 leading-none transition-transform outline-none hover:translate-y-[1px]"
                     >
                       <Star
                         className={cn(
                           "size-6",
-                          active ? "text-amber-400" : "text-slate-300 dark:text-slate-600",
+                          active
+                            ? "text-amber-400"
+                            : "text-slate-300 dark:text-slate-600",
                         )}
                         fill={active ? "currentColor" : "transparent"}
                       />

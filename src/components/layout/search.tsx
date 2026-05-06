@@ -34,11 +34,11 @@ export function SearchInput({
   const trimmedQuery = query.trim();
   const showHistory = inputFocused && !trimmedQuery;
 
-  const { data: products, isLoading } = useProducts(searchParams);
-  const { data: searchHistoryData, isLoading: historyLoading } = useSearchHistory(
-    { page_size: 10 },
-    { enabled: showHistory },
-  );
+  const { data: products, isLoading } = useProducts(searchParams, {
+    enabled: !!searchParams.search,
+  });
+  const { data: searchHistoryData, isLoading: historyLoading } =
+    useSearchHistory({ page_size: 8 }, { enabled: showHistory });
   const logSearch = useLogSearch();
   const deleteSearchHistory = useDeleteSearchHistory();
 
@@ -47,29 +47,31 @@ export function SearchInput({
     setInputFocused(false);
   }, []);
 
-  useEffect(() => {
-    const trimmed = query.trim();
+  const isTyping = inputFocused && trimmedQuery && !searchParams.search;
 
-    if (!trimmed) {
-      setSearchParams({});
-      return;
-    }
+  // useEffect(() => {
+  //   const trimmed = query.trim();
 
-    const timeout = setTimeout(() => {
-      setSearchParams({ search: trimmed });
-    }, 300);
+  //   if (!trimmed) {
+  //     setSearchParams({});
+  //     return;
+  //   }
 
-    return () => clearTimeout(timeout);
-  }, [query]);
+  //   const timeout = setTimeout(() => {
+  //     setSearchParams({ search: trimmed });
+  //   }, 300);
 
-  useEffect(() => {
-    if (!trimmedQuery) {
-      setOpen(false);
-      return;
-    }
+  //   return () => clearTimeout(timeout);
+  // }, [query]);
 
-    setOpen(true);
-  }, [trimmedQuery]);
+  // useEffect(() => {
+  //   if (!trimmedQuery) {
+  //     setOpen(false);
+  //     return;
+  //   }
+
+  //   setOpen(true);
+  // }, [trimmedQuery]);
 
   useEffect(() => {
     if (!open && !showHistory) {
@@ -115,15 +117,16 @@ export function SearchInput({
     setQuery(item.query_text);
     setSearchParams({ search: item.query_text });
     setOpen(true);
-    const filters =
-      typeof item.filters === "string" ? item.filters : "";
+    const filters = typeof item.filters === "string" ? item.filters : "";
     logSearch.mutate({ query_text: item.query_text, filters });
   };
 
   const runSearch = () => {
     const trimmed = query.trim();
     if (!trimmed) return;
+
     setSearchParams({ search: trimmed });
+    setOpen(true);
     logSearch.mutate({ query_text: trimmed, filters: "" });
   };
 
@@ -133,8 +136,9 @@ export function SearchInput({
         value={query}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
           const nextQuery = e.target.value;
+          setSearchParams({});
           setQuery(nextQuery);
-          setOpen(Boolean(nextQuery.trim()));
+          setOpen(true);
         }}
         onFocus={() => {
           setInputFocused(true);
@@ -229,10 +233,19 @@ export function SearchInput({
       )}
 
       {trimmedQuery && open && (
-        <ul className="absolute top-full left-0 z-10 mt-2 w-full rounded-lg bg-white shadow-md dark:bg-[#0F172B] dark:shadow-none">
+        <ul className="absolute top-full left-0 z-10 mt-2 w-full rounded-lg border border-[#E5E7EB] bg-white shadow-md dark:bg-[#0F172B] dark:shadow-none">
+          {isTyping && (
+            <div className="h-11 p-4 text-[12px] leading-4 font-semibold tracking-[0.6px] text-[#90A1B9] uppercase">
+              Вводите запрос...
+            </div>
+          )}
+
           {isLoading && (
             <li
-              className={cn("h-10 px-2 py-2 text-sm text-gray-500", className)}
+              className={cn(
+                "h-11 p-4 text-[12px] leading-4 font-semibold tracking-[0.6px] text-[#90A1B9] uppercase",
+                className,
+              )}
             >
               Загрузка...
             </li>
@@ -240,7 +253,10 @@ export function SearchInput({
 
           {!isLoading && products?.results.length === 0 && (
             <li
-              className={cn("h-10 px-2 py-2 text-sm text-gray-500", className)}
+              className={cn(
+                "h-11 p-4 text-[12px] leading-4 font-semibold tracking-[0.6px] text-[#90A1B9] uppercase",
+                className,
+              )}
             >
               Ничего не найдено
             </li>
@@ -251,7 +267,7 @@ export function SearchInput({
               <li
                 key={product.id}
                 className={cn(
-                  "flex h-11 cursor-pointer items-center justify-between rounded-lg px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1D293D]",
+                  "flex h-11 cursor-pointer items-center justify-between rounded-lg px-4 py-4 text-sm hover:bg-gray-100 dark:hover:bg-[#1D293D]",
                   className,
                 )}
                 onClick={() => handleSelect(product.id)}

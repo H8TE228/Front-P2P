@@ -182,8 +182,7 @@ export function ProductDetailPage() {
         onError: (err) => {
           const anyErr = err as any;
           const data = anyErr?.response?.data;
-          let detail =
-            data?.detail ?? data?.message ?? anyErr?.message;
+          let detail = data?.detail ?? data?.message ?? anyErr?.message;
           if (
             detail == null &&
             data &&
@@ -347,7 +346,7 @@ export function ProductDetailPage() {
                     >
                       <Heart
                         className={
-                          isFavorite ? "text-red-600 fill-red-600" : undefined
+                          isFavorite ? "fill-red-600 text-red-600" : undefined
                         }
                       />
                     </Button>
@@ -519,7 +518,7 @@ export function ProductDetailPage() {
                     Арендовать
                   </Button>
                   <Dialog open={rentModalOpen} onOpenChange={setRentModalOpen}>
-                    <DialogContent className="sm:max-w-md">
+                    <DialogContent className="p-6 sm:max-w-md">
                       <DialogHeader>
                         <DialogTitle>Заявка на аренду</DialogTitle>
                         <DialogDescription>
@@ -529,11 +528,15 @@ export function ProductDetailPage() {
                       </DialogHeader>
                       <div className="grid gap-5">
                         <div className="grid gap-2">
-                          <Label className="text-foreground">
+                          <Label
+                            className="text-foreground"
+                            htmlFor="startDate"
+                          >
                             Начало аренды
                           </Label>
                           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                             <Input
+                              id="startDate"
                               type="date"
                               className="h-10 min-h-10"
                               value={rentForm.startDate}
@@ -559,11 +562,12 @@ export function ProductDetailPage() {
                           </div>
                         </div>
                         <div className="grid gap-2">
-                          <Label className="text-foreground">
+                          <Label className="text-foreground" htmlFor="endDate">
                             Окончание аренды
                           </Label>
                           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                             <Input
+                              id="endDate"
                               type="date"
                               className="h-10 min-h-10"
                               value={rentForm.endDate}
@@ -596,14 +600,16 @@ export function ProductDetailPage() {
                             </p>
                           )}
                         {rentError && (
-                          <p className="text-destructive text-sm">{rentError}</p>
+                          <p className="text-destructive text-sm">
+                            {rentError}
+                          </p>
                         )}
                       </div>
                       <DialogFooter className="sm:justify-end">
                         <Button
                           type="button"
                           variant="outline"
-                          className="w-full sm:w-auto"
+                          className="h-9 w-full sm:w-auto"
                           onClick={() => setRentModalOpen(false)}
                         >
                           Отмена
@@ -611,7 +617,7 @@ export function ProductDetailPage() {
                         <Button
                           type="button"
                           variant="blue"
-                          className="w-full sm:w-auto"
+                          className="h-9 w-full sm:w-auto"
                           disabled={
                             rentRangeInvalid || createTransaction.isPending
                           }
