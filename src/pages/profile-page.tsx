@@ -12,7 +12,6 @@ import {
   useMyProducts,
   useProfile,
   useViewHistory,
-  useViewHistoryItems,
 } from "@/hooks";
 import { useAppDispatch } from "@/hooks/rtk";
 import { logout } from "@/store/auth-slice";
