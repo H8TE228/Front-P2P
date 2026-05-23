@@ -5,6 +5,16 @@ export {
   transactionsQueries,
   type CreateItemTransactionBody,
 } from "./transactions-queries";
+export {
+  sharedRentalsQueries,
+  type SharedRental,
+  type SharedRentalSegment,
+  type SharedRentalStatus,
+  type PaginatedSharedRentalList,
+  type SharedRentalsListParams,
+  type CreateSharedRentalBody,
+  type JoinSharedRentalBody,
+} from "./shared-rentals-queries";
 export { reviewsQueries } from "./reviews-queries";
 export { viewHistoryQueries } from "./view-history-queries";
 export { favoriteItemsQueries } from "./favorite-items-queries";

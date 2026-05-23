@@ -1,7 +1,10 @@
 import { formatRubAmount } from "@/lib/format-listing";
 
-export function formatTransactionDateTime(iso: string): string {
+export function formatTransactionDateTime(iso: string | null | undefined): string {
+  if (!iso) return "—";
+
   const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "—";
 
   const months = [
     "января",

@@ -1,10 +1,11 @@
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
   Camera,
   Heart,
   Star,
   ShieldCheck,
   Clock,
+  Users,
   ChevronLeft,
   ArrowRight,
   Shield,
@@ -19,21 +20,9 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   useCreateFavoriteItem,
-  useCreateTransaction,
   useDeleteFavoriteItem,
-  useFavoriteItems,
   useLogViewHistory,
   useProduct,
 } from "@/hooks";
@@ -49,7 +38,10 @@ import { useAppSelector } from "@/hooks/rtk";
 import { useGetRecommendedByIdProducts } from "@/hooks/use-get-recommended-by-id-products";
 import { useGetSimilarByIdProducts } from "@/hooks/use-get-similar-by-id-products";
 import type { Item } from "@/api/schema";
-import { ListingCard } from "@/components";
+import { ListingCard, ProductDealDialog } from "@/components";
+import { formatRubAmount } from "@/lib/format-listing";
+import { isShareListing, parseListingPrice } from "@/lib/listing-deal";
+import { cn } from "@/lib/utils";
 
 const productStatus = {
   available: "Доступен",
@@ -84,53 +76,12 @@ const formatDate = (iso: string) => {
   return `${day} ${month} ${hours}:${minutes}`;
 };
 
-const pad2 = (n: number) => String(n).padStart(2, "0");
-
-const toDatetimeLocalValue = (d: Date) =>
-  `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}T${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-
-const defaultRentRange = () => {
-  const start = new Date();
-  start.setMinutes(0, 0, 0);
-  start.setHours(start.getHours() + 1);
-  const end = new Date(start);
-  end.setHours(end.getHours() + 24);
-  return { start: toDatetimeLocalValue(start), end: toDatetimeLocalValue(end) };
-};
-
-const splitDatetimeLocal = (value: string) => {
-  const [datePart, timePart = ""] = value.split("T");
-  const time = timePart.slice(0, 5);
-  return {
-    date: datePart ?? "",
-    time: time.length === 5 ? time : "00:00",
-  };
-};
-
-const rentFormFromDefaults = () => {
-  const r = defaultRentRange();
-  const s = splitDatetimeLocal(r.start);
-  const e = splitDatetimeLocal(r.end);
-  return {
-    startDate: s.date,
-    startTime: s.time,
-    endDate: e.date,
-    endTime: e.time,
-  };
-};
-
-const combineDateTimeLocal = (date: string, time: string) =>
-  date && time ? `${date}T${time}` : "";
-
 export function ProductDetailPage() {
   const { id } = useParams();
   const location = useLocation();
-  const navigate = useNavigate();
   const [api, setApi] = useState<any>(null);
   const [current, setCurrent] = useState(0);
-  const [rentError, setRentError] = useState<string | null>(null);
-  const [rentModalOpen, setRentModalOpen] = useState(false);
-  const [rentForm, setRentForm] = useState(rentFormFromDefaults);
+  const [dealModalOpen, setDealModalOpen] = useState(false);
 
   const { data: product } = useProduct(id!);
   const { data: recommended, isLoading: isRecommendedLoading } =
@@ -140,91 +91,18 @@ export function ProductDetailPage() {
   const imgCount = product?.images?.length || 0;
 
   const user = useAppSelector((state) => state.auth.user);
-  const createTransaction = useCreateTransaction();
   const logView = useLogViewHistory();
-  let isFavorite = product?.is_liked;
-  console.log(isFavorite);
+  const isFavorite = product?.is_liked;
   const createFavorite = useCreateFavoriteItem();
   const deleteFavorite = useDeleteFavoriteItem();
 
-  const plannedStart = combineDateTimeLocal(
-    rentForm.startDate,
-    rentForm.startTime,
-  );
-  const plannedEnd = combineDateTimeLocal(rentForm.endDate, rentForm.endTime);
+  const isShare = product ? isShareListing(product) : false;
+  const pricePerDay = product ? parseListingPrice(product.price) : 0;
 
-  const rentRangeInvalid =
-    !plannedStart || !plannedEnd || plannedStart >= plannedEnd;
-
-  const rentButtonDisabled =
+  const dealButtonDisabled =
     !product ||
     user?.id === product.owner.id ||
-    createTransaction.isPending ||
     product.status !== "available";
-
-  useEffect(() => {
-    if (!rentModalOpen) return;
-    setRentForm(rentFormFromDefaults());
-    setRentError(null);
-  }, [rentModalOpen]);
-
-  const handleRent = () => {
-    if (!product || rentRangeInvalid) return;
-    setRentError(null);
-
-    createTransaction.mutate(
-      {
-        itemId: String(product.id),
-        planned_start: new Date(plannedStart).toISOString(),
-        planned_end: new Date(plannedEnd).toISOString(),
-      },
-      {
-        onSuccess: () => {
-          setRentModalOpen(false);
-          navigate("/transactions");
-        },
-        onError: (err) => {
-          const anyErr = err as any;
-          const data = anyErr?.response?.data;
-          let detail = data?.detail ?? data?.message ?? anyErr?.message;
-          if (
-            detail == null &&
-            data &&
-            typeof data === "object" &&
-            !Array.isArray(data)
-          ) {
-            const parts = Object.entries(data).flatMap(([key, val]) =>
-              Array.isArray(val)
-                ? val.map((x) => `${key}: ${String(x)}`)
-                : [`${key}: ${String(val)}`],
-            );
-            if (parts.length > 0) detail = parts.join(" ");
-          }
-          setRentError(
-            typeof detail === "string" && detail.trim().length > 0
-              ? detail
-              : "Не удалось создать транзакцию",
-          );
-        },
-      },
-    );
-  };
-
-  // см в свагере на новые ручки для избранного
-  const toggleFavorite = () => {
-    if (!product) return;
-    if (isFavorite) {
-      deleteFavorite.mutate(product.id);
-      isFavorite = false;
-      // return;
-    }
-    createFavorite.mutate(product.id);
-  };
-
-  // const toggleFavorite = () => {
-  //   isFavorite = !isFavorite;
-  //   console.log(isFavorite);
-  // };
 
   useEffect(() => {
     if (!api) return;
@@ -249,6 +127,15 @@ export function ProductDetailPage() {
 
   const handleThumbClick = (index: number) => {
     api?.scrollTo(index);
+  };
+
+  const toggleFavorite = () => {
+    if (!product) return;
+    if (isFavorite) {
+      deleteFavorite.mutate(product.id);
+      return;
+    }
+    createFavorite.mutate(product.id);
   };
 
   const breadcrumbs = [
@@ -285,7 +172,9 @@ export function ProductDetailPage() {
                     {item.label}
                   </Link>
                 ) : (
-                  <span className="text-black">{item.label}</span>
+                  <span className="text-black dark:text-slate-100">
+                    {item.label}
+                  </span>
                 )}
 
                 {!isLast && (
@@ -495,145 +384,50 @@ export function ProductDetailPage() {
               </CardHeader>
               <CardContent className="flex flex-col gap-6 border-b px-6 pb-6">
                 <div className="flex flex-col gap-3">
-                  <span className="text-3xl font-bold">
-                    {product.price.slice(0, -3)} руб
-                    <span className="text-muted-foreground text-lg">
+                  <span className="text-3xl font-bold text-slate-900 dark:text-slate-100">
+                    {formatRubAmount(pricePerDay)} ₽
+                    <span className="text-muted-foreground text-lg font-normal">
                       {" "}
-                      / (за сколько)
+                      {isShare ? "/ доля" : "/ день"}
                     </span>
                   </span>
                   <div className="flex gap-2">
-                    <div className="flex gap-1 rounded-lg border-2 border-[#E2E8F0] bg-[#F1F5F9] px-2.5 py-1 text-xs font-semibold uppercase">
-                      <Clock className="size-4" />
-                      аренда
+                    <div
+                      className={cn(
+                        "flex gap-1 rounded-lg border-2 px-2.5 py-1 text-xs font-semibold uppercase",
+                        isShare
+                          ? "border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-900/50 dark:bg-violet-900/20 dark:text-violet-200"
+                          : "border-[#E2E8F0] bg-[#F1F5F9] text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200",
+                      )}
+                    >
+                      {isShare ? (
+                        <Users className="size-4" />
+                      ) : (
+                        <Clock className="size-4" />
+                      )}
+                      {isShare ? "совладение" : "аренда"}
                     </div>
-                    <div className="rounded-lg border-2 border-[#B9F8CF] bg-[#f0fdf4] px-2.5 py-1 text-xs font-semibold text-[#008236] uppercase">
+                    <div className="rounded-lg border-2 border-[#B9F8CF] bg-[#f0fdf4] px-2.5 py-1 text-xs font-semibold text-[#008236] uppercase dark:border-emerald-900/40 dark:bg-emerald-900/20 dark:text-emerald-300">
                       {productStatus[product.status!]}
                     </div>
                   </div>
                 </div>
                 <div>
                   <Button
-                    disabled={rentButtonDisabled}
+                    disabled={dealButtonDisabled}
                     variant="blue"
                     className="mb-3 h-13 w-full"
-                    onClick={() => setRentModalOpen(true)}
+                    onClick={() => setDealModalOpen(true)}
                   >
-                    Арендовать
+                    {isShare ? "Купить долю" : "Арендовать"}
                   </Button>
-                  <Dialog open={rentModalOpen} onOpenChange={setRentModalOpen}>
-                    <DialogContent className="p-6 sm:max-w-md">
-                      <DialogHeader>
-                        <DialogTitle>Заявка на аренду</DialogTitle>
-                        <DialogDescription>
-                          Выберите дату и время начала и окончания. Владелец
-                          объявления подтвердит или отклонит заявку.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-5">
-                        <div className="grid gap-2">
-                          <Label
-                            className="text-foreground"
-                            htmlFor="startDate"
-                          >
-                            Начало аренды
-                          </Label>
-                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                            <Input
-                              id="startDate"
-                              type="date"
-                              className="h-10 min-h-10"
-                              value={rentForm.startDate}
-                              onChange={(e) =>
-                                setRentForm((f) => ({
-                                  ...f,
-                                  startDate: e.target.value,
-                                }))
-                              }
-                            />
-                            <Input
-                              type="time"
-                              step={60}
-                              className="h-10 min-h-10"
-                              value={rentForm.startTime}
-                              onChange={(e) =>
-                                setRentForm((f) => ({
-                                  ...f,
-                                  startTime: e.target.value,
-                                }))
-                              }
-                            />
-                          </div>
-                        </div>
-                        <div className="grid gap-2">
-                          <Label className="text-foreground" htmlFor="endDate">
-                            Окончание аренды
-                          </Label>
-                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                            <Input
-                              id="endDate"
-                              type="date"
-                              className="h-10 min-h-10"
-                              value={rentForm.endDate}
-                              onChange={(e) =>
-                                setRentForm((f) => ({
-                                  ...f,
-                                  endDate: e.target.value,
-                                }))
-                              }
-                            />
-                            <Input
-                              type="time"
-                              step={60}
-                              className="h-10 min-h-10"
-                              value={rentForm.endTime}
-                              onChange={(e) =>
-                                setRentForm((f) => ({
-                                  ...f,
-                                  endTime: e.target.value,
-                                }))
-                              }
-                            />
-                          </div>
-                        </div>
-                        {rentRangeInvalid &&
-                          rentForm.startDate &&
-                          rentForm.endDate && (
-                            <p className="text-destructive text-sm">
-                              Укажите корректный период: окончание позже начала.
-                            </p>
-                          )}
-                        {rentError && (
-                          <p className="text-destructive text-sm">
-                            {rentError}
-                          </p>
-                        )}
-                      </div>
-                      <DialogFooter className="sm:justify-end">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="h-9 w-full sm:w-auto"
-                          onClick={() => setRentModalOpen(false)}
-                        >
-                          Отмена
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="blue"
-                          className="h-9 w-full sm:w-auto"
-                          disabled={
-                            rentRangeInvalid || createTransaction.isPending
-                          }
-                          onClick={handleRent}
-                        >
-                          {createTransaction.isPending
-                            ? "Отправляем..."
-                            : "Отправить заявку"}
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+
+                  <ProductDealDialog
+                    product={product}
+                    open={dealModalOpen}
+                    onOpenChange={setDealModalOpen}
+                  />
+
                   <div className="">
                     <Button
                       disabled={user?.id === product.owner.id}
