@@ -3,11 +3,11 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ItemDetailOwner } from './itemDetailOwner';
-import type { StatusFeaEnum } from './statusFeaEnum';
-import type { ItemImage } from './itemImage';
-import type { ItemDetailDeliveryMethod } from './itemDetailDeliveryMethod';
-import type { AvailabilityCalendar } from './availabilityCalendar';
+import type { ItemDetailOwner } from "./itemDetailOwner";
+import type { StatusFeaEnum } from "./statusFeaEnum";
+import type { ItemImage } from "./itemImage";
+import type { ItemDetailDeliveryMethod } from "./itemDetailDeliveryMethod";
+import type { AvailabilityCalendar } from "./availabilityCalendar";
 
 export interface ItemDetail {
   readonly id: number;
@@ -19,14 +19,15 @@ export interface ItemDetail {
   /** @maxLength 200 */
   name: string;
   description: string;
-  characteristics?: unknown;
+  characteristics?: string;
   status?: StatusFeaEnum;
   /** @pattern ^-?\d{0,8}(?:\.\d{0,2})?$ */
   price: string;
   readonly images: readonly ItemImage[];
   readonly created_at: string;
   readonly updated_at: string;
-  delivery_method?: typeof ItemDetailDeliveryMethod[keyof typeof ItemDetailDeliveryMethod] ;
+  is_liked?: boolean;
+  delivery_method?: (typeof ItemDetailDeliveryMethod)[keyof typeof ItemDetailDeliveryMethod];
   /**
    * @minimum -2147483648
    * @maximum 2147483647

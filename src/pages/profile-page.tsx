@@ -8,12 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import {
-  useMyProducts,
-  useProfile,
-  useViewHistory,
-  useViewHistoryItems,
-} from "@/hooks";
+import { useMyProducts, useProfile, useViewHistory } from "@/hooks";
 import { useAppDispatch } from "@/hooks/rtk";
 import { logout } from "@/store/auth-slice";
 import { MapPin, Pen, Shield, Star } from "lucide-react";

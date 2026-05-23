@@ -46,6 +46,10 @@ import {
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/hooks/rtk";
+import { useGetRecommendedByIdProducts } from "@/hooks/use-get-recommended-by-id-products";
+import { useGetSimilarByIdProducts } from "@/hooks/use-get-similar-by-id-products";
+import type { Item } from "@/api/schema";
+import { ListingCard } from "@/components";
 
 const productStatus = {
   available: "Доступен",
@@ -129,19 +133,19 @@ export function ProductDetailPage() {
   const [rentForm, setRentForm] = useState(rentFormFromDefaults);
 
   const { data: product } = useProduct(id!);
-  const { data: favorites } = useFavoriteItems({ page_size: 200 });
+  const { data: recommended, isLoading: isRecommendedLoading } =
+    useGetRecommendedByIdProducts(id!);
+  const { data: similar, isLoading: isSimilarLoading } =
+    useGetSimilarByIdProducts(id!);
   const imgCount = product?.images?.length || 0;
 
   const user = useAppSelector((state) => state.auth.user);
   const createTransaction = useCreateTransaction();
   const logView = useLogViewHistory();
+  let isFavorite = product?.is_liked;
+  console.log(isFavorite);
   const createFavorite = useCreateFavoriteItem();
   const deleteFavorite = useDeleteFavoriteItem();
-
-  const favoriteEntry = favorites?.results?.find(
-    (x) => x.item?.id === Number(product?.id),
-  );
-  const isFavorite = Boolean(favoriteEntry);
 
   const plannedStart = combineDateTimeLocal(
     rentForm.startDate,
@@ -206,15 +210,21 @@ export function ProductDetailPage() {
     );
   };
 
+  // см в свагере на новые ручки для избранного
   const toggleFavorite = () => {
     if (!product) return;
-    const fav = favoriteEntry;
-    if (fav) {
-      deleteFavorite.mutate(fav.id);
-      return;
+    if (isFavorite) {
+      deleteFavorite.mutate(product.id);
+      isFavorite = false;
+      // return;
     }
-    createFavorite.mutate({ item_id: Number(product.id) });
+    createFavorite.mutate(product.id);
   };
+
+  // const toggleFavorite = () => {
+  //   isFavorite = !isFavorite;
+  //   console.log(isFavorite);
+  // };
 
   useEffect(() => {
     if (!api) return;
@@ -346,7 +356,7 @@ export function ProductDetailPage() {
                     >
                       <Heart
                         className={
-                          isFavorite ? "fill-red-600 text-red-600" : undefined
+                          isFavorite ? "fill-red-600 text-red-600" : ""
                         }
                       />
                     </Button>
@@ -428,13 +438,7 @@ export function ProductDetailPage() {
               </p>
             </section>
 
-            <section className="text-muted-foreground text-xs">{`№ ${product.id} | ${formatDate(product.updated_at)}`}</section>
-
-            <section>
-              <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-slate-100">
-                Похожие объявления
-              </h2>
-            </section>
+            <section className="text-muted-foreground mb-24 text-xs">{`№ ${product.id} | ${formatDate(product.updated_at)}`}</section>
           </div>
 
           <div className="space-y-6">
@@ -668,11 +672,69 @@ export function ProductDetailPage() {
             </section>
           </div>
         </div>
-        {/* <div className="grid min-h-104 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {MOCK_LISTINGS.slice(0, 4).map((product) => (
-            <ListingCard key={product.id} product={product} />
-          ))}
-        </div> */}
+        <section className="pb-4">
+          <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-slate-100">
+            Сопутствующие товары
+          </h2>
+          {isRecommendedLoading && (
+            <div className="text-muted-foreground col-span-full">
+              Загрузка объявлений...
+            </div>
+          )}
+          {!isRecommendedLoading && !recommended?.length && (
+            <div className="text-muted-foreground col-span-full">
+              Сопутствующих товаров не найдено
+            </div>
+          )}
+          {!isRecommendedLoading && recommended?.length > 0 && (
+            <Carousel className="relative w-full">
+              <CarouselContent className="relative lg:h-86">
+                {recommended?.map((p: Item) => (
+                  <CarouselItem
+                    className="basis-1/2 sm:basis-1/3 lg:basis-1/5"
+                    key={p.id}
+                  >
+                    <ListingCard key={p.id} product={p} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious style={{ bottom: "-35px", right: "40px" }} />
+              <CarouselNext style={{ bottom: "-35px", right: 0 }} />
+            </Carousel>
+          )}
+        </section>
+
+        <section className="pb-4">
+          <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-slate-100">
+            Похожие объявления
+          </h2>
+          {isSimilarLoading && (
+            <div className="text-muted-foreground col-span-full">
+              Загрузка объявлений...
+            </div>
+          )}
+          {!isSimilarLoading && !similar?.length && (
+            <div className="text-muted-foreground col-span-full">
+              Похожих объявлений не найдено
+            </div>
+          )}
+          {!isSimilarLoading && similar?.length > 0 && (
+            <Carousel className="relative w-full">
+              <CarouselContent className="relative lg:h-86">
+                {similar?.map((p: Item) => (
+                  <CarouselItem
+                    className="basis-1/2 sm:basis-1/3 lg:basis-1/5"
+                    key={p.id}
+                  >
+                    <ListingCard key={p.id} product={p} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious style={{ bottom: "-35px", right: "40px" }} />
+              <CarouselNext style={{ bottom: "-35px", right: 0 }} />
+            </Carousel>
+          )}
+        </section>
       </main>
     )
   );

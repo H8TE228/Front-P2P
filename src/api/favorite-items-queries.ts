@@ -18,8 +18,10 @@ export const favoriteItemsQueries = {
     const res = await api.get<FavoriteItem>(`/listings/favorite-items/${id}/`);
     return res.data;
   },
-  createFavoriteItem: async (payload: FavoriteItemCreate) => {
-    const res = await api.post<FavoriteItem>("/listings/favorite-items/", payload);
+  createFavoriteItem: async (id: number | string) => {
+    const res = await api.post<FavoriteItem>("/listings/favorite-items/", {
+      item_id: Number(id),
+    });
     return res.data;
   },
   putFavoriteItem: async (id: number | string, payload: FavoriteItemCreate) => {
@@ -44,4 +46,3 @@ export const favoriteItemsQueries = {
     return res.data;
   },
 };
-

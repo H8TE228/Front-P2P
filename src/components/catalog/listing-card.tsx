@@ -27,7 +27,7 @@ import { useState } from "react";
 
 export function ListingCard({
   product,
-  isMine,
+  isMine = false,
   imageUrl,
 }: {
   product: Item;
