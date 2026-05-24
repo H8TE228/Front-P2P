@@ -19,7 +19,7 @@ export interface ItemDetail {
   /** @maxLength 200 */
   name: string;
   description: string;
-  characteristics?: string;
+  characteristics?: string | Record<string, unknown>;
   status?: StatusFeaEnum;
   /** @pattern ^-?\d{0,8}(?:\.\d{0,2})?$ */
   price: string;

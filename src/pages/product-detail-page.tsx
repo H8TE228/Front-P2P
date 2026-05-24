@@ -39,7 +39,10 @@ import { useGetRecommendedByIdProducts } from "@/hooks/use-get-recommended-by-id
 import { useGetSimilarByIdProducts } from "@/hooks/use-get-similar-by-id-products";
 import type { Item } from "@/api/schema";
 import { ListingCard, ProductDealDialog } from "@/components";
-import { formatRubAmount } from "@/lib/format-listing";
+import {
+  formatItemCharacteristics,
+  formatRubAmount,
+} from "@/lib/format-listing";
 import { isShareListing, parseListingPrice } from "@/lib/listing-deal";
 import { cn } from "@/lib/utils";
 
@@ -323,7 +326,7 @@ export function ProductDetailPage() {
                 Характеристики
               </h2>
               <p className="leading-relaxed wrap-break-word whitespace-pre-wrap text-slate-700 dark:text-slate-300">
-                {product.characteristics || "Характеристики отсутствуют."}
+                {formatItemCharacteristics(product.characteristics)}
               </p>
             </section>
 
