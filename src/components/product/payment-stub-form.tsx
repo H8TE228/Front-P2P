@@ -31,7 +31,7 @@ export function PaymentStubForm({
           <Input
             className="h-10 rounded-[10px]"
             placeholder="0000 0000 0000 0000"
-            defaultValue="4242 4242 4242 4242"
+            defaultValue=""
           />
         </div>
         <div className="grid grid-cols-2 gap-3">
@@ -39,20 +39,32 @@ export function PaymentStubForm({
             <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Срок
             </Label>
-            <Input className="h-10 rounded-[10px]" placeholder="MM/YY" defaultValue="12/28" />
+            <Input
+              className="h-10 rounded-[10px]"
+              placeholder="MM/YY"
+              defaultValue=""
+            />
           </div>
           <div className="grid gap-2">
             <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
               CVC
             </Label>
-            <Input className="h-10 rounded-[10px]" placeholder="CVC" defaultValue="123" />
+            <Input
+              className="h-10 rounded-[10px]"
+              placeholder="CVC"
+              defaultValue=""
+            />
           </div>
         </div>
         <div className="grid gap-2">
           <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
             Имя держателя
           </Label>
-          <Input className="h-10 rounded-[10px]" placeholder="IVAN IVANOV" defaultValue="IVAN IVANOV" />
+          <Input
+            className="h-10 rounded-[10px]"
+            placeholder="IVAN IVANOV"
+            defaultValue=""
+          />
         </div>
       </div>
 
@@ -69,9 +81,7 @@ export function PaymentStubForm({
         </span>
       </div>
 
-      {error && (
-        <p className="text-destructive mt-3 text-sm">{error}</p>
-      )}
+      {error && <p className="text-destructive mt-3 text-sm">{error}</p>}
 
       <div className="mt-6 flex flex-col gap-3">
         <Button

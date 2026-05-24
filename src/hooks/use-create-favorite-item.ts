@@ -1,5 +1,4 @@
 import { favoriteItemsQueries } from "@/api";
-import type { FavoriteItemCreate } from "@/api/schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useCreateFavoriteItem() {
