@@ -19,9 +19,12 @@ export const favoriteItemsQueries = {
     return res.data;
   },
   createFavoriteItem: async (id: number | string) => {
-    const res = await api.post<FavoriteItem>("/listings/favorite-items/", {
-      item_id: Number(id),
-    });
+    const res = await api.post<FavoriteItem>(
+      `/listings/favorite-items/by-item/${id}/`,
+      {
+        item_id: Number(id),
+      },
+    );
     return res.data;
   },
   putFavoriteItem: async (id: number | string, payload: FavoriteItemCreate) => {
@@ -42,7 +45,9 @@ export const favoriteItemsQueries = {
     return res.data;
   },
   deleteFavoriteItem: async (id: number | string) => {
-    const res = await api.delete<void>(`/listings/favorite-items/${id}/`);
+    const res = await api.delete<void>(
+      `/listings/favorite-items/by-item/${id}/`,
+    );
     return res.data;
   },
 };
