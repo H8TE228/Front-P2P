@@ -6,7 +6,7 @@ export function RootLayout() {
   return (
     <>
       <Header />
-      <div className="min-h-[calc(100vh-416px)]">
+      <div className="min-h-[calc(100vh-415px)]">
         <Outlet />
       </div>
       <Footer />
